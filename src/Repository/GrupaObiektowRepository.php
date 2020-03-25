@@ -4,7 +4,9 @@
 namespace App\Repository;
 
 
-class GrupaObiektowRepository
+use Doctrine\ORM\EntityRepository;
+
+class GrupaObiektowRepository extends EntityRepository
 {
 
 }

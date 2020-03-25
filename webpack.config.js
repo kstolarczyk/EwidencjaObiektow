@@ -6,13 +6,15 @@ if (!Encore.isRuntimeEnvironmentConfigured()) {
     Encore.configureRuntimeEnvironment(process.env.NODE_ENV || 'dev');
 }
 
+var publicPath = Encore.isProduction() ? '/EwidencjaObiektow/build' : '/EwidencjaObiektow/build';
+var manifestKey = Encore.isProduction() ? 'EwidencjaObiektow/build/' : 'EwidencjaObiektow/build/';
 Encore
     // directory where compiled assets will be stored
     .setOutputPath('public/build/')
     // public path used by the web server to access the output path
-    .setPublicPath('/build')
+    .setPublicPath(publicPath)
     // only needed for CDN's or sub-directory deploy
-    //.setManifestKeyPrefix('build/')
+    .setManifestKeyPrefix(manifestKey)
 
     /*
      * ENTRY CONFIG
@@ -24,6 +26,8 @@ Encore
      * and one CSS file (e.g. app.css) if your JavaScript imports CSS.
      */
     .addEntry('app', './assets/js/app.js')
+    .addEntry('light-theme', './assets/js/light-theme.js')
+    .addEntry('dark-theme', './assets/js/dark-theme.js')
     //.addEntry('page1', './assets/js/page1.js')
     //.addEntry('page2', './assets/js/page2.js')
 
@@ -54,7 +58,7 @@ Encore
     })
 
     // enables Sass/SCSS support
-    //.enableSassLoader()
+    .enableSassLoader()
 
     // uncomment if you use TypeScript
     //.enableTypeScriptLoader()

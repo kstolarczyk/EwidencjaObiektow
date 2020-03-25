@@ -4,7 +4,9 @@
 namespace App\Repository;
 
 
-class TypParametruRepository
+use Doctrine\ORM\EntityRepository;
+
+class TypParametruRepository extends EntityRepository
 {
 
 }
