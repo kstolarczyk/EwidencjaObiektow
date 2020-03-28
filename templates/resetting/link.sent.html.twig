@@ -1,0 +1,7 @@
+{% trans_default_domain 'App' %}
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <p>{{ 'Password.reset.link.sent'|trans({'%email%': email}) }}</p>
+{% endblock %}
+

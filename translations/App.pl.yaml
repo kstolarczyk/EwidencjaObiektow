@@ -1,0 +1,5 @@
+Registration.success: Rejestracja przebiegła pomyślnie
+Password:
+  reset:
+    link:
+      sent: 'Link do zresetowania hasła został wysłany na adres: %email%'

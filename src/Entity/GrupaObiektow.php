@@ -50,81 +50,51 @@ class GrupaObiektow
         $this->obiekty = new ArrayCollection();
     }
 
-    /**
-     * @return int
-     */
     public function getId(): int
     {
         return $this->id;
     }
 
-    /**
-     * @param int $id
-     */
     public function setId(int $id): void
     {
         $this->id = $id;
     }
 
-    /**
-     * @return string
-     */
     public function getSymbol(): string
     {
         return $this->symbol;
     }
 
-    /**
-     * @param string $symbol
-     */
     public function setSymbol(string $symbol): void
     {
         $this->symbol = $symbol;
     }
 
-    /**
-     * @return string
-     */
     public function getNazwa(): string
     {
         return $this->nazwa;
     }
 
-    /**
-     * @param string $nazwa
-     */
     public function setNazwa(string $nazwa): void
     {
         $this->nazwa = $nazwa;
     }
 
-    /**
-     * @return ArrayCollection
-     */
     public function getTypyParametrow(): ArrayCollection
     {
         return $this->typyParametrow;
     }
 
-    /**
-     * @param ArrayCollection $typyParametrow
-     */
     public function setTypyParametrow(ArrayCollection $typyParametrow): void
     {
         $this->typyParametrow = $typyParametrow;
     }
 
-    /**
-     * @return ArrayCollection
-     */
     public function getObiekty(): ArrayCollection
     {
         return $this->obiekty;
     }
 
-    /**
-     * @param ArrayCollection $obiekty
-     */
     public function setObiekty(ArrayCollection $obiekty): void
     {
         $this->obiekty = $obiekty;

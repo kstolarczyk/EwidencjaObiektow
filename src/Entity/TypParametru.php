@@ -5,7 +5,7 @@ namespace App\Entity;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * @ORM\Entity(repositoryClass="TypParametruRepository")
+ * @ORM\Entity(repositoryClass="App\Repository\TypParametruRepository")
  * @ORM\Table(name="typy_parametrow")
  */
 class TypParametru
@@ -37,81 +37,51 @@ class TypParametru
      */
     public string $jednostkaMiary;
 
-    /**
-     * @return int
-     */
     public function getId(): int
     {
         return $this->id;
     }
 
-    /**
-     * @param int $id
-     */
     public function setId(int $id): void
     {
         $this->id = $id;
     }
 
-    /**
-     * @return string
-     */
     public function getSymbol(): string
     {
         return $this->symbol;
     }
 
-    /**
-     * @param string $symbol
-     */
     public function setSymbol(string $symbol): void
     {
         $this->symbol = $symbol;
     }
 
-    /**
-     * @return string
-     */
     public function getNazwa(): string
     {
         return $this->nazwa;
     }
 
-    /**
-     * @param string $nazwa
-     */
     public function setNazwa(string $nazwa): void
     {
         $this->nazwa = $nazwa;
     }
 
-    /**
-     * @return string
-     */
     public function getTypDanych(): string
     {
         return $this->typDanych;
     }
 
-    /**
-     * @param string $typDanych
-     */
     public function setTypDanych(string $typDanych): void
     {
         $this->typDanych = $typDanych;
     }
 
-    /**
-     * @return string
-     */
     public function getJednostkaMiary(): string
     {
         return $this->jednostkaMiary;
     }
 
-    /**
-     * @param string $jednostkaMiary
-     */
     public function setJednostkaMiary(string $jednostkaMiary): void
     {
         $this->jednostkaMiary = $jednostkaMiary;
