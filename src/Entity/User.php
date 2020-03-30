@@ -36,7 +36,7 @@ class User implements UserInterface
      * @Assert\Regex(pattern="/^(?=.*[A-Z])(?=.*[a-z])(?=.*[0-9])/")
      * @Assert\NotCompromisedPassword()
      */
-    public string $plainPassword = '';
+    public ?string $plainPassword = null;
 
     /**
      * @ORM\Column(name="password", type="string", nullable=false)
@@ -129,12 +129,12 @@ class User implements UserInterface
         $this->id = $id;
     }
 
-    public function getPlainPassword(): string
+    public function getPlainPassword(): ?string
     {
         return $this->plainPassword;
     }
 
-    public function setPlainPassword(string $plainPassword): void
+    public function setPlainPassword(?string $plainPassword): void
     {
         $this->plainPassword = $plainPassword;
     }
