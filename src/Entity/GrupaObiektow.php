@@ -18,17 +18,17 @@ class GrupaObiektow
      * @ORM\GeneratedValue(strategy="AUTO")
      * @ORM\Column(name="id", type="integer", nullable=false)
      */
-    public int $id;
+    private int $id;
 
     /**
      * @ORM\Column(name="symbol", type="string", nullable=false)
      */
-    public string $symbol;
+    private string $symbol;
 
     /**
      * @ORM\Column(name="nazwa", type="string", nullable=false)
      */
-    public string $nazwa;
+    private string $nazwa;
 
     /**
      * @ORM\ManyToMany(targetEntity="App\Entity\TypParametru")
@@ -37,12 +37,12 @@ class GrupaObiektow
      *     inverseJoinColumns={@ORM\JoinColumn(name="typ_parametru_id", referencedColumnName="id")}
      *     )
      */
-    public ArrayCollection $typyParametrow;
+    private ArrayCollection $typyParametrow;
 
     /**
      * @ORM\OneToMany(targetEntity="App\Entity\Obiekt", mappedBy="grupa")
      */
-    public ArrayCollection $obiekty;
+    private ArrayCollection $obiekty;
 
     public function __construct()
     {

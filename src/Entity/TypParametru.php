@@ -15,27 +15,27 @@ class TypParametru
      * @ORM\GeneratedValue(strategy="AUTO")
      * @ORM\Column(name="id", type="integer", nullable=false)
      */
-    public int $id;
+    private int $id;
 
     /**
      * @ORM\Column(name="symbol", type="string", nullable=false)
      */
-    public string $symbol;
+    private string $symbol;
 
     /**
      * @ORM\Column(name="nazwa", type="string", nullable=false)
      */
-    public string $nazwa;
+    private string $nazwa;
 
     /**
      * @ORM\Column(name="typ_danych", type="string", nullable=false)
      */
-    public string $typDanych;
+    private string $typDanych;
 
     /**
      * @ORM\Column(name="jednostka_miary", type="string", nullable=false)
      */
-    public string $jednostkaMiary;
+    private string $jednostkaMiary;
 
     public function getId(): int
     {

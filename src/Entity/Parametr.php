@@ -16,24 +16,24 @@ class Parametr
      * @ORM\GeneratedValue(strategy="AUTO")
      * @ORM\Column(name="id", type="integer", nullable=false)
      */
-    public int $id;
+    private int $id;
 
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\TypParametru")
      * @ORM\JoinColumn(name="typ_id", referencedColumnName="id")
      */
-    public TypParametru $typ;
+    private TypParametru $typ;
 
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\Obiekt", inversedBy="parametry")
      * @ORM\JoinColumn(name="obiekt_id", referencedColumnName="id")
      */
-    public Obiekt $obiekt;
+    private Obiekt $obiekt;
 
     /**
      * @ORM\Column(name="value", type="string", nullable=false)
      */
-    public string $value;
+    private string $value;
 
     public function getId(): int
     {

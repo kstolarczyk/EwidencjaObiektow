@@ -23,48 +23,47 @@ class User implements UserInterface
      * @ORM\GeneratedValue(strategy="AUTO")
      * @ORM\Column(name="id", type="integer", nullable=false)
      */
-    public int $id;
+    private int $id;
 
     /**
      * @ORM\Column(name="username", type="string", nullable=false, length=24)
      * @Assert\NotBlank()
      * @Assert\Length(min="5", max="24")
      */
-    public string $username = '';
+    private string $username = '';
 
     /**
      * @Assert\Regex(pattern="/^(?=.*[A-Z])(?=.*[a-z])(?=.*[0-9])/")
      * @Assert\NotCompromisedPassword()
      */
-    public ?string $plainPassword = null;
+    private ?string $plainPassword = null;
 
     /**
      * @ORM\Column(name="password", type="string", nullable=false)
      */
-    public string $password;
+    private string $password;
 
     /**
      * @ORM\Column(name="password_request_token", type="string", nullable=true)
      */
-    public ?string $passwordRequestToken = null;
+    private ?string $passwordRequestToken = null;
 
     /**
      * @ORM\Column(name="email", type="string", nullable=false, length=64)
      * @Assert\Length(min="10",max="64")
      * @Assert\Email()
      */
-    public string $email = '';
+    private string $email = '';
 
     /**
      * @ORM\Column(name="roles", type="array")
      */
-    public ArrayCollection $roles;
+    private ArrayCollection $roles;
 
     public function __construct()
     {
         $this->roles = new ArrayCollection(['ROLE_USER']);
     }
-
 
     public function setRoles(array $roles): void
     {

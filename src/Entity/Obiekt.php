@@ -18,28 +18,28 @@ class Obiekt
      * @ORM\GeneratedValue(strategy="AUTO")
      * @ORM\Column(name="id", type="integer", nullable=false)
      */
-    public int $id;
+    private int $id;
 
     /**
      * @ORM\Column(name="symbol", type="string", nullable=false)
      */
-    public string $symbol;
+    private string $symbol;
 
     /**
      * @ORM\Column(name="nazwa", type="string", nullable=false)
      */
-    public string $nazwa;
+    private string $nazwa;
 
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\GrupaObiektow", inversedBy="obiekty")
      * @ORM\JoinColumn(name="grupa_id", referencedColumnName="id")
      */
-    public GrupaObiektow $grupa;
+    private GrupaObiektow $grupa;
 
     /**
      * @ORM\OneToMany(targetEntity="App\Entity\Parametr", mappedBy="obiekt")
      */
-    public ArrayCollection $parametry;
+    private ArrayCollection $parametry;
 
     public function __construct()
     {
