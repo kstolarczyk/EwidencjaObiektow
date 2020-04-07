@@ -1,0 +1,26 @@
+{% trans_default_domain 'App' %}
+<nav class="navbar navbar-expand-lg navbar-dark bg-primary fixed-top">
+    <a class="navbar-brand" href="{{ path('homepage') }}"><i
+                class="fas fa-fw fa-lg fa-menorah"></i> {{ 'Ewidencja.obiektow'|trans }}</a>
+    <a id="sidebar-toggler" href="javascript:void(0)" data-target="#sidebar-menu">
+        <span class="navbar-toggler-icon"></span>
+    </a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#top-navbar">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="top-navbar">
+        <ul class="navbar-nav mr-0 ml-auto">
+            <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" data-toggle="dropdown" role="button" href="javascript:void(0)">
+                    <i class="fas fa-fw fa-lg fa-star-of-david"></i> {{ app.user.username }}
+                </a>
+                <div class="dropdown-menu dropdown-menu-right mr-1">
+                    <a class="dropdown-item" href="#"><i class="fas fa-fw fa-user-edit"></i> {{ 'Profil'|trans }}</a>
+                    <a class="dropdown-item" href="#"><i class="fas fa-fw fa-user-cog"></i> {{ 'Ustawienia'|trans }}</a>
+                    <a class="dropdown-item" href="{{ path('app_logout') }}"><i
+                                class="fas fa-fw fa-sign-out-alt"></i> {{ 'Wyloguj'|trans }}</a>
+                </div>
+            </li>
+        </ul>
+    </div>
+</nav>
