@@ -18,6 +18,8 @@ security:
       security: false
     main:
       anonymous: lazy
+      remember_me:
+        secret: '%env(APP_SECRET)%'
       provider: users
       guard:
         authenticators:

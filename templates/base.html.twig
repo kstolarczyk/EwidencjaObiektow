@@ -1,5 +1,5 @@
 {% trans_default_domain 'App' %}
-{% set theme = 'light' %}
+{% set theme = app.request.get('theme', 'light') %}
 <!DOCTYPE html>
 <html lang="{{ app.request.preferredLanguage }}">
 <head>
@@ -7,26 +7,33 @@
     <title>{% block title %}{{ 'Ewidencja.obiektow'|trans }}{% endblock %}</title>
     {{ encore_entry_link_tags(theme == 'dark' ? 'dark-theme' : 'light-theme') }}
     {{ encore_entry_link_tags('app') }}
-    {{ encore_entry_link_tags('sidebar') }}
     {{ encore_entry_script_tags('app') }}
     {{ encore_entry_script_tags(theme == 'dark' ? 'dark-theme' : 'light-theme') }}
-    {{ encore_entry_script_tags('sidebar') }}
 </head>
-<body>
+<body class="sb-nav-fixed">
 {% if is_granted('ROLE_USER') %}
     {% include 'navigation.html.twig' %}
 {% endif %}
-<div class="d-flex">
+<div id="layoutSidenav">
     {% if is_granted('ROLE_USER') %}
         {% include 'sidebar.html.twig' %}
     {% endif %}
-    <div id="wrapper" class="d-flex flex-row">
+    <div id="layoutSidenav_content" {% if not is_granted('ROLE_USER') %}style="margin-left:-225px;"{% endif %}>
         {% block body %}
-            <h1>Jebać PiS</h1>
+            <h1>Chuje</h1>
         {% endblock %}
+        <footer class="py-4 mt-auto mx-auto">
+            <div class="container-fluid">
+                <div class="d-flex align-items-center justify-content-between small">
+                    <div class="text-muted">Copyright &copy; Your Website 2019</div>
+                    <div>
+                        <a href="#">Privacy Policy</a> &middot; <a href="#">Terms &amp; Conditions</a>
+                    </div>
+                </div>
+            </div>
+        </footer>
     </div>
 </div>
-
 {% include 'foot.assets.html.twig' %}
 {% block javascripts %}
 {% endblock %}

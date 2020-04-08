@@ -1,26 +1,27 @@
 {% trans_default_domain 'App' %}
-<nav class="navbar navbar-expand-lg navbar-dark bg-primary fixed-top">
-    <a class="navbar-brand" href="{{ path('homepage') }}"><i
-                class="fas fa-fw fa-lg fa-menorah"></i> {{ 'Ewidencja.obiektow'|trans }}</a>
-    <a id="sidebar-toggler" href="javascript:void(0)" data-target="#sidebar-menu">
-        <span class="navbar-toggler-icon"></span>
-    </a>
-    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#top-navbar">
-        <span class="navbar-toggler-icon"></span>
-    </button>
-    <div class="collapse navbar-collapse" id="top-navbar">
-        <ul class="navbar-nav mr-0 ml-auto">
-            <li class="nav-item dropdown">
-                <a class="nav-link dropdown-toggle" data-toggle="dropdown" role="button" href="javascript:void(0)">
-                    <i class="fas fa-fw fa-lg fa-star-of-david"></i> {{ app.user.username }}
-                </a>
-                <div class="dropdown-menu dropdown-menu-right mr-1">
-                    <a class="dropdown-item" href="#"><i class="fas fa-fw fa-user-edit"></i> {{ 'Profil'|trans }}</a>
-                    <a class="dropdown-item" href="#"><i class="fas fa-fw fa-user-cog"></i> {{ 'Ustawienia'|trans }}</a>
-                    <a class="dropdown-item" href="{{ path('app_logout') }}"><i
-                                class="fas fa-fw fa-sign-out-alt"></i> {{ 'Wyloguj'|trans }}</a>
-                </div>
-            </li>
-        </ul>
-    </div>
+<nav class="sb-topnav navbar navbar-expand navbar-dark bg-dark">
+    <a class="navbar-brand" href="{{ path('homepage') }}">{{ 'Ewidencja.obiektow'|trans }}</a>
+    <button class="btn btn-link btn-sm order-1 order-lg-0" id="sidebarToggle" href="#">
+        <i class="fas fa-bars"></i>
+    </button><!-- Navbar Search-->
+    <form class="d-none d-md-inline-block form-inline ml-auto mr-0 mr-md-3 my-2 my-md-0">
+        <div class="input-group">
+            <input class="form-control" type="text" placeholder="Search for..." aria-label="Search" aria-describedby="basic-addon2"/>
+            <div class="input-group-append">
+                <button class="btn btn-primary" type="button"><i class="fas fa-search"></i></button>
+            </div>
+        </div>
+    </form>
+    <!-- Navbar-->
+    <ul class="navbar-nav ml-auto ml-md-0">
+        <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" id="userDropdown" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="fas fa-user fa-fw"></i></a>
+            <div class="dropdown-menu dropdown-menu-right" aria-labelledby="userDropdown">
+                <a class="dropdown-item" href="#">{{ 'Ustawienia'|trans }}</a>
+                <a class="dropdown-item" href="#">{{ 'Profil'|trans }}</a>
+                <div class="dropdown-divider"></div>
+                <a class="dropdown-item" href="{{ path('app_logout') }}">{{ 'Wyloguj'|trans }}</a>
+            </div>
+        </li>
+    </ul>
 </nav>

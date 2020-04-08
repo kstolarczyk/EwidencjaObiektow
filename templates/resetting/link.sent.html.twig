@@ -1,7 +1,17 @@
-{% trans_default_domain 'App' %}
 {% extends 'base.html.twig' %}
-
+{% trans_default_domain 'App' %}
 {% block body %}
-    <p>{{ 'Password.reset.link.sent'|trans({'%email%': email}) }}</p>
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-lg-5">
+                <div class="card shadow-lg border-0 rounded-lg mt-5">
+                    <div class="card-body">
+                        <p>{{ 'Password.reset.link.sent'|trans({'%email%': email}) }}</p>
+                        <a href="{{ path('app_login') }}">{{ 'Powrot.do.logowania'|trans }}</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 {% endblock %}
 

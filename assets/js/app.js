@@ -12,6 +12,7 @@ import $ from 'jquery';
 import 'jquery-ui-dist/jquery-ui';
 
 import 'bootstrap';
+import './sb-admin';
 
 global.$ = global.jQuery = $;
 
