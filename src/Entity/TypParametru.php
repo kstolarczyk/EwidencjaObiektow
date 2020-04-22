@@ -20,22 +20,22 @@ class TypParametru
     /**
      * @ORM\Column(name="symbol", type="string", nullable=false)
      */
-    private string $symbol;
+    private ?string $symbol = null;
 
     /**
      * @ORM\Column(name="nazwa", type="string", nullable=false)
      */
-    private string $nazwa;
+    private ?string $nazwa = null;
 
     /**
      * @ORM\Column(name="typ_danych", type="string", nullable=false)
      */
-    private string $typDanych;
+    private ?string $typDanych = null;
 
     /**
      * @ORM\Column(name="jednostka_miary", type="string", nullable=false)
      */
-    private string $jednostkaMiary;
+    private ?string $jednostkaMiary = null;
 
     public function getId(): int
     {
@@ -47,7 +47,7 @@ class TypParametru
         $this->id = $id;
     }
 
-    public function getSymbol(): string
+    public function getSymbol(): ?string
     {
         return $this->symbol;
     }
@@ -57,7 +57,7 @@ class TypParametru
         $this->symbol = $symbol;
     }
 
-    public function getNazwa(): string
+    public function getNazwa(): ?string
     {
         return $this->nazwa;
     }
@@ -67,7 +67,7 @@ class TypParametru
         $this->nazwa = $nazwa;
     }
 
-    public function getTypDanych(): string
+    public function getTypDanych(): ?string
     {
         return $this->typDanych;
     }
@@ -77,7 +77,7 @@ class TypParametru
         $this->typDanych = $typDanych;
     }
 
-    public function getJednostkaMiary(): string
+    public function getJednostkaMiary(): ?string
     {
         return $this->jednostkaMiary;
     }
@@ -88,4 +88,22 @@ class TypParametru
     }
 
 
+    public const DATE = "DATE";
+    public const DATETIME = "DATETIME";
+    public const TIME = "TIME";
+    public const INT = "INT";
+    public const FLOAT = "FLOAT";
+    public const STRING = "STRING";
+
+    public static function getTypyDanych(): array
+    {
+        return [
+            static::INT,
+            static::FLOAT,
+            static::STRING,
+            static::DATE,
+            static::TIME,
+            static::DATETIME
+        ];
+    }
 }

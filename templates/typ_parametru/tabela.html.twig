@@ -1,0 +1,23 @@
+{% trans_default_domain 'App' %}
+<table class="table table-bordered table-responsive-md" id="typ_parametru-tabela">
+    <thead class="thead-dark">
+    <tr>
+        <th>#</th>
+        <th>{{ 'Nazwa'|trans }}</th>
+        <th>{{ 'Symbol'|trans }}</th>
+        <th>{{ 'Typ.danych.1'|trans }}</th>
+        <th>{{ 'Jednostka.miary'|trans }}</th>
+    </tr>
+    </thead>
+    <tbody>
+    {% for typ in lista %}
+        <tr>
+            <td>{{ loop.index }}</td>
+            <td>{{ typ.nazwa }}</td>
+            <td>{{ typ.symbol }}</td>
+            <td>{{ typ.typDanych|trans([],'TypDanych') }}</td>
+            <td>{{ typ.jednostkaMiary }}</td>
+        </tr>
+    {% endfor %}
+    </tbody>
+</table>

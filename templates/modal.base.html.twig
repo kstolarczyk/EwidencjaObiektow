@@ -1,0 +1,24 @@
+{% trans_default_domain 'App' %}
+<div class="modal fade" id="{% block modal_id %}{% endblock %}" tabindex="-1" role="dialog">
+    <div class="modal-dialog {% block modal_size %}{% endblock %}" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                {% block modal_header %}
+                    <h5 class="modal-title" id="{% block modal_title_id %}{% endblock %}">{% block modal_title %}{% endblock %}</h5>
+                    <button class="close" type="button" data-dismiss="modal">
+                        <span>&times;</span>
+                    </button>
+                {% endblock %}
+            </div>
+            <div class="modal-body">
+                {% block modal_body %}
+                {% endblock %}
+            </div>
+            <div class="modal-footer">
+                {% block modal_footer %}
+                    <button type="button" class="btn btn-light" data-dismiss="modal">{{ 'Zamknij'|trans }}</button>
+                {% endblock %}
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,12 @@
+{% trans_default_domain 'App' %}
+{% extends 'modal.base.html.twig' %}
+{% block modal_id %}typ_parametru-modal{% endblock %}
+{% block modal_title_id %}typ_parametru-modal-title{% endblock %}
+{% block modal_body %}
+    <div id="typ_parametru-modal-content"></div>
+{% endblock %}
+{% block modal_footer %}
+    <button class="btn btn-primary btn-lg" onclick="Zapisz(this)" id="typ_parametru-modal-zapisz">{{ 'Zapisz'|trans }}</button>
+    {{ parent() }}
+{% endblock %}
+

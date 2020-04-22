@@ -1,0 +1,6 @@
+INT: liczba całkowita [INT]
+FLOAT: liczba zmiennoprzecinkowa [FLOAT]
+STRING: Ciąg znaków [STRING]
+DATE: Data [DATE]
+TIME: Czas [TIME]
+DATETIME: Data i czas [DATETIME]

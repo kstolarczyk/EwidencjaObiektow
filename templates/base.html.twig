@@ -19,9 +19,11 @@
         {% include 'sidebar.html.twig' %}
     {% endif %}
     <div id="layoutSidenav_content" {% if not is_granted('ROLE_USER') %}style="margin-left:-225px;"{% endif %}>
-        {% block body %}
-            <h1>Chuje</h1>
-        {% endblock %}
+        <div class="container-fluid mt-3">
+            {% block body %}
+                <h1>Chuje</h1>
+            {% endblock %}
+        </div>
         <footer class="py-4 mt-auto mx-auto">
             <div class="container-fluid">
                 <div class="d-flex align-items-center justify-content-between small">

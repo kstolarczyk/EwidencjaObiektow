@@ -1,0 +1,43 @@
+{% trans_default_domain 'App' %}
+{% extends 'base.html.twig' %}
+{% block body %}
+    <h2 class="mb-3">{{ 'Typy.parametrow'|trans }}</h2>
+    <button class="btn btn-primary btn-lg" onclick="Dodaj()"><i class="fas fa-fw fa-plus"></i></button>
+    <div class="card bg-light mt-4">
+        <div class="card-body" id="typ_parametru-lista">
+            {% include 'typ_parametru/tabela.html.twig' %}
+        </div>
+    </div>
+    {% include 'typ_parametru/modal.html.twig' %}
+{% endblock %}
+{% block javascripts %}
+    <script type="text/javascript">
+        function Dodaj() {
+            $.get("{{ path('typ_parametru_dodaj') }}", {}, function (response, status) {
+                if (status === "success") {
+                    $("#typ_parametru-modal-content").html(response);
+                    $("#typ_parametru-modal-title").html("{{ 'Nowy.typ.parametru'|trans }}")
+                    $("#typ_parametru-modal").modal("show");
+                }
+            });
+        }
+
+        function Zapisz() {
+            let form = $("#typ_parametru-modal-content").find("form");
+            $.post("{{ path('typ_parametru_dodaj') }}", form.serialize(), function (response, status) {
+                if (status === "success") {
+                    $("#typ_parametru-modal").modal("hide");
+                    Odswiez();
+                }
+            });
+        }
+
+        function Odswiez() {
+            $.get("{{ path('typ_parametru_index') }}", {}, function (response, status) {
+                if (status === "success") {
+                    $("#typ_parametru-lista").html(response);
+                }
+            })
+        }
+    </script>
+{% endblock %}
