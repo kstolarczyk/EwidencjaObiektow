@@ -4,7 +4,7 @@
     <h2 class="mb-3">{{ 'Typy.parametrow'|trans }}</h2>
     <button class="btn btn-primary btn-lg" onclick="Dodaj()"><i class="fas fa-fw fa-plus"></i></button>
     <div class="card bg-light mt-4">
-        <div class="card-body" id="typ_parametru-lista">
+        <div class="card-body px-1 px-sm-3" id="typ_parametru-lista">
             {% include 'typ_parametru/tabela.html.twig' %}
         </div>
     </div>
@@ -13,21 +13,40 @@
 {% block javascripts %}
     <script type="text/javascript">
         function Dodaj() {
-            $.get("{{ path('typ_parametru_dodaj') }}", {}, function (response, status) {
+            $.post("{{ path('typ_parametru_dodaj') }}", {}, function (response, status) {
                 if (status === "success") {
                     $("#typ_parametru-modal-content").html(response);
                     $("#typ_parametru-modal-title").html("{{ 'Nowy.typ.parametru'|trans }}")
+                    $("#typ_parametru-modal-zapisz").data("id", 0);
                     $("#typ_parametru-modal").modal("show");
                 }
             });
         }
 
-        function Zapisz() {
-            let form = $("#typ_parametru-modal-content").find("form");
-            $.post("{{ path('typ_parametru_dodaj') }}", form.serialize(), function (response, status) {
+        function Edytuj(id) {
+            let url = "{{ path('typ_parametru_edytuj', {id: '9999999'}) }}".replace('9999999', id);
+            $.post(url, {}, function (response, status) {
                 if (status === "success") {
-                    $("#typ_parametru-modal").modal("hide");
-                    Odswiez();
+                    $("#typ_parametru-modal-content").html(response);
+                    $("#typ_parametru-modal-title").html("{{ 'Typ.parametru'|trans }} #" + id)
+                    $("#typ_parametru-modal-zapisz").data("id", id);
+                    $("#typ_parametru-modal").modal("show");
+                }
+            });
+        }
+
+        function Zapisz(e) {
+            let form = $("#typ_parametru-modal-content").find("form");
+            let id = $(e).data("id");
+            let url = id > 0 ? "{{ path('typ_parametru_edytuj', {id: '9999999'}) }}".replace('9999999', id) : "{{ path('typ_parametru_dodaj') }}";
+            $.post(url, form.serialize(), function (response, status) {
+                if (status === "success") {
+                    if (response !== true) {
+                        $("#typ_parametru-modal-content").html(response);
+                    } else {
+                        $("#typ_parametru-modal").modal("hide");
+                        Odswiez();
+                    }
                 }
             });
         }
@@ -38,6 +57,31 @@
                     $("#typ_parametru-lista").html(response);
                 }
             })
+        }
+
+        function Usun(id) {
+            bootbox.confirm({
+                message: "{{ 'Usun.potwierdz'|trans }} #" + id,
+                callback: function (result) {
+                    if (result) {
+                        $.post("{{ path('typ_parametru_usun', {id: '9999999'}) }}".replace('9999999', id), {}, function (response, status) {
+                            if (status === "success") {
+                                Odswiez();
+                            }
+                        });
+                    }
+                },
+                buttons: {
+                    confirm: {
+                        label: "{{ 'Tak'|trans }}",
+                        className: "btn-danger btn-lg"
+                    },
+                    cancel: {
+                        label: "{{ 'Nie'|trans }}",
+                        className: "btn-secondary btn-lg"
+                    }
+                }
+            });
         }
     </script>
 {% endblock %}

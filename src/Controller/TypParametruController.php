@@ -12,7 +12,7 @@ use Symfony\Component\Routing\Annotation\Route;
 class TypParametruController extends BaseController
 {
     /**
-     * @Route("/TypParametru/Dodaj", name="typ_parametru_dodaj", condition="request.isXmlHttpRequest()")
+     * @Route("/TypParametru/Dodaj", name="typ_parametru_dodaj", condition="request.isXmlHttpRequest()", methods={"POST"})
      */
     public function dodaj(Request $request, EntityManagerInterface $entityManager)
     {
@@ -24,9 +24,34 @@ class TypParametruController extends BaseController
             $entityManager->flush();
             return new JsonResponse(true);
         }
-        return new JsonResponse($this->renderView('typ_parametru/dodaj.html.twig', [
+        return new JsonResponse($this->renderView('typ_parametru/form.html.twig', [
             'form' => $form->createView()
         ]));
+    }
+
+    /**
+     * @Route("/TypParametru/Edytuj/{id}", name="typ_parametru_edytuj", condition="request.isXmlHttpRequest()", requirements={"id":"\d+"}, methods={"POST"})
+     */
+    public function edytuj(Request $request, EntityManagerInterface $entityManager, TypParametru $typParametru)
+    {
+        $form = $this->createForm(TypParametruType::class, $typParametru);
+        $form->handleRequest($request);
+        if ($form->isSubmitted() && $form->isValid()) {
+            $entityManager->flush();
+            return new JsonResponse(true);
+        }
+
+        return new JsonResponse($this->renderView('typ_parametru/form.html.twig', ['form' => $form->createView()]));
+    }
+
+    /**
+     * @Route("/TypParametru/Usun/{id}", name="typ_parametru_usun", condition="request.isXmlHttpRequest()", requirements={"id":"\d+"}, methods={"POST"})
+     */
+    public function usun(Request $request, EntityManagerInterface $entityManager, TypParametru $typParametru)
+    {
+        $entityManager->remove($typParametru);
+        $entityManager->flush();
+        return new JsonResponse(true);
     }
 
     /**

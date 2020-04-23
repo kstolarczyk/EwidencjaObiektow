@@ -4,11 +4,13 @@
 <html lang="{{ app.request.preferredLanguage }}">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"/>
     <title>{% block title %}{{ 'Ewidencja.obiektow'|trans }}{% endblock %}</title>
     {{ encore_entry_link_tags(theme == 'dark' ? 'dark-theme' : 'light-theme') }}
     {{ encore_entry_link_tags('app') }}
     {{ encore_entry_script_tags('app') }}
     {{ encore_entry_script_tags(theme == 'dark' ? 'dark-theme' : 'light-theme') }}
+    <script type="text/javascript">{% include 'global.scripts.js.twig' %}</script>
 </head>
 <body class="sb-nav-fixed">
 {% if is_granted('ROLE_USER') %}
@@ -19,7 +21,7 @@
         {% include 'sidebar.html.twig' %}
     {% endif %}
     <div id="layoutSidenav_content" {% if not is_granted('ROLE_USER') %}style="margin-left:-225px;"{% endif %}>
-        <div class="container-fluid mt-3">
+        <div class="container-fluid mt-3 px-1 px-sm-4">
             {% block body %}
                 <h1>Chuje</h1>
             {% endblock %}

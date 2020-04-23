@@ -10,9 +10,18 @@ import '../css/app.scss';
 // Need jQuery? Install it with "yarn add jquery", then uncomment to import it.
 import $ from 'jquery';
 import 'jquery-ui-dist/jquery-ui';
-
 import 'bootstrap';
+import bootbox from 'bootbox';
 import './sb-admin';
 
+require('jszip');
+require('pdfmake');
+require('datatables.net-bs4')(window, $);
+require('datatables.net-buttons-bs4')(window, $);
+require('datatables.net-buttons/js/buttons.colVis')(window, $);
+require('datatables.net-buttons/js/buttons.html5')(window, $);
+require('datatables.net-responsive-bs4')(window, $);
+
 global.$ = global.jQuery = $;
+global.bootbox = bootbox;
 

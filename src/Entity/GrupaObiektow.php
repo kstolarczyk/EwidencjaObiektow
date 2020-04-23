@@ -5,7 +5,9 @@ namespace App\Entity;
 
 
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\GrupaObiektowRepository")
@@ -22,13 +24,15 @@ class GrupaObiektow
 
     /**
      * @ORM\Column(name="symbol", type="string", nullable=false)
+     * @Assert\NotBlank()
      */
-    private string $symbol;
+    private string $symbol = "";
 
     /**
      * @ORM\Column(name="nazwa", type="string", nullable=false)
+     * @Assert\NotBlank()
      */
-    private string $nazwa;
+    private string $nazwa = "";
 
     /**
      * @ORM\ManyToMany(targetEntity="App\Entity\TypParametru")
@@ -37,12 +41,12 @@ class GrupaObiektow
      *     inverseJoinColumns={@ORM\JoinColumn(name="typ_parametru_id", referencedColumnName="id")}
      *     )
      */
-    private ArrayCollection $typyParametrow;
+    private Collection $typyParametrow;
 
     /**
      * @ORM\OneToMany(targetEntity="App\Entity\Obiekt", mappedBy="grupa")
      */
-    private ArrayCollection $obiekty;
+    private Collection $obiekty;
 
     public function __construct()
     {
@@ -80,22 +84,22 @@ class GrupaObiektow
         $this->nazwa = $nazwa;
     }
 
-    public function getTypyParametrow(): ArrayCollection
+    public function getTypyParametrow(): Collection
     {
         return $this->typyParametrow;
     }
 
-    public function setTypyParametrow(ArrayCollection $typyParametrow): void
+    public function setTypyParametrow(Collection $typyParametrow): void
     {
         $this->typyParametrow = $typyParametrow;
     }
 
-    public function getObiekty(): ArrayCollection
+    public function getObiekty(): Collection
     {
         return $this->obiekty;
     }
 
-    public function setObiekty(ArrayCollection $obiekty): void
+    public function setObiekty(Collection $obiekty): void
     {
         $this->obiekty = $obiekty;
     }

@@ -1,0 +1,18 @@
+$.fn.disable = function () {
+    $(this).prop("disabled", true);
+};
+
+$.fn.enable = function () {
+    $(this).prop("disabled", false);
+};
+
+$(document).ajaxStart(function () {
+    let buttons = $(".btn:not(.ajax-disabled)");
+    buttons.addClass("ajax-disabled");
+    buttons.disable();
+});
+$(document).ajaxStop(function () {
+    let buttons = $(".ajax-disabled");
+    buttons.removeClass("ajax-disabled");
+    buttons.enable();
+});

@@ -7,6 +7,7 @@
         <th>{{ 'Symbol'|trans }}</th>
         <th>{{ 'Typ.danych.1'|trans }}</th>
         <th>{{ 'Jednostka.miary'|trans }}</th>
+        <th>{{ 'Akcje'|trans }}</th>
     </tr>
     </thead>
     <tbody>
@@ -17,7 +18,15 @@
             <td>{{ typ.symbol }}</td>
             <td>{{ typ.typDanych|trans([],'TypDanych') }}</td>
             <td>{{ typ.jednostkaMiary }}</td>
+            <td class="text-nowrap">
+                <button class="btn btn-primary" onclick="Edytuj({{ typ.id }})"><i class="fas fa-fw fa-edit"></i>
+                </button>
+                <button class="btn btn-danger" onclick="Usun({{ typ.id }})"><i class="fas fa-fw fa-trash"></i></button>
+            </td>
         </tr>
     {% endfor %}
     </tbody>
 </table>
+<script>
+    $("#typ_parametru-tabela").DataTable();
+</script>

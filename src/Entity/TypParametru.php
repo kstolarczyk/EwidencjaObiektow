@@ -3,6 +3,7 @@
 
 namespace App\Entity;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\TypParametruRepository")
@@ -19,18 +20,21 @@ class TypParametru
 
     /**
      * @ORM\Column(name="symbol", type="string", nullable=false)
+     * @Assert\NotBlank()
      */
-    private ?string $symbol = null;
+    private string $symbol = "";
 
     /**
      * @ORM\Column(name="nazwa", type="string", nullable=false)
+     * @Assert\NotBlank()
      */
-    private ?string $nazwa = null;
+    private string $nazwa = "";
 
     /**
      * @ORM\Column(name="typ_danych", type="string", nullable=false)
+     * @Assert\NotBlank()
      */
-    private ?string $typDanych = null;
+    private string $typDanych = "";
 
     /**
      * @ORM\Column(name="jednostka_miary", type="string", nullable=false)
@@ -47,7 +51,7 @@ class TypParametru
         $this->id = $id;
     }
 
-    public function getSymbol(): ?string
+    public function getSymbol(): string
     {
         return $this->symbol;
     }
@@ -57,7 +61,7 @@ class TypParametru
         $this->symbol = $symbol;
     }
 
-    public function getNazwa(): ?string
+    public function getNazwa(): string
     {
         return $this->nazwa;
     }
@@ -67,7 +71,7 @@ class TypParametru
         $this->nazwa = $nazwa;
     }
 
-    public function getTypDanych(): ?string
+    public function getTypDanych(): string
     {
         return $this->typDanych;
     }

@@ -1,0 +1,11 @@
+{% trans_default_domain 'App' %}
+{% extends 'modal.base.html.twig' %}
+{% block modal_id %}grupa_obiektow-modal{% endblock %}
+{% block modal_title_id %}grupa_obiektow-modal-title{% endblock %}
+{% block modal_body %}
+    <div id="grupa_obiektow-modal-content"></div>
+{% endblock %}
+{% block modal_footer %}
+    <button class="btn btn-primary btn-lg" type="button" id="grupa_obiektow-modal-zapisz" onclick="Zapisz(this)">{{ 'Zapisz'|trans }}</button>
+    {{ parent() }}
+{% endblock %}

@@ -1,0 +1,86 @@
+{% trans_default_domain 'App' %}
+{% extends 'base.html.twig' %}
+{% block body %}
+    <h2 class="mb-3">{{ 'Grupy.obiektow'|trans }}</h2>
+    <button class="btn btn-primary btn-lg" onclick="Dodaj()"><i class="fas fa-fw fa-plus"></i></button>
+    <div class="card bg-light mt-4">
+        <div class="card-body" id="grupa_obiektow-lista">
+            {% include 'grupa_obiektow/tabela.html.twig' %}
+        </div>
+    </div>
+    {% include 'grupa_obiektow/modal.html.twig' %}
+{% endblock %}
+{% block javascripts %}
+    <script>
+        function Dodaj() {
+            $.post("{{ path('grupa_obiektow_dodaj') }}", {}, function (response, status) {
+                if (status === "success") {
+                    $("#grupa_obiektow-modal-content").html(response);
+                    $("#grupa_obiektow-modal-title").html("{{ 'Nowa.grupa.obiektow'|trans }}")
+                    $("#grupa_obiektow-modal-zapisz").data("id", 0);
+                    $("#grupa_obiektow-modal").modal("show");
+                }
+            });
+        }
+
+        function Edytuj(id) {
+            $.post("{{ path('grupa_obiektow_edytuj', {id: '9999999'}) }}".replace('9999999', id), {}, function (response, status) {
+                if (status === "success") {
+                    $("#grupa_obiektow-modal-content").html(response);
+                    $("#grupa_obiektow-modal-title").html("{{ 'Grupa.obiektow'|trans }} #" + id)
+                    $("#grupa_obiektow-modal-zapisz").data("id", id);
+                    $("#grupa_obiektow-modal").modal("show");
+                }
+            });
+        }
+
+        function Usun(id) {
+            bootbox.confirm({
+                message: "{{ 'Usun.potwierdz'|trans }} #" + id,
+                callback: function (result) {
+                    if (result) {
+                        $.post("{{ path('grupa_obiektow_usun', {id: '9999999'}) }}".replace('9999999', id), {}, function (response, status) {
+                            if (status === "success") {
+                                Odswiez();
+                            }
+                        });
+                    }
+                },
+                buttons: {
+                    confirm: {
+                        label: "{{ 'Tak'|trans }}",
+                        className: "btn-danger btn-lg"
+                    },
+                    cancel: {
+                        label: "{{ 'Nie'|trans }}",
+                        className: "btn-secondary btn-lg"
+                    }
+                }
+            });
+        }
+
+        function Zapisz(e) {
+            let form = $("#grupa_obiektow-modal-content").find("form");
+            let id = $(e).data("id");
+            let url = id > 0 ? "{{ path('grupa_obiektow_edytuj', {id: '9999999'}) }}".replace('9999999', id) : "{{ path('grupa_obiektow_dodaj') }}"
+            $.post(url, form.serialize(), function (response, status) {
+                if (status === "success") {
+                    if (response !== true) {
+                        $("#grupa_obiektow-modal-content").html(response);
+                    } else {
+                        $("#grupa_obiektow-modal").modal("hide");
+                        Odswiez();
+                    }
+                }
+            });
+        }
+
+        function Odswiez() {
+            $.get("{{ path('grupa_obiektow_index') }}", {}, function (response, status) {
+                if (status === "success") {
+                    $("#grupa_obiektow-lista").html(response);
+                }
+            });
+        }
+    </script>
+{% endblock %}
