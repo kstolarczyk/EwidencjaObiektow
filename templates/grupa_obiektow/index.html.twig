@@ -36,6 +36,7 @@
 
         function Usun(id) {
             bootbox.confirm({
+                centerVertical: true,
                 message: "{{ 'Usun.potwierdz'|trans }} #" + id,
                 callback: function (result) {
                     if (result) {
