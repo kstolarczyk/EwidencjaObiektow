@@ -37,7 +37,7 @@ class TypParametru
     private string $typDanych = "";
 
     /**
-     * @ORM\Column(name="jednostka_miary", type="string", nullable=false)
+     * @ORM\Column(name="jednostka_miary", type="string", nullable=true)
      */
     private ?string $jednostkaMiary = null;
 
