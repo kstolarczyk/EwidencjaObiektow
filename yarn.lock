@@ -747,6 +747,42 @@
   resolved "https://registry.yarnpkg.com/@fortawesome/fontawesome-free/-/fontawesome-free-5.13.0.tgz#fcb113d1aca4b471b709e8c9c168674fbd6e06d9"
   integrity sha512-xKOeQEl5O47GPZYIMToj6uuA2syyFlq9EMSl2ui0uytjY9xbe8XS0pexNWmxrdcCyNGyDmLyYw5FtKsalBUeOg==
 
+"@pnotify/bootstrap4@^5.1.0":
+  version "5.1.0"
+  resolved "https://registry.yarnpkg.com/@pnotify/bootstrap4/-/bootstrap4-5.1.0.tgz#f0278684442a2c5d45b5f25c2c93c03cf9e0a1af"
+  integrity sha512-Y7gD7WV6r+kw9/oA/QBsNsN6yl+iyBFsybYp7VfoFYzGA2YIYcIdFaOCcR51XtkdU59aLbeou0EZPDZrXlSHYQ==
+  dependencies:
+    "@pnotify/core" "^5.1.0"
+
+"@pnotify/core@^5.1.0":
+  version "5.1.0"
+  resolved "https://registry.yarnpkg.com/@pnotify/core/-/core-5.1.0.tgz#3c8af806067a2536a7464c4ae398d46668ab8119"
+  integrity sha512-F8npH5gJWaO0zIbhfaIY5T+QxOIqxrkqqr6dM7Gpqi13uzJ3qtZlbo6SZzJKT9jY0wdds+vobYdD6Xr3OH1FaQ==
+  dependencies:
+    "@smui/common" "^1.0.0-beta.21"
+    svelte "^3.20.1"
+
+"@pnotify/font-awesome5-fix@^5.1.0":
+  version "5.1.0"
+  resolved "https://registry.yarnpkg.com/@pnotify/font-awesome5-fix/-/font-awesome5-fix-5.1.0.tgz#b157da38542dec1789e3ff46a21e14c2032cd046"
+  integrity sha512-aiGoj+3RkffXoi3LSzNqMmTQdp0cuTzuwTN8mDDzvRzTpdjg8ztS/qN4mHFM9UGiOga8yQLXKmK23xJ/5M3uOA==
+  dependencies:
+    "@pnotify/core" "^5.1.0"
+
+"@pnotify/font-awesome5@^5.1.0":
+  version "5.1.0"
+  resolved "https://registry.yarnpkg.com/@pnotify/font-awesome5/-/font-awesome5-5.1.0.tgz#fa2d19e0dbd7bee81e5563d4ab440622abd78f7b"
+  integrity sha512-1enaWcyf/VjopvTOuTzJeFYupueeZP1JlxMGofRdvCxfapUAWkrjJIJ2T1uZ+HTIj79YaPyLfthzvQvl4vW7Zw==
+  dependencies:
+    "@pnotify/core" "^5.1.0"
+
+"@smui/common@^1.0.0-beta.21":
+  version "1.0.0-beta.21"
+  resolved "https://registry.yarnpkg.com/@smui/common/-/common-1.0.0-beta.21.tgz#f81f659542a189dbf2e04edc78fcfed408db0a58"
+  integrity sha512-t063AKMVeKLl91C7HyMqWerrEMal1rIAHis6kH/HRWuqudLfQ2vrGCKq3SMLEL6t4OqgiXg122g0FDBk5t4M1A==
+  dependencies:
+    svelte "^3.0"
+
 "@symfony/webpack-encore@^0.28.2":
   version "0.28.3"
   resolved "https://registry.yarnpkg.com/@symfony/webpack-encore/-/webpack-encore-0.28.3.tgz#45b590f7b86beb7bb6918a95df89f42f72b796d0"
@@ -6902,6 +6938,11 @@ supports-color@^5.3.0:
   integrity sha512-QjVjwdXIt408MIiAqCX4oUKsgU2EqAGzs2Ppkm4aQYbjm+ZEWEcW4SfFNTr4uMNZma0ey4f5lgLrkB0aX0QMow==
   dependencies:
     has-flag "^3.0.0"
+
+svelte@^3.0, svelte@^3.20.1:
+  version "3.20.1"
+  resolved "https://registry.yarnpkg.com/svelte/-/svelte-3.20.1.tgz#8417fcd883a2f534b642a0737368272e651cf3ac"
+  integrity sha512-m/dw52BZf+p6KYnyKLErIcGalu4pwJrQbUM7VZriRw6ZlJj1qMAZsLcIWzEB3I0hhdJwkKb7LrrvUIeqmbO92Q==
 
 svg-to-pdfkit@^0.1.8:
   version "0.1.8"

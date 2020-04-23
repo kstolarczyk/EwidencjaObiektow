@@ -26,13 +26,13 @@ class GrupaObiektow
      * @ORM\Column(name="symbol", type="string", nullable=false)
      * @Assert\NotBlank()
      */
-    private string $symbol = "";
+    private ?string $symbol = null;
 
     /**
      * @ORM\Column(name="nazwa", type="string", nullable=false)
      * @Assert\NotBlank()
      */
-    private string $nazwa = "";
+    private ?string $nazwa = null;
 
     /**
      * @ORM\ManyToMany(targetEntity="App\Entity\TypParametru")
@@ -64,22 +64,22 @@ class GrupaObiektow
         $this->id = $id;
     }
 
-    public function getSymbol(): string
+    public function getSymbol(): ?string
     {
         return $this->symbol;
     }
 
-    public function setSymbol(string $symbol): void
+    public function setSymbol(?string $symbol): void
     {
         $this->symbol = $symbol;
     }
 
-    public function getNazwa(): string
+    public function getNazwa(): ?string
     {
         return $this->nazwa;
     }
 
-    public function setNazwa(string $nazwa): void
+    public function setNazwa(?string $nazwa): void
     {
         $this->nazwa = $nazwa;
     }

@@ -16,3 +16,18 @@ $(document).ajaxStop(function () {
     buttons.removeClass("ajax-disabled");
     buttons.enable();
 });
+
+$(document).ajaxComplete(function (event, xhr) {
+    switch (xhr.status) {
+        case 404:
+            error({
+                text: "{{ 'Nie.odnaleziono.obiektu'|trans }}"
+            });
+            break;
+        case 500:
+            error({
+                text: "{{ 'Nieoczekiwany.blad.aplikacji'|trans }}"
+            });
+            break;
+    }
+});

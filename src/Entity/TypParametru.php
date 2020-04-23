@@ -22,19 +22,19 @@ class TypParametru
      * @ORM\Column(name="symbol", type="string", nullable=false)
      * @Assert\NotBlank()
      */
-    private string $symbol = "";
+    private ?string $symbol = null;
 
     /**
      * @ORM\Column(name="nazwa", type="string", nullable=false)
      * @Assert\NotBlank()
      */
-    private string $nazwa = "";
+    private ?string $nazwa = null;
 
     /**
      * @ORM\Column(name="typ_danych", type="string", nullable=false)
      * @Assert\NotBlank()
      */
-    private string $typDanych = "";
+    private ?string $typDanych = null;
 
     /**
      * @ORM\Column(name="jednostka_miary", type="string", nullable=true)
@@ -51,32 +51,32 @@ class TypParametru
         $this->id = $id;
     }
 
-    public function getSymbol(): string
+    public function getSymbol(): ?string
     {
         return $this->symbol;
     }
 
-    public function setSymbol(string $symbol): void
+    public function setSymbol(?string $symbol): void
     {
         $this->symbol = $symbol;
     }
 
-    public function getNazwa(): string
+    public function getNazwa(): ?string
     {
         return $this->nazwa;
     }
 
-    public function setNazwa(string $nazwa): void
+    public function setNazwa(?string $nazwa): void
     {
         $this->nazwa = $nazwa;
     }
 
-    public function getTypDanych(): string
+    public function getTypDanych(): ?string
     {
         return $this->typDanych;
     }
 
-    public function setTypDanych(string $typDanych): void
+    public function setTypDanych(?string $typDanych): void
     {
         $this->typDanych = $typDanych;
     }
