@@ -86,7 +86,7 @@ class TypParametru
         return $this->jednostkaMiary;
     }
 
-    public function setJednostkaMiary(string $jednostkaMiary): void
+    public function setJednostkaMiary(?string $jednostkaMiary): void
     {
         $this->jednostkaMiary = $jednostkaMiary;
     }
