@@ -4,3 +4,13 @@
 {{ form_row(form.symbol) }}
 {{ form_row(form.grupa) }}
 {{ form_end(form) }}
+<script>
+    $("#obiekt_grupa").change(function () {
+        let form = $("#obiekt-modal-content").find("form");
+        $.post("{{ path('obiekt_dodaj') }}", form.serialize(), function (response, status) {
+            if (status === "success") {
+                $("#obiekt-modal-content").html(response);
+            }
+        });
+    });
+</script>

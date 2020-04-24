@@ -4,6 +4,7 @@
 namespace App\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\ParametrRepository")
@@ -21,19 +22,22 @@ class Parametr
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\TypParametru")
      * @ORM\JoinColumn(name="typ_id", referencedColumnName="id")
+     * @Assert\NotNull()
      */
-    private TypParametru $typ;
+    private ?TypParametru $typ = null;
 
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\Obiekt", inversedBy="parametry")
      * @ORM\JoinColumn(name="obiekt_id", referencedColumnName="id")
+     * @Assert\NotNull()
      */
-    private Obiekt $obiekt;
+    private ?Obiekt $obiekt = null;
 
     /**
      * @ORM\Column(name="value", type="string", nullable=false)
+     * @Assert\NotBlank()
      */
-    private string $value;
+    private ?string $value = null;
 
     public function getId(): int
     {
@@ -45,32 +49,32 @@ class Parametr
         $this->id = $id;
     }
 
-    public function getTyp(): TypParametru
+    public function getTyp(): ?TypParametru
     {
         return $this->typ;
     }
 
-    public function setTyp(TypParametru $typ): void
+    public function setTyp(?TypParametru $typ): void
     {
         $this->typ = $typ;
     }
 
-    public function getObiekt(): Obiekt
+    public function getObiekt(): ?Obiekt
     {
         return $this->obiekt;
     }
 
-    public function setObiekt(Obiekt $obiekt): void
+    public function setObiekt(?Obiekt $obiekt): void
     {
         $this->obiekt = $obiekt;
     }
 
-    public function getValue(): string
+    public function getValue(): ?string
     {
         return $this->value;
     }
 
-    public function setValue(string $value): void
+    public function setValue(?string $value): void
     {
         $this->value = $value;
     }

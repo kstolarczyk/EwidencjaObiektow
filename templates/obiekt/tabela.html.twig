@@ -7,12 +7,11 @@
         <th>{{ 'Symbol'|trans }}</th>
         <th>{{ 'Grupa'|trans }}</th>
         <th>{{ 'Akcje'|trans }}</th>
-
     </tr>
     </thead>
     <tbody>
     {% for obiekt in lista %}
-        <tr >
+        <tr>
             <td>{{ loop.index }} </td>
             <td >{{ obiekt.nazwa }}</td>
             <td>{{ obiekt.symbol }}</td>

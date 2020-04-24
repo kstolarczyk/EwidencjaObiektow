@@ -2,19 +2,18 @@
 
 namespace App\Controller;
 
-use App\Entity\GrupaObiektow;
 use App\Entity\Obiekt;
 use App\Form\ObiektType;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Routing\Annotation\Route;
 
 class ObiektController extends AbstractController
 {
     /**
-     * @Route("/obiekt", name="obiekt_index")
+     * @Route("/Obiekt", name="obiekt_index")
      */
     public function index(Request $request, EntityManagerInterface $entityManager)
     {
@@ -28,12 +27,11 @@ class ObiektController extends AbstractController
     }
 
     /**
-     * @Route("/obiekt/Dodaj", name="obiekt_dodaj", condition="request.isXmlHttpRequest()", methods={"POST"})
+     * @Route("/Obiekt/Dodaj", name="obiekt_dodaj", condition="request.isXmlHttpRequest()", methods={"POST"})
      */
     public function dodaj(Request $request, EntityManagerInterface $entityManager)
     {
         $obiekt = new Obiekt();
-        //$obiekt->setParametry(null);
         $form = $this->createForm(ObiektType::class, $obiekt);
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
@@ -47,7 +45,7 @@ class ObiektController extends AbstractController
 
 
     /**
-     * @Route("/obiekt/Edytuj/{id}", name="obiekt_edytuj", condition="request.isXmlHttpRequest()", requirements={"id":"\d+"}, methods={"POST"})
+     * @Route("/Obiekt/Edytuj/{id}", name="obiekt_edytuj", condition="request.isXmlHttpRequest()", requirements={"id":"\d+"}, methods={"POST"})
      */
     public function edytuj(Request $request, EntityManagerInterface $entityManager, Obiekt $obiekt)
     {
