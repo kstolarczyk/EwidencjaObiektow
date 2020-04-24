@@ -41,7 +41,8 @@ class Obiekt
     private ?GrupaObiektow $grupa = null;
 
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\Parametr", mappedBy="obiekt")
+     * @ORM\OneToMany(targetEntity="App\Entity\Parametr", mappedBy="obiekt", cascade={"persist"})
+     * @Assert\Valid()
      */
     private Collection $parametry;
 
@@ -100,14 +101,17 @@ class Obiekt
         $this->parametry = $parametry;
     }
 
-    public function addParametr(Parametr $parametr):bool {
-        if(!$this->parametry->contains($parametr)) {
+    public function addParametry(Parametr $parametr): bool
+    {
+        if (!$this->parametry->contains($parametr)) {
+            $parametr->setObiekt($this);
             return $this->parametry->add($parametr);
         }
         return false;
     }
 
-    public function removeParametr(Parametr $parametr):bool {
+    public function removeParametry(Parametr $parametr): bool
+    {
         return $this->parametry->removeElement($parametr);
     }
 

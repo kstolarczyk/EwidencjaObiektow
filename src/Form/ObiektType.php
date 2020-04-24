@@ -7,6 +7,7 @@ use App\Entity\Obiekt;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -29,7 +30,17 @@ class ObiektType extends AbstractType
             ->add('grupa', EntityType::class, [
                 'label' => 'Grupa.Obiektow',
                 'class' => GrupaObiektow::class,
+                'required' => false,
                 'choice_label' => 'nazwa'
+            ])
+            ->add('parametry', CollectionType::class, [
+                'label' => false,
+                'entry_type' => ParametrType::class,
+                'allow_add' => true,
+                'by_reference' => false,
+                'entry_options' => [
+                    'label' => false
+                ]
             ]);
     }
 

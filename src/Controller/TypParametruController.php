@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Entity\GrupaObiektow;
 use App\Entity\TypParametru;
 use App\Form\TypParametruType;
 use Doctrine\ORM\EntityManagerInterface;
@@ -66,5 +67,35 @@ class TypParametruController extends BaseController
             ]));
         }
         return $this->render('typ_parametru/index.html.twig', ['lista' => $lista]);
+    }
+
+    /**
+     * @Route("/TypParametru/Ajax", name="typ_parametru_ajax", condition="request.isXmlHttpRequest()")
+     */
+    public function ajaxGet(EntityManagerInterface $entityManager, Request $request)
+    {
+        $grupaId = $request->query->getInt('grupaId', 0);
+        $typyParametrow = [];
+        if ($grupaId > 0) {
+            $grupa = $entityManager->getRepository(GrupaObiektow::class)->find($grupaId);
+            if ($grupa instanceof GrupaObiektow) {
+                $typyParametrow = $grupa->getTypyParametrow();
+            }
+        } else {
+            $typyParametrow = $entityManager->getRepository(TypParametru::class)->findAll();
+        }
+        $return = [];
+        foreach ($typyParametrow as $typ) {
+            /** @var TypParametru $typ */
+            $return[] = [
+                'id' => $typ->getId(),
+                'nazwa' => $typ->getNazwa(),
+                'symbol' => $typ->getSymbol(),
+                'jednostkaMiary' => $typ->getJednostkaMiary(),
+                'typDanych' => $typ->getTypDanych()
+            ];
+        }
+
+        return new JsonResponse($return);
     }
 }

@@ -41,6 +41,7 @@ class TypParametru
      */
     private ?string $jednostkaMiary = null;
 
+
     public function getId(): int
     {
         return $this->id;

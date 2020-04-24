@@ -4,27 +4,36 @@
 {% block body %}
     <h2 class="mb-3">{{ 'Obiekty'|trans }}</h2>
     <button class="btn btn-primary btn-lg" onclick="Dodaj()"><i class="fas fa-fw fa-plus"></i></button>
-    <div>
-        <label>{{ 'Wybierz.grupe'|trans }}</label>
-        <select id="grupa_obiektow-select">
-            {% for grupa in listaGrupObiektow %}
-                <option value="{{ grupa.id }}" onclick="Wybierz(this.value)"> {{ grupa.nazwa }} </option>
-            {% endfor %}
-
-        </select>
-    </div>
-
-
-
-    <div class="card bg-light mt-4">
-        <div class="card-body">
-            {% include 'obiekt/tabela.html.twig' %}
+    <div class="row mt-3">
+        <div class="col-md-4">
+            <select id="grupa_obiektow-select" class="form-control" data-placeholder="{{ 'Wybierz.grupe'|trans }}..." data-allow-clear="true">
+                <option value=""></option>
+            </select>
         </div>
     </div>
+    <div id="obiekt-lista" class="mt-4">
+        {% include 'obiekt/tabela.html.twig' %}
+    </div>
+
     {% include 'obiekt/modal.html.twig' %}
 {% endblock %}
 {% block javascripts %}
     <script>
+        $.get("{{ path('grupa_obiektow_ajax') }}", {}, function (response, status) {
+            if (status === "success") {
+                let data = $.map(response, function (obj) {
+                    obj.text = obj.nazwa + " (" + obj.symbol + ")";
+                    obj.selected = obj.id === {{ grupaId }};
+                    return obj;
+                });
+                $("#grupa_obiektow-select").select2({data: data});
+            }
+        });
+
+        $("#grupa_obiektow-select").change(function () {
+            Wybierz($(this).val());
+        });
+
         function Dodaj() {
             $.post("{{ path('obiekt_dodaj') }}", {}, function (response, status) {
                 if (status === "success") {
@@ -51,21 +60,22 @@
                 }
             });
         }
+
         function Odswiez() {
-            $.get("{{ path('obiekt_index') }}", {}, function (response, status) {
-                if (status === "success") {
-                    $("#obiekt-tabela").html(response);
-                }
-            });
-        }
-        function Wybierz(id){
-            let url="{{ path('obiekt_index', {id: '999999'}) }}".replace('999999', id);
-            $.get(url, function (response, status) {
+            $.get("{{ path('obiekt_index') }}", {grupaId: '{{ grupaId }}'}, function (response, status) {
                 if (status === "success") {
                     $("#obiekt-tabela").html(response);
                 }
             });
         }
 
+        function Wybierz(id) {
+            $.get("{{ path('obiekt_index') }}", {grupaId: id}, function (response, status) {
+                if (status === "success") {
+                    $("#obiekt-lista").html(response);
+                }
+            });
+        }
+
     </script>
-{%  endblock %}
+{% endblock %}

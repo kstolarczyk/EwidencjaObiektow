@@ -25,12 +25,14 @@ require('datatables.net-buttons-bs4')(window, $);
 require('datatables.net-buttons/js/buttons.colVis')(window, $);
 require('datatables.net-buttons/js/buttons.html5')(window, $);
 require('datatables.net-responsive-bs4')(window, $);
+require('select2/dist/js/select2')(window, $);
 
 global.$ = global.jQuery = $;
 global.bootbox = bootbox;
 defaultModules.set(PNotifyBootstrap4, {});
 defaultModules.set(PNotifyFontAwesome5Fix, {});
 defaultModules.set(PNotifyFontAwesome5, {});
+
 global.alert = alert;
 global.notice = notice;
 global.info = info;

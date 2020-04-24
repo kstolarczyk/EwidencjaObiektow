@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Entity\GrupaObiektow;
 use App\Entity\Obiekt;
 use App\Form\ObiektType;
 use Doctrine\ORM\EntityManagerInterface;
@@ -17,25 +18,21 @@ class ObiektController extends AbstractController
      */
     public function index(Request $request, EntityManagerInterface $entityManager)
     {
-        $listaGrupObiektow = $entityManager->getRepository(GrupaObiektow::class)->findAll();
-        $grupaId=$request->query->get('id');
-        if($grupaId>0){
-            $grupaObiektow=$entityManager->getRepository(GrupaObiektow::class)->find($grupaId);
-            $lista=$grupaObiektow->getObiekty();
-            return $this->render('obiekt/tabela.html.twig', [
-                'lista' => $lista,
-            ]);
+        $grupaId = $request->query->getInt('grupaId', 0);
+        $lista = [];
+        if ($grupaId > 0) {
+            $grupaObiektow = $entityManager->getRepository(GrupaObiektow::class)->find($grupaId);
+            if ($grupaObiektow instanceof GrupaObiektow) {
+                $lista = $grupaObiektow->getObiekty();
+            }
         }
 
+        $viewData = ['lista' => $lista, 'grupaId' => $grupaId];
 
-        $lista = $entityManager->getRepository(Obiekt::class)->findAll();
         if ($request->isXmlHttpRequest()) {
-            return new JsonResponse($this->renderView('obiekt/tabela.html.twig', ['lista' => $lista]));
+            return new JsonResponse($this->renderView('obiekt/tabela.html.twig', $viewData));
         }
-        return $this->render('obiekt/index.html.twig', [
-            'lista' => $lista,
-            'listaGrupObiektow' => $listaGrupObiektow,
-        ]);
+        return $this->render('obiekt/index.html.twig', $viewData);
     }
 
     /**

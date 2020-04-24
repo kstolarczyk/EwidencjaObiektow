@@ -67,4 +67,22 @@ class GrupaObiektowController extends AbstractController
         $entityManager->flush();
         return new JsonResponse(true);
     }
+
+    /**
+     * @Route("/GrupaObiektow/Ajax", name="grupa_obiektow_ajax", condition="request.isXmlHttpRequest()")
+     */
+    public function ajaxGet(EntityManagerInterface $entityManager)
+    {
+        $grupyObiektow = $entityManager->getRepository(GrupaObiektow::class)->findAll();
+        $return = [];
+        foreach ($grupyObiektow as $grupa) {
+            /** @var GrupaObiektow $grupa */
+            $return[] = [
+                'id' => $grupa->getId(),
+                'nazwa' => $grupa->getNazwa(),
+                'symbol' => $grupa->getSymbol()
+            ];
+        }
+        return new JsonResponse($return);
+    }
 }
