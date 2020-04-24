@@ -17,12 +17,24 @@ class ObiektController extends AbstractController
      */
     public function index(Request $request, EntityManagerInterface $entityManager)
     {
+        $listaGrupObiektow = $entityManager->getRepository(GrupaObiektow::class)->findAll();
+        $grupaId=$request->query->get('id');
+        if($grupaId>0){
+            $grupaObiektow=$entityManager->getRepository(GrupaObiektow::class)->find($grupaId);
+            $lista=$grupaObiektow->getObiekty();
+            return $this->render('obiekt/tabela.html.twig', [
+                'lista' => $lista,
+            ]);
+        }
+
+
         $lista = $entityManager->getRepository(Obiekt::class)->findAll();
         if ($request->isXmlHttpRequest()) {
             return new JsonResponse($this->renderView('obiekt/tabela.html.twig', ['lista' => $lista]));
         }
         return $this->render('obiekt/index.html.twig', [
-            'lista' => $lista
+            'lista' => $lista,
+            'listaGrupObiektow' => $listaGrupObiektow,
         ]);
     }
 
