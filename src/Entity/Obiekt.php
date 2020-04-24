@@ -5,7 +5,9 @@ namespace App\Entity;
 
 
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\ObiektRepository")
@@ -22,24 +24,26 @@ class Obiekt
 
     /**
      * @ORM\Column(name="symbol", type="string", nullable=false)
+     * @Assert\NotBlank()
      */
-    private string $symbol;
+    private ?string $symbol = "";
 
     /**
      * @ORM\Column(name="nazwa", type="string", nullable=false)
+     *  @Assert\NotBlank()
      */
-    private string $nazwa;
+    private ?string $nazwa ="";
 
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\GrupaObiektow", inversedBy="obiekty")
      * @ORM\JoinColumn(name="grupa_id", referencedColumnName="id")
      */
-    private GrupaObiektow $grupa;
+    private ?GrupaObiektow $grupa = null;
 
     /**
      * @ORM\OneToMany(targetEntity="App\Entity\Parametr", mappedBy="obiekt")
      */
-    private ArrayCollection $parametry;
+    private Collection $parametry;
 
     public function __construct()
     {
@@ -76,22 +80,22 @@ class Obiekt
         $this->nazwa = $nazwa;
     }
 
-    public function getGrupa(): GrupaObiektow
+    public function getGrupa(): ?GrupaObiektow
     {
         return $this->grupa;
     }
 
-    public function setGrupa(GrupaObiektow $grupa): void
+    public function setGrupa(?GrupaObiektow $grupa): void
     {
         $this->grupa = $grupa;
     }
 
-    public function getParametry(): ArrayCollection
+    public function getParametry(): Collection
     {
         return $this->parametry;
     }
 
-    public function setParametry(ArrayCollection $parametry): void
+    public function setParametry(Collection $parametry): void
     {
         $this->parametry = $parametry;
     }

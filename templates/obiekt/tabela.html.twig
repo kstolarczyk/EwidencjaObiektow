@@ -1,0 +1,40 @@
+{% trans_default_domain 'App' %}
+<table class="table table-bordered table-responsive-md w-100" id="obiekt-tabela">
+    <thead class="thead-dark">
+    <tr>
+        <th>#</th>
+        <th>{{ 'Nazwa'|trans }}</th>
+        <th>{{ 'Symbol'|trans }}</th>
+        <th>{{ 'Grupa'|trans }}</th>
+        <th>{{ 'Akcje'|trans }}</th>
+
+    </tr>
+    </thead>
+    <tbody>
+    {% for obiekt in lista %}
+        <tr >
+            <td>{{ loop.index }} </td>
+            <td >{{ obiekt.nazwa }}</td>
+            <td>{{ obiekt.symbol }}</td>
+            <td>{{ obiekt.grupa.nazwa }}</td>
+            <td>
+                <button class="btn btn-secondary dropdown-toggle" data-toggle="dropdown">
+                    <i class="fas fa-fw fa-cogs"></i></button>
+                <div class="dropdown-menu">
+                    <a class="dropdown-item" href="javascript:void(0)" onclick="Edytuj({{ obiekt.id }})">
+                        <i class="fas fa-fw fa-edit"></i>
+                        {{ 'Edytuj'|trans }}
+                    </a>
+                    <a class="dropdown-item" href="javascript:void(0)" onclick="Usun({{ obiekt.id }})">
+                        <i class="fas fa-fw fa-trash"></i>
+                        {{ 'Usun'|trans }}
+                    </a>
+                </div>
+            </td>
+        </tr>
+    {% endfor %}
+    </tbody>
+</table>
+<script>
+    $("#obiekt-tabela").DataTable();
+</script>

@@ -1,0 +1,59 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Lista obietków{% endblock %}
+{% block body %}
+    <h2 class="mb-3">{{ 'Obiekty'|trans }}</h2>
+    <button class="btn btn-primary btn-lg" onclick="Dodaj()"><i class="fas fa-fw fa-plus"></i></button>
+    {% include 'obiekt/modal.html.twig' %}
+<style>
+    .example-wrapper { margin: 1em auto; max-width: 800px; width: 95%; font: 18px/1.5 sans-serif; }
+    .example-wrapper code { background: #F5F5F5; padding: 2px 6px; }
+</style>
+
+<div class="example-wrapper">
+    <div class="card bg-light mt-4">
+        <div class="card-body">
+            {% include 'obiekt/tabela.html.twig' %}
+        </div>
+    </div>
+</div>
+
+{% endblock %}
+{% block javascripts %}
+    <script>
+        function Dodaj() {
+            $.post("{{ path('obiekt_dodaj') }}", {}, function (response, status) {
+                if (status === "success") {
+                    $("#obiekt-modal-content").html(response);
+                    $("#obiekt-modal-title").html("{{ 'Nowy.obiekt'|trans }}")
+                    $("#obiekt-modal-zapisz").data("id", 0);
+                    $("#obiekt-modal").modal("show");
+                }
+            });
+        }
+
+        function Zapisz(e) {
+            let form = $("#obiekt-modal-content").find("form");
+            let id = $(e).data("id");
+            let url = id > 0 ? "{{ path('obiekt_edytuj', {id: '9999999'}) }}".replace('9999999', id) : "{{ path('obiekt_dodaj') }}"
+            $.post(url, form.serialize(), function (response, status) {
+                if (status === "success") {
+                    if (response !== true) {
+                        $("#obiekt-modal-content").html(response);
+                    } else {
+                        $("#obiekt-modal").modal("hide");
+                        Odswiez();
+                    }
+                }
+            });
+        }
+        function Odswiez() {
+            $.get("{{ path('obiekt_index') }}", {}, function (response, status) {
+                if (status === "success") {
+                    $("#obiekt-tabela").html(response);
+                }
+            });
+        }
+
+    </script>
+{%  endblock %}
