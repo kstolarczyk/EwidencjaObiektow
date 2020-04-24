@@ -5,10 +5,19 @@
     <h2 class="mb-3">{{ 'Obiekty'|trans }}</h2>
     <button class="btn btn-primary btn-lg" onclick="Dodaj()"><i class="fas fa-fw fa-plus"></i></button>
     {% include 'obiekt/modal.html.twig' %}
-<style>
-    .example-wrapper { margin: 1em auto; max-width: 800px; width: 95%; font: 18px/1.5 sans-serif; }
-    .example-wrapper code { background: #F5F5F5; padding: 2px 6px; }
-</style>
+
+
+    <div>
+        <label>{{ 'Wybierz.grupe'|trans }}</label>
+        <select id="grupa_obiektow-select">
+            {% for grupa in listaGrupObiektow %}
+                <option value="{{ grupa.id }}" onclick="Wybierz(this.value)"> {{ grupa.nazwa }} </option>
+            {% endfor %}
+
+        </select>
+    </div>
+
+
 
 <div class="example-wrapper">
     <div class="card bg-light mt-4">
@@ -49,6 +58,14 @@
         }
         function Odswiez() {
             $.get("{{ path('obiekt_index') }}", {}, function (response, status) {
+                if (status === "success") {
+                    $("#obiekt-tabela").html(response);
+                }
+            });
+        }
+        function Wybierz(id){
+            let url="{{ path('obiekt_index', {id: '999999'}) }}".replace('999999', id);
+            $.get(url, function (response, status) {
                 if (status === "success") {
                     $("#obiekt-tabela").html(response);
                 }

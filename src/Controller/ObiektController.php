@@ -14,16 +14,28 @@ use Symfony\Component\HttpFoundation\Request;
 class ObiektController extends AbstractController
 {
     /**
-     * @Route("/obiekt", name="obiekt_index")
+     * @Route("/obiekt", name="obiekt_index", methods={"GET"})
      */
     public function index(Request $request, EntityManagerInterface $entityManager)
     {
+        $listaGrupObiektow = $entityManager->getRepository(GrupaObiektow::class)->findAll();
+        $grupaId=$request->query->get('id');
+        if($grupaId>0){
+            $grupaObiektow=$entityManager->getRepository(GrupaObiektow::class)->find($grupaId);
+            $lista=$grupaObiektow->getObiekty();
+            return $this->render('obiekt/tabela.html.twig', [
+                'lista' => $lista,
+            ]);
+        }
+
+
         $lista = $entityManager->getRepository(Obiekt::class)->findAll();
         if ($request->isXmlHttpRequest()) {
             return new JsonResponse($this->renderView('obiekt/tabela.html.twig', ['lista' => $lista]));
         }
         return $this->render('obiekt/index.html.twig', [
-            'lista' => $lista
+            'lista' => $lista,
+            'listaGrupObiektow' => $listaGrupObiektow,
         ]);
     }
 
@@ -60,5 +72,7 @@ class ObiektController extends AbstractController
 
         return new JsonResponse($this->renderView('obiekt/form.html.twig', ['form' => $form->createView()]));
     }
+
+
 
 }
