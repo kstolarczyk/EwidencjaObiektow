@@ -30,5 +30,11 @@ $(document).ajaxComplete(function (event, xhr) {
                 text: "{{ 'Nieoczekiwany.blad.aplikacji'|trans }}"
             });
             break;
+        case 403:
+            error({
+                text: "{{ 'Odmowa.dostepu'|trans }}"
+            });
+            window.location.reload();
+            break;
     }
 });
