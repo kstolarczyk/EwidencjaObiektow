@@ -28,7 +28,6 @@ class ObiektController extends AbstractController
         }
 
         $viewData = ['lista' => $lista, 'grupaId' => $grupaId];
-
         if ($request->isXmlHttpRequest()) {
             return new JsonResponse($this->renderView('obiekt/tabela.html.twig', $viewData));
         }
@@ -58,7 +57,7 @@ class ObiektController extends AbstractController
      */
     public function edytuj(Request $request, EntityManagerInterface $entityManager, Obiekt $obiekt)
     {
-        $form = $this->createForm(Obiekt::class, $obiekt);
+        $form = $this->createForm(ObiektType::class, $obiekt);
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             $entityManager->flush();
@@ -66,6 +65,16 @@ class ObiektController extends AbstractController
         }
 
         return new JsonResponse($this->renderView('obiekt/form.html.twig', ['form' => $form->createView()]));
+    }
+
+    /**
+     * @Route("/Obiekt/Usun/{id}", name="obiekt_usun", condition="request.isXmlHttpRequest()", requirements={"id":"\d+"}, methods={"POST"})
+     */
+    public function usun(EntityManagerInterface $entityManager, Obiekt $obiekt)
+    {
+        $entityManager->remove($obiekt);
+        $entityManager->flush();
+        return new JsonResponse(true);
     }
 
 }

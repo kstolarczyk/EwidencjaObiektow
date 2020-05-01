@@ -36,8 +36,9 @@ class ObiektType extends AbstractType
             ->add('parametry', CollectionType::class, [
                 'label' => false,
                 'entry_type' => ParametrType::class,
-                'allow_add' => true,
                 'by_reference' => false,
+                'allow_add' => true,
+                'allow_delete' => true,
                 'entry_options' => [
                     'label' => false
                 ]

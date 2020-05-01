@@ -45,6 +45,43 @@
             });
         }
 
+        function Edytuj(id) {
+            $.post("{{ path('obiekt_edytuj', {id: '999999'}) }}".replace('999999', id), {}, function (response, status) {
+                if (status === "success") {
+                    $("#obiekt-modal-content").html(response);
+                    $("#obiekt-modal-title").html("{{ 'Obiekt'|trans }} #" + id);
+                    $("#obiekt-modal-zapisz").data("id", id);
+                    $("#obiekt-modal").modal("show");
+                }
+            });
+        }
+
+        function Usun(id) {
+            bootbox.confirm({
+                centerVertical: true,
+                message: "{{ 'Usun.potwierdz'|trans }} #" + id,
+                callback: function (result) {
+                    if (result) {
+                        $.post("{{ path('obiekt_usun', {id: '9999999'}) }}".replace('9999999', id), {}, function (response, status) {
+                            if (status === "success") {
+                                Odswiez();
+                            }
+                        });
+                    }
+                },
+                buttons: {
+                    confirm: {
+                        label: "{{ 'Tak'|trans }}",
+                        className: "btn-danger btn-lg"
+                    },
+                    cancel: {
+                        label: "{{ 'Nie'|trans }}",
+                        className: "btn-secondary btn-lg"
+                    }
+                }
+            });
+        }
+
         function Zapisz(e) {
             let form = $("#obiekt-modal-content").find("form");
             let id = $(e).data("id");
@@ -62,9 +99,9 @@
         }
 
         function Odswiez() {
-            $.get("{{ path('obiekt_index') }}", {grupaId: '{{ grupaId }}'}, function (response, status) {
+            $.get("{{ path('obiekt_index') }}", {grupaId: $("#grupa_obiektow-select").val()}, function (response, status) {
                 if (status === "success") {
-                    $("#obiekt-tabela").html(response);
+                    $("#obiekt-lista").html(response);
                 }
             });
         }

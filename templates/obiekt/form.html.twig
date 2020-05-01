@@ -15,7 +15,9 @@
         {{ form_row(form.grupa) }}
     </div>
 </div>
-<div id="obiekt-parametry-content" data-prototype="{{ form_row(form.parametry.vars.prototype)|e('html_attr') }}"></div>
+<div id="obiekt-parametry-content" data-prototype="{{ form_row(form.parametry.vars.prototype)|e('html_attr') }}">
+    {{ form_row(form.parametry) }}
+</div>
 {{ form_end(form) }}
 <script>
     $("#obiekt_grupa").select2({

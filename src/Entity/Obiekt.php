@@ -41,7 +41,7 @@ class Obiekt
     private ?GrupaObiektow $grupa = null;
 
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\Parametr", mappedBy="obiekt", cascade={"persist"})
+     * @ORM\OneToMany(targetEntity="App\Entity\Parametr", mappedBy="obiekt", cascade={"persist", "remove"}, orphanRemoval=true)
      * @Assert\Valid()
      */
     private Collection $parametry;
