@@ -4,3 +4,12 @@
 {{ form_row(form.symbol) }}
 {{ form_row(form.typyParametrow) }}
 {{ form_end(form) }}
+<script>
+    $("#grupa_obiektow_typyParametrow").select2({
+        width: '100%',
+        allowClear: true,
+        placeholder: '{{ 'Wybierz.parametry'|trans }}...'
+    });
+
+    $('#grupa_obiektow-modal-content').find('.select2-search__field').css('width', '100%');
+</script>

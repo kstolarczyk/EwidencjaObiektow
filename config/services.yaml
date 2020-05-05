@@ -25,3 +25,14 @@ services:
 
     # add more service definitions when explicit configuration is needed
     # please note that last definitions always *replace* previous ones
+
+    Symfony\Component\HttpFoundation\Session\Storage\Handler\PdoSessionHandler:
+        arguments:
+            #            - 'sqlsrv:database=EwidencjaObiektow; host=localhost; port=1433'
+            #            - { db_username: SA, db_password: ImKox@#45 }
+
+            # If you're using Doctrine & want to re-use that connection, then:
+            # comment-out the above 2 lines and uncomment the line below
+            - !service { class: PDO, factory: ['@database_connection', 'getWrappedConnection'] }
+            # If you get transaction issues (e.g. after login) uncomment the line below
+            - { lock_mode: 1 }

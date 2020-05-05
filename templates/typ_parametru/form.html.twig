@@ -5,3 +5,9 @@
 {{ form_row(form.typDanych) }}
 {{ form_row(form.jednostkaMiary) }}
 {{ form_end(form) }}
+<script>
+    $("#typ_parametru_typDanych").select2({
+        allowClear: false,
+        width: '100%'
+    });
+</script>

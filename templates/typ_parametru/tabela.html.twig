@@ -18,10 +18,19 @@
             <td>{{ typ.symbol }}</td>
             <td>{{ typ.typDanych|trans([],'TypDanych') }}</td>
             <td>{{ typ.jednostkaMiary }}</td>
-            <td class="text-nowrap">
-                <button class="btn btn-primary" onclick="Edytuj({{ typ.id }})"><i class="fas fa-fw fa-edit"></i>
-                </button>
-                <button class="btn btn-danger" onclick="Usun({{ typ.id }})"><i class="fas fa-fw fa-trash"></i></button>
+            <td>
+                <button class="btn btn-secondary dropdown-toggle" data-toggle="dropdown">
+                    <i class="fas fa-fw fa-cogs"></i></button>
+                <div class="dropdown-menu">
+                    <a class="dropdown-item" href="javascript:void(0)" onclick="Edytuj({{ typ.id }})">
+                        <i class="fas fa-fw fa-edit"></i>
+                        {{ 'Edytuj'|trans }}
+                    </a>
+                    <a class="dropdown-item" href="javascript:void(0)" onclick="Usun({{ typ.id }})">
+                        <i class="fas fa-fw fa-trash"></i>
+                        {{ 'Usun'|trans }}
+                    </a>
+                </div>
             </td>
         </tr>
     {% endfor %}

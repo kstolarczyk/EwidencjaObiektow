@@ -7,6 +7,10 @@ $.fn.enable = function () {
     $(this).prop("disabled", false);
 };
 
+$(document).on("shown.bs.modal", ".modal", function () {
+    $(this).find(":focusable:not(button)").first().focus();
+});
+
 $(document).ajaxStart(function () {
     let buttons = $(".btn:not(.ajax-disabled)");
     buttons.addClass("ajax-disabled");
