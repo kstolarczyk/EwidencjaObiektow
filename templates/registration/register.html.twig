@@ -11,30 +11,16 @@
                         <h3 class="text-center font-weight-light my-4">{{ 'Stworz.konto'|trans }}</h3>
                     </div>
                     <div class="card-body">
-                        <form method="post">
-                            <div class="form-group">
-                                <label class="small mb-1" for="username">{{ 'Nazwa.uzytkownika'|trans }}</label>
-                                <input class="form-control py-4" name="registration[username]" id="username" type="text" placeholder="{{ 'Wprowadz.uzytkownika'|trans }}"/>
-                            </div>
-                            <div class="form-group">
-                                <label class="small mb-1" for="email">{{ 'Adres.email'|trans }}</label>
-                                <input class="form-control py-4" name="registration[email]" id="email" type="email" aria-describedby="emailHelp" placeholder="{{ 'Wprowadz.email'|trans }}"/>
-                            </div>
-
-                            <div class="form-group">
-                                <label class="small mb-1" for="inputPassword">{{ 'Haslo'|trans }}</label>
-                                <input class="form-control py-4" name="registration[plainPassword][first]" id="inputPassword" type="password" placeholder="{{ 'Wprowadz.haslo'|trans }}"/>
-                            </div>
-
-                            <div class="form-group">
-                                <label class="small mb-1" for="inputConfirmPassword">{{ 'Potwierdz.haslo'|trans }}</label>
-                                <input class="form-control py-4" name="registration[plainPassword][second]" id="inputConfirmPassword" type="password" placeholder="{{ 'Potwierdz.haslo'|trans }}"/>
-                            </div>
-                            <div class="form-group mt-4 mb-0">
-                                <button type="submit" class="btn btn-primary btn-lg btn-block">{{ 'Zarejestruj'|trans }}</button>
-                            </div>
-                            {{ form_row(registrationForm._token) }}
-                        </form>
+                        {{ form_start(form) }}
+                        {{ form_errors(form) }}
+                        {{ form_row(form.username, {attr: {class: 'py-4', placeholder: 'Wprowadz.uzytkownika'|trans}, label_attr: {class: 'small mb-1'}}) }}
+                        {{ form_row(form.email, {attr: {class: 'py-4', placeholder: 'Wprowadz.email'|trans}, label_attr: {class: 'small mb-1'}}) }}
+                        {{ form_row(form.plainPassword.pass, {attr: {class: 'py-4', placeholder: 'Wprowadz.haslo'|trans}, label_attr: {class: 'small mb-1'}}) }}
+                        {{ form_row(form.plainPassword.confirm, {attr: {class: 'py-4', placeholder: 'Powtorz.haslo'|trans}, label_attr: {class: 'small mb-1'}}) }}
+                        <div class="form-group mt-4 mb-0">
+                            <button type="submit" class="btn btn-primary btn-lg btn-block">{{ 'Zarejestruj'|trans }}</button>
+                        </div>
+                        {{ form_end(form) }}
                     </div>
                     <div class="card-footer text-center">
                         <div class="small">

@@ -20,14 +20,16 @@ class ObiektController extends AbstractController
     {
         $grupaId = $request->query->getInt('grupaId', 0);
         $lista = [];
+        $typyParametrow = [];
         if ($grupaId > 0) {
             $grupaObiektow = $entityManager->getRepository(GrupaObiektow::class)->find($grupaId);
             if ($grupaObiektow instanceof GrupaObiektow) {
                 $lista = $grupaObiektow->getObiekty();
+                $typyParametrow = $grupaObiektow->getTypyParametrow();
             }
         }
 
-        $viewData = ['lista' => $lista, 'grupaId' => $grupaId];
+        $viewData = ['lista' => $lista, 'grupaId' => $grupaId, 'typyParametrow' => $typyParametrow];
         if ($request->isXmlHttpRequest()) {
             return new JsonResponse($this->renderView('obiekt/tabela.html.twig', $viewData));
         }

@@ -8,7 +8,9 @@
                     <th>#</th>
                     <th>{{ 'Nazwa'|trans }}</th>
                     <th>{{ 'Symbol'|trans }}</th>
-                    <th>{{ 'Grupa'|trans }}</th>
+                    {% for typ in typyParametrow %}
+                        <th>{{ typ.nazwa }} {% if typ.jednostkaMiary %}[{{ typ.jednostkaMiary }}]{% endif %}</th>
+                    {% endfor %}
                     <th>{{ 'Akcje'|trans }}</th>
                 </tr>
                 </thead>
@@ -18,7 +20,9 @@
                         <td>{{ loop.index }} </td>
                         <td>{{ obiekt.nazwa }}</td>
                         <td>{{ obiekt.symbol }}</td>
-                        <td>{{ obiekt.grupa.nazwa }}</td>
+                        {% for parametr in obiekt.parametry %}
+                            <td>{{ parametr.value }}</td>
+                        {% endfor %}
                         <td>
                             <button class="btn btn-secondary dropdown-toggle" data-toggle="dropdown">
                                 <i class="fas fa-fw fa-cogs"></i></button>
