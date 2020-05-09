@@ -1,11 +1,10 @@
 {% trans_default_domain 'App' %}
 {% extends 'modal.base.html.twig' %}
+{% block modal_size %}modal-lg{% endblock %}
 {% block modal_id %}grupa_obiektow-szczegoly-modal{% endblock %}
 {% block modal_title_id %}grupa_obiektow-szczegoly-modal-title{% endblock %}
 {% block modal_body %}
-    <div id="grupa_obiektow-szczegoly-modal-content">
-        {% include 'grupa_obiektow/szczegoly-tabela.html.twig' %}
-    </div>
+    <div id="grupa_obiektow-szczegoly-modal-content"></div>
 {% endblock %}
 {% block modal_footer %}
     {{ parent() }}

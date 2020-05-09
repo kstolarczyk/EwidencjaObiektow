@@ -86,11 +86,12 @@
             });
         }
 
-        function Szczegoly(id) {
-            let path="{{ path('grupa_obiektow_szczegoly', {Id: '9999999'}) }}".replace('9999999', id)
+        function Szczegoly(id, nazwa) {
+            let path = "{{ path('grupa_obiektow_szczegoly', {id: '9999999'}) }}".replace('9999999', id)
             $.get(path, function (response, status) {
                 if (status === "success") {
                     $("#grupa_obiektow-szczegoly-modal-content").html(response);
+                    $("#grupa_obiektow-szczegoly-modal-title").html(nazwa);
                     $("#grupa_obiektow-szczegoly-modal").modal("show");
                 }
 

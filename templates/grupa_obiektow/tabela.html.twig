@@ -18,6 +18,10 @@
                 <button class="btn btn-secondary dropdown-toggle" data-toggle="dropdown">
                     <i class="fas fa-fw fa-cogs"></i></button>
                 <div class="dropdown-menu">
+                    <a class="dropdown-item" href="javascript:void(0)" onclick="Szczegoly({{ grupa.id }}, '{{ grupa.nazwa }}')">
+                        <i class="fas fa-fw fa-info-circle"></i>
+                        {{ 'Szczegoly'|trans }}
+                    </a>
                     <a class="dropdown-item" href="javascript:void(0)" onclick="Edytuj({{ grupa.id }})">
                         <i class="fas fa-fw fa-edit"></i>
                         {{ 'Edytuj'|trans }}
@@ -25,10 +29,6 @@
                     <a class="dropdown-item" href="javascript:void(0)" onclick="Usun({{ grupa.id }})">
                         <i class="fas fa-fw fa-trash"></i>
                         {{ 'Usun'|trans }}
-                    </a>
-                    <a class="dropdown-item" href="javascript:void(0)" onclick="Szczegoly({{ grupa.id }})">
-                        <i class="fas fa-fw fa-info"></i>
-                        {{ 'Szczegoly'|trans }}
                     </a>
                 </div>
             </td>
