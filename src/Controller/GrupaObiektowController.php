@@ -18,12 +18,11 @@ class GrupaObiektowController extends AbstractController
     public function index(Request $request, EntityManagerInterface $entityManager)
     {
         $lista = $entityManager->getRepository(GrupaObiektow::class)->findAll();
+        $viewData = ['lista' => $lista, 'szczegoly' => null];
         if ($request->isXmlHttpRequest()) {
-            return new JsonResponse($this->renderView('grupa_obiektow/tabela.html.twig', ['lista' => $lista]));
+            return new JsonResponse($this->renderView('grupa_obiektow/tabela.html.twig', $viewData));
         }
-        return $this->render('grupa_obiektow/index.html.twig', [
-            'lista' => $lista
-        ]);
+        return $this->render('grupa_obiektow/index.html.twig', $viewData);
     }
 
     /**
@@ -84,5 +83,19 @@ class GrupaObiektowController extends AbstractController
             ];
         }
         return new JsonResponse($return);
+    }
+
+    /**
+     * @Route("/GrupaObiektow/Szczegoly", name="grupa_obiektow_szczegoly", condition="request.isXmlHttpRequest()")
+     */
+    public function szczegoly(EntityManagerInterface $entityManager, Request $request)
+    {
+        $grupaId=$request->query->getInt('Id', 0);
+        $grupaObiektow = $entityManager->getRepository(GrupaObiektow::class)->find($grupaId);
+        $typyParametrow=[];
+        if ($grupaObiektow instanceof GrupaObiektow) {
+            $typyParametrow= $grupaObiektow->getTypyParametrow();
+        }
+        return new JsonResponse($this->renderView('grupa_obiektow/szczegoly-tabela.html.twig', ['szczegoly' => $typyParametrow]));
     }
 }

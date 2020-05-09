@@ -9,6 +9,8 @@
         </div>
     </div>
     {% include 'grupa_obiektow/modal.html.twig' %}
+    {% include 'grupa_obiektow/szczegoly-modal.html.twig' %}
+
 {% endblock %}
 {% block javascripts %}
     <script>
@@ -83,5 +85,17 @@
                 }
             });
         }
+
+        function Szczegoly(id) {
+            let path="{{ path('grupa_obiektow_szczegoly', {Id: '9999999'}) }}".replace('9999999', id)
+            $.get(path, function (response, status) {
+                if (status === "success") {
+                    $("#grupa_obiektow-szczegoly-modal-content").html(response);
+                    $("#grupa_obiektow-szczegoly-modal").modal("show");
+                }
+
+            });
+        }
+
     </script>
 {% endblock %}

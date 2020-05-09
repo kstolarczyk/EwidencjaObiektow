@@ -1,0 +1,26 @@
+{% trans_default_domain 'App' %}
+<table class="table table-bordered table-responsive-md w-100 table-responsive" id="grupa_obiektow-szczegoly-tabela">
+    <thead class="thead-dark">
+    <tr>
+        <th>#</th>
+        <th>{{ 'Nazwa'|trans }}</th>
+        <th>{{ 'Symbol'|trans }}</th>
+        <th>{{ 'Typ.danych'|trans }}</th>
+        <th>{{ 'Jednostka.miary'|trans }}</th>
+    </tr>
+    </thead>
+    <tbody>
+    {% for parametr in szczegoly %}
+        <tr>
+            <td>{{ loop.index }}</td>
+            <td>{{ parametr.nazwa }}</td>
+            <td>{{ parametr.symbol }}</td>
+            <td>{{ parametr.typDanych }}</td>
+            <td>{{ parametr.jednostkaMiary }}</td>
+        </tr>
+    {% endfor %}
+    </tbody>
+</table>
+<script>
+    $("#grupa_obiektow-szczegoly-tabela").DataTable();
+</script>
