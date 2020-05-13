@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\GrupaObiektow;
 use App\Entity\Obiekt;
+use App\Entity\TypParametru;
 use App\Form\ObiektType;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -50,7 +51,10 @@ class ObiektController extends AbstractController
             return new JsonResponse(true);
         }
 
-        return new JsonResponse($this->renderView('obiekt/form.html.twig', ['form' => $form->createView()]));
+        return new JsonResponse($this->renderView('obiekt/form.html.twig', [
+            'form' => $form->createView(),
+            'enum_type' => TypParametru::ENUM
+        ]));
     }
 
 
@@ -66,7 +70,10 @@ class ObiektController extends AbstractController
             return new JsonResponse(true);
         }
 
-        return new JsonResponse($this->renderView('obiekt/form.html.twig', ['form' => $form->createView()]));
+        return new JsonResponse($this->renderView('obiekt/form.html.twig', [
+            'form' => $form->createView(),
+            'enum_type' => TypParametru::ENUM
+        ]));
     }
 
     /**

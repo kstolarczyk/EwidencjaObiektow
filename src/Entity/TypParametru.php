@@ -41,6 +41,10 @@ class TypParametru
      */
     private ?string $jednostkaMiary = null;
 
+    /**
+     * @ORM\Column(name="akceptowalne_wartosci", type="array", nullable=true)
+     */
+    private ?array $akceptowalneWartosci = null;
 
     public function getId(): int
     {
@@ -92,6 +96,16 @@ class TypParametru
         $this->jednostkaMiary = $jednostkaMiary;
     }
 
+    public function getAkceptowalneWartosci(): ?array
+    {
+        return $this->akceptowalneWartosci;
+    }
+
+    public function setAkceptowalneWartosci(?array $akceptowalneWartosci): void
+    {
+        $this->akceptowalneWartosci = $akceptowalneWartosci;
+    }
+
 
     public const DATE = "DATE";
     public const DATETIME = "DATETIME";
@@ -99,6 +113,7 @@ class TypParametru
     public const INT = "INT";
     public const FLOAT = "FLOAT";
     public const STRING = "STRING";
+    public const ENUM = "ENUM";
 
     public static function getTypyDanych(): array
     {
@@ -108,7 +123,8 @@ class TypParametru
             static::STRING,
             static::DATE,
             static::TIME,
-            static::DATETIME
+            static::DATETIME,
+            static::ENUM
         ];
     }
 }

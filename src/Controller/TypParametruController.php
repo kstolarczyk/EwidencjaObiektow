@@ -26,7 +26,9 @@ class TypParametruController extends BaseController
             return new JsonResponse(true);
         }
         return new JsonResponse($this->renderView('typ_parametru/form.html.twig', [
-            'form' => $form->createView()
+            'form' => $form->createView(),
+            'enum_type' => TypParametru::ENUM,
+            'akceptowalne_hidden' => $typParametru->getTypDanych() !== TypParametru::ENUM
         ]));
     }
 
@@ -42,7 +44,11 @@ class TypParametruController extends BaseController
             return new JsonResponse(true);
         }
 
-        return new JsonResponse($this->renderView('typ_parametru/form.html.twig', ['form' => $form->createView()]));
+        return new JsonResponse($this->renderView('typ_parametru/form.html.twig', [
+            'form' => $form->createView(),
+            'enum_type' => TypParametru::ENUM,
+            'akceptowalne_hidden' => $typParametru->getTypDanych() !== TypParametru::ENUM
+        ]));
     }
 
     /**
@@ -92,10 +98,19 @@ class TypParametruController extends BaseController
                 'nazwa' => $typ->getNazwa(),
                 'symbol' => $typ->getSymbol(),
                 'jednostkaMiary' => $typ->getJednostkaMiary(),
-                'typDanych' => $typ->getTypDanych()
+                'typDanych' => $typ->getTypDanych(),
+                'akceptowalneWartosci' => $typ->getAkceptowalneWartosci()
             ];
         }
 
         return new JsonResponse($return);
+    }
+
+    /**
+     * @Route("/TypParametru/TypyDanych", name="typ_parametru_typy_danych", condition="request.isXmlHttpRequest()")
+     */
+    public function getTypyDanych()
+    {
+        return new JsonResponse(TypParametru::getTypyDanych());
     }
 }
