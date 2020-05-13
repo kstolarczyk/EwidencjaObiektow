@@ -5,8 +5,8 @@ if (!Encore.isRuntimeEnvironmentConfigured()) {
     Encore.configureRuntimeEnvironment(process.env.NODE_ENV || 'dev');
 }
 
-var publicPath = Encore.isProduction() ? '/EwidencjaObiektow/build' : '/EwidencjaObiektow/build';
-var manifestKey = Encore.isProduction() ? 'EwidencjaObiektow/build/' : 'EwidencjaObiektow/build/';
+var publicPath = Encore.isProduction() ? '/build' : '/build';
+var manifestKey = Encore.isProduction() ? 'build/' : 'build/';
 Encore
     // directory where compiled assets will be stored
     .setOutputPath('public/build/')
