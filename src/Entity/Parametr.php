@@ -36,7 +36,7 @@ class Parametr
     private ?Obiekt $obiekt = null;
 
     /**
-     * @ORM\Column(name="value", type="string", nullable=false)
+     * @ORM\Column(name="value", type="string", nullable=true)
      */
     private ?string $value = null;
 

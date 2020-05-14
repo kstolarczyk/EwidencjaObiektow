@@ -28,13 +28,31 @@ class ObiektController extends AbstractController
                 $lista = $grupaObiektow->getObiekty();
                 $typyParametrow = $grupaObiektow->getTypyParametrow();
             }
+
         }
 
         $viewData = ['lista' => $lista, 'grupaId' => $grupaId, 'typyParametrow' => $typyParametrow];
         if ($request->isXmlHttpRequest()) {
-            return new JsonResponse($this->renderView('obiekt/tabela.html.twig', $viewData));
+            return new JsonResponse($this->renderView('obiekt/tabela.ajax.html.twig', $viewData));
         }
         return $this->render('obiekt/index.html.twig', $viewData);
+    }
+
+    /**
+     * @Route("/Obiekt/Ajax/{id}", name="obiekt_ajax_lista", condition="request.isXmlHttpRequest()")
+     */
+    public function listaObiektow(Request $request, EntityManagerInterface $entityManager, GrupaObiektow $grupaObiektow)
+    {
+        $params = $request->query->all();
+        $lista = $entityManager->getRepository(Obiekt::class)
+            ->findBy(['grupa' => $grupaObiektow], $params['order'], $params['length'], $params['start'])
+            ->map(fn(Obiekt $obiekt) => $obiekt->toArrayView());
+        return new JsonResponse([
+            'draw' => $params['draw'] + 1,
+            'recordsTotal' => $lista->count(),
+            'recordsFiltered' => $lista->count(),
+            'data' => $lista->toArray()
+        ]);
     }
 
     /**

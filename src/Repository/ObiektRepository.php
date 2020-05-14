@@ -4,9 +4,7 @@
 namespace App\Repository;
 
 
-use Doctrine\ORM\EntityRepository;
-
-class ObiektRepository extends EntityRepository
+class ObiektRepository extends BaseRepository
 {
 
 }

@@ -30,9 +30,9 @@ class Obiekt
 
     /**
      * @ORM\Column(name="nazwa", type="string", nullable=false)
-     *  @Assert\NotBlank()
+     * @Assert\NotBlank()
      */
-    private ?string $nazwa ="";
+    private ?string $nazwa = "";
 
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\GrupaObiektow", inversedBy="obiekty")
@@ -41,7 +41,7 @@ class Obiekt
     private ?GrupaObiektow $grupa = null;
 
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\Parametr", mappedBy="obiekt", cascade={"persist", "remove"}, orphanRemoval=true)
+     * @ORM\OneToMany(targetEntity="App\Entity\Parametr", mappedBy="obiekt", cascade={"persist","remove"}, orphanRemoval=true)
      * @Assert\Valid()
      */
     private Collection $parametry;
@@ -113,6 +113,18 @@ class Obiekt
     public function removeParametry(Parametr $parametr): bool
     {
         return $this->parametry->removeElement($parametr);
+    }
+
+    public function toArrayView(): array
+    {
+        return [
+                'id' => $this->id,
+                'nazwa' => $this->nazwa,
+                'symbol' => $this->symbol
+            ] + array_reduce($this->parametry->toArray(),
+                fn(array $r, Parametr $p) => $r + [$p->getTyp()->getSymbol() => $p->getValue()],
+                []
+            );
     }
 
 }

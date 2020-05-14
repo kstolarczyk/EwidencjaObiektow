@@ -12,7 +12,7 @@
         </div>
     </div>
     <div id="obiekt-lista" class="mt-4">
-        {% include 'obiekt/tabela.html.twig' %}
+        {% include 'obiekt/tabela.ajax.html.twig' %}
     </div>
 
     {% include 'obiekt/modal.html.twig' %}
@@ -99,17 +99,13 @@
         }
 
         function Odswiez() {
-            $.get("{{ path('obiekt_index') }}", {grupaId: $("#grupa_obiektow-select").val()}, function (response, status) {
-                if (status === "success") {
-                    $("#obiekt-lista").html(response);
-                }
-            });
+            $("#obiekty-lista").DataTable().ajax.reload();
         }
 
         function Wybierz(id) {
             $.get("{{ path('obiekt_index') }}", {grupaId: id}, function (response, status) {
                 if (status === "success") {
-                    $("#obiekt-lista").html(response);
+                    $("#obiekt-lista").empty().html(response);
                 }
             });
         }
