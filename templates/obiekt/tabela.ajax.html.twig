@@ -8,9 +8,9 @@
                     <th data-key="nazwa">{{ 'Nazwa'|trans }}</th>
                     <th data-key="symbol">{{ 'Symbol'|trans }}</th>
                     {% for typ in typyParametrow %}
-                        <th data-key="{{ typ.symbol }}">{{ typ.nazwa }} {% if typ.jednostkaMiary %}[{{ typ.jednostkaMiary }}]{% endif %}</th>
+                        <th data-orderable="false" data-key="#{{ typ.id }}">{{ typ.nazwa }} {% if typ.jednostkaMiary %}[{{ typ.jednostkaMiary }}]{% endif %}</th>
                     {% endfor %}
-                    <th data-render="ObiektAkcje" class="custom-render">{{ 'Akcje'|trans }}</th>
+                    <th data-render="ObiektAkcje" data-class="text-center" data-orderable="false" class="custom-render custom-class">{{ 'Akcje'|trans }}</th>
                 </tr>
                 </thead>
             </table>
@@ -18,7 +18,7 @@
     </div>
     <script>
         function ObiektAkcje(row) {
-            return '{{ include('obiekt.dropdown.html.twig')|e('js') }}'.replace(/'__obiektId__'/g, row.id);
+            return '{{ include('obiekt/obiekt.dropdown.html.twig')|e('js') }}'.replace(/'__obiektId__'/g, row.id);
         }
 
         $("#obiekt-tabela").ajaxDataTable('{{ path('obiekt_ajax_lista', {id: grupaId}) }}', {}).on('xhr.dt', function (e) {

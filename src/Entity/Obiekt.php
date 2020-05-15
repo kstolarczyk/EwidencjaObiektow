@@ -13,7 +13,7 @@ use Symfony\Component\Validator\Constraints as Assert;
  * @ORM\Entity(repositoryClass="App\Repository\ObiektRepository")
  * @ORM\Table(name="obiekty")
  */
-class Obiekt
+class Obiekt implements Searchable
 {
     /**
      * @ORM\Id()
@@ -45,6 +45,7 @@ class Obiekt
      * @Assert\Valid()
      */
     private Collection $parametry;
+
 
     public function __construct()
     {
@@ -122,9 +123,13 @@ class Obiekt
                 'nazwa' => $this->nazwa,
                 'symbol' => $this->symbol
             ] + array_reduce($this->parametry->toArray(),
-                fn(array $r, Parametr $p) => $r + [$p->getTyp()->getSymbol() => $p->getValue()],
+                fn(array $r, Parametr $p) => $r + ['#' . $p->getTyp()->getId() => $p->getValue()],
                 []
             );
     }
 
+    public static function getSearchableProperties(): array
+    {
+        return ['nazwa', 'symbol'];
+    }
 }

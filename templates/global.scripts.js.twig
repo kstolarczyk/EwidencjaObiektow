@@ -10,7 +10,9 @@ $.fn.enable = function () {
 $.fn.ajaxDataTable = function (url, data, dtOptions) {
     let thCols = $(this).find("thead th");
     let defOptions = {
+        language: {% include 'datatable.lang.'~app.request.locale~'.json' %},
         serverSide: true,
+        searchDelay: 250,
         ajax: {
             url: url,
             data: function (readyData) {
@@ -50,7 +52,20 @@ $.fn.ajaxDataTable = function (url, data, dtOptions) {
             }
         ]
     };
-    return $(this).DataTable(Object.assign(defOptions, dtOptions));
+    let dt = $(this).DataTable(Object.assign(defOptions, dtOptions));
+    let dtSearchField = $(this).closest(".dataTables_wrapper").find("div.dataTables_filter input");
+    let searchTimeout = null;
+    dtSearchField.off("keyup.DT input.DT cut.DT paste.DT")
+        .on("paste.DT cut.DT input.DT", function () {
+            clearTimeout(searchTimeout);
+            searchTimeout = setTimeout(function () {
+                let searchText = dtSearchField.val();
+                if (searchText === '' || searchText.length >= 2) {
+                    dt.search(searchText).draw();
+                }
+            }, dt.settings().searchDelay);
+        });
+    return dt;
 };
 
 $(document).on("shown.bs.modal", ".modal", function () {

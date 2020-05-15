@@ -44,14 +44,15 @@ class ObiektController extends AbstractController
     public function listaObiektow(Request $request, EntityManagerInterface $entityManager, GrupaObiektow $grupaObiektow)
     {
         $params = $request->query->all();
+        $total = 0;
         $lista = $entityManager->getRepository(Obiekt::class)
-            ->findBy(['grupa' => $grupaObiektow], $params['order'], $params['length'], $params['start'])
+            ->dtFindBy(['grupa' => $grupaObiektow], $params['order'], $params['length'], $params['start'], $params['search']['value'], $total)
             ->map(fn(Obiekt $obiekt) => $obiekt->toArrayView());
         return new JsonResponse([
             'draw' => $params['draw'] + 1,
-            'recordsTotal' => $lista->count(),
+            'recordsTotal' => $total,
             'recordsFiltered' => $lista->count(),
-            'data' => $lista->toArray()
+            'data' => $lista->getValues()
         ]);
     }
 
