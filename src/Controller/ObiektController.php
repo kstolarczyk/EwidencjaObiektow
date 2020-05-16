@@ -45,13 +45,14 @@ class ObiektController extends AbstractController
     {
         $params = $request->query->all();
         $total = 0;
+        $filtered = 0;
         $lista = $entityManager->getRepository(Obiekt::class)
-            ->dtFindBy(['grupa' => $grupaObiektow], $params['order'], $params['length'], $params['start'], $params['search']['value'], $total)
-            ->map(fn(Obiekt $obiekt) => $obiekt->toArrayView());
+            ->dtFindBy(['grupa' => $grupaObiektow],
+                $params['order'], $params['length'], $params['start'], $params['search']['value'], $total, $filtered);
         return new JsonResponse([
             'draw' => $params['draw'] + 1,
             'recordsTotal' => $total,
-            'recordsFiltered' => $lista->count(),
+            'recordsFiltered' => $filtered,
             'data' => $lista->getValues()
         ]);
     }

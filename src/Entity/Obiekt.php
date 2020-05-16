@@ -37,6 +37,7 @@ class Obiekt implements Searchable
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\GrupaObiektow", inversedBy="obiekty")
      * @ORM\JoinColumn(name="grupa_id", referencedColumnName="id")
+     * @Assert\NotBlank()
      */
     private ?GrupaObiektow $grupa = null;
 
@@ -50,6 +51,11 @@ class Obiekt implements Searchable
     public function __construct()
     {
         $this->parametry = new ArrayCollection();
+    }
+
+    public static function getSearchableProperties(): array
+    {
+        return ['nazwa', 'symbol'];
     }
 
     public function getId(): int
@@ -114,22 +120,5 @@ class Obiekt implements Searchable
     public function removeParametry(Parametr $parametr): bool
     {
         return $this->parametry->removeElement($parametr);
-    }
-
-    public function toArrayView(): array
-    {
-        return [
-                'id' => $this->id,
-                'nazwa' => $this->nazwa,
-                'symbol' => $this->symbol
-            ] + array_reduce($this->parametry->toArray(),
-                fn(array $r, Parametr $p) => $r + ['#' . $p->getTyp()->getId() => $p->getValue()],
-                []
-            );
-    }
-
-    public static function getSearchableProperties(): array
-    {
-        return ['nazwa', 'symbol'];
     }
 }

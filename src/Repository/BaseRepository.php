@@ -21,7 +21,7 @@ class BaseRepository extends EntityRepository
         return new ArrayCollection(parent::findBy($criteria, $orderBy, $limit, $offset));
     }
 
-    public function dtFindBy(array $criteria, array $orderBy = null, $limit = null, $offset = null, $search = '', &$total = 0): Collection
+    public function dtFindBy(array $criteria = [], array $orderBy = [], ?int $limit = null, ?int $offset = null, ?string $search = '', ?int &$total = 0): Collection
     {
         $total = $this->count($criteria);
         $query = $this->createQueryBuilder('e');
