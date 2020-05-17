@@ -8,7 +8,7 @@
                     <th data-key="nazwa">{{ 'Nazwa'|trans }}</th>
                     <th data-key="symbol">{{ 'Symbol'|trans }}</th>
                     {% for typ in typyParametrow %}
-                        <th data-key="p{{ loop.index }}">{{ typ.nazwa }} {% if typ.jednostkaMiary %}[{{ typ.jednostkaMiary }}]{% endif %}</th>
+                        <th data-key="param{{ loop.index }}">{{ typ.nazwa }} {% if typ.jednostkaMiary %}[{{ typ.jednostkaMiary }}]{% endif %}</th>
                     {% endfor %}
                     <th data-render="ObiektAkcje" data-class="text-center" data-orderable="false" class="custom-render custom-class">{{ 'Akcje'|trans }}</th>
                 </tr>

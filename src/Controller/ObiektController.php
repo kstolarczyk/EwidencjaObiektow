@@ -44,8 +44,6 @@ class ObiektController extends AbstractController
     public function listaObiektow(Request $request, EntityManagerInterface $entityManager, GrupaObiektow $grupaObiektow)
     {
         $params = $request->query->all();
-        $total = 0;
-        $filtered = 0;
         $lista = $entityManager->getRepository(Obiekt::class)
             ->dtFindBy(['grupa' => $grupaObiektow],
                 $params['order'], $params['length'], $params['start'], $params['search']['value'], $total, $filtered);
