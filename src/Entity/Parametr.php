@@ -5,6 +5,8 @@ namespace App\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Component\Validator\ConstraintViolation;
+use Symfony\Component\Validator\Context\ExecutionContextInterface;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\ParametrRepository")
@@ -34,10 +36,72 @@ class Parametr
     private ?Obiekt $obiekt = null;
 
     /**
-     * @ORM\Column(name="value", type="string", nullable=false)
-     * @Assert\NotBlank()
+     * @ORM\Column(name="value", type="string", nullable=true)
      */
     private ?string $value = null;
+
+    /**
+     * @Assert\Callback()
+     */
+    public function validate(ExecutionContextInterface $executionContext)
+    {
+        $typ = $this->getTyp();
+        if (!$typ instanceof TypParametru) return;
+        $value = $this->getValue();
+        switch ($typ->getTypDanych()) {
+            case TypParametru::STRING:
+                break;
+            case TypParametru::INT:
+                if ($value !== (string)(int)$value) {
+                    $executionContext->buildViolation('The value should be an integer')
+                        ->atPath('value')
+                        ->addViolation();
+                }
+                break;
+            case TypParametru::FLOAT:
+                if ($value !== (string)(float)$value) {
+                    $executionContext->buildViolation('The value should be float')
+                        ->atPath('value')
+                        ->addViolation();
+                }
+                break;
+            case TypParametru::DATETIME:
+                $errors = $executionContext->getValidator()->validate($value, Assert\DateTime::class);
+                foreach ($errors as $error) {
+                    /** @var ConstraintViolation $error */
+                    $executionContext->buildViolation($error->getMessage())
+                        ->atPath($error->getPropertyPath())
+                        ->addViolation();
+                }
+                break;
+            case TypParametru::DATE:
+                $errors = $executionContext->getValidator()->validate($value, Assert\Date::class);
+                foreach ($errors as $error) {
+                    /** @var ConstraintViolation $error */
+                    $executionContext->buildViolation($error->getMessage())
+                        ->atPath($error->getPropertyPath())
+                        ->addViolation();
+                }
+                break;
+            case TypParametru::TIME:
+                $errors = $executionContext->getValidator()->validate($value, Assert\Time::class);
+                foreach ($errors as $error) {
+                    /** @var ConstraintViolation $error */
+                    $executionContext->buildViolation($error->getMessage())
+                        ->atPath($error->getPropertyPath())
+                        ->addViolation();
+                }
+                break;
+            case TypParametru::ENUM:
+                $acceptedValues = $typ->getAkceptowalneWartosci();
+                if (!in_array($value, $acceptedValues)) {
+                    $executionContext->buildViolation('Not acceptable value')
+                        ->atPath('value')
+                        ->addViolation();
+                }
+                break;
+        }
+    }
 
     public function getId(): int
     {

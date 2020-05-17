@@ -20,6 +20,10 @@
 </div>
 {{ form_end(form) }}
 <script>
+    $("select").select2({
+        allowClear: false,
+        width: '100%'
+    });
     $("#obiekt_grupa").select2({
         allowClear: true,
         placeholder: "{{ 'Wybierz.grupe'|trans }}...",
@@ -35,7 +39,17 @@
                 $.each(response, function (i, typ) {
                     let label = typ.nazwa + (typ.jednostkaMiary ? " [" + typ.jednostkaMiary + "]" : "");
                     let html = formFactor.replace(/__name__/g, i).replace("__label__", label);
-                    contentElement.append(html);
+                    if (typ.typDanych === '{{ enum_type }}') {
+                        html = html.replace('input', 'select');
+                        contentElement.append(html);
+                        $("#obiekt_parametry_" + i + "_value").select2({
+                            allowClear: false,
+                            width: '100%',
+                            data: typ.akceptowalneWartosci
+                        });
+                    } else {
+                        contentElement.append(html);
+                    }
                     $("#obiekt_parametry_" + i + "_typ").val(typ.id);
                 });
             }

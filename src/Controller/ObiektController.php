@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\GrupaObiektow;
 use App\Entity\Obiekt;
+use App\Entity\TypParametru;
 use App\Form\ObiektType;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -27,13 +28,31 @@ class ObiektController extends AbstractController
                 $lista = $grupaObiektow->getObiekty();
                 $typyParametrow = $grupaObiektow->getTypyParametrow();
             }
+
         }
 
         $viewData = ['lista' => $lista, 'grupaId' => $grupaId, 'typyParametrow' => $typyParametrow];
         if ($request->isXmlHttpRequest()) {
-            return new JsonResponse($this->renderView('obiekt/tabela.html.twig', $viewData));
+            return new JsonResponse($this->renderView('obiekt/tabela.ajax.html.twig', $viewData));
         }
         return $this->render('obiekt/index.html.twig', $viewData);
+    }
+
+    /**
+     * @Route("/Obiekt/Ajax/{id}", name="obiekt_ajax_lista", condition="request.isXmlHttpRequest()")
+     */
+    public function listaObiektow(Request $request, EntityManagerInterface $entityManager, GrupaObiektow $grupaObiektow)
+    {
+        $params = $request->query->all();
+        $lista = $entityManager->getRepository(Obiekt::class)
+            ->dtFindBy(['grupa' => $grupaObiektow],
+                $params['order'], $params['length'], $params['start'], $params['search']['value'], $total, $filtered);
+        return new JsonResponse([
+            'draw' => $params['draw'] + 1,
+            'recordsTotal' => $total,
+            'recordsFiltered' => $filtered,
+            'data' => $lista->getValues()
+        ]);
     }
 
     /**
@@ -50,7 +69,10 @@ class ObiektController extends AbstractController
             return new JsonResponse(true);
         }
 
-        return new JsonResponse($this->renderView('obiekt/form.html.twig', ['form' => $form->createView()]));
+        return new JsonResponse($this->renderView('obiekt/form.html.twig', [
+            'form' => $form->createView(),
+            'enum_type' => TypParametru::ENUM
+        ]));
     }
 
 
@@ -66,7 +88,10 @@ class ObiektController extends AbstractController
             return new JsonResponse(true);
         }
 
-        return new JsonResponse($this->renderView('obiekt/form.html.twig', ['form' => $form->createView()]));
+        return new JsonResponse($this->renderView('obiekt/form.html.twig', [
+            'form' => $form->createView(),
+            'enum_type' => TypParametru::ENUM
+        ]));
     }
 
     /**

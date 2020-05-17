@@ -1,0 +1,4 @@
+The field akceptowalneWartosci should be empty: Akceptowalne wartości niedozwolone dla tego typu danych!
+Not acceptable value: Wybrano wartość z poza dostępnej listy
+The value should be an integer: Wartość powinna być liczbą całkowitą!
+The value should be float: Wartość powinna być liczbowa!

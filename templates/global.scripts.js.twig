@@ -7,6 +7,67 @@ $.fn.enable = function () {
     $(this).prop("disabled", false);
 };
 
+$.fn.ajaxDataTable = function (url, data, dtOptions) {
+    let thCols = $(this).find("thead th");
+    let defOptions = {
+        language: {% include 'datatable.lang.'~app.request.locale~'.json' %},
+        serverSide: true,
+        searchDelay: 250,
+        ajax: {
+            url: url,
+            data: function (readyData) {
+                readyData['order'] = readyData['order'].reduce(function (map, obj) {
+                    let key = thCols.eq(obj.column)[0].dataset.key;
+                    map[key] = obj.dir;
+                    return map;
+                }, {});
+                return Object.assign(readyData, data);
+            }
+        },
+        columnDefs: [
+            {
+                targets: 'custom-class',
+                createdCell: function (cell, cellData, rowData, row, col) {
+                    let th = thCols.eq(col)[0];
+                    let customClass = th.dataset.class;
+                    $(cell).addClass(customClass);
+                }
+            },
+            {
+                targets: 'custom-render',
+                data: null,
+                render: function (data, type, row, meta) {
+                    let th = thCols.eq(meta.col)[0];
+                    let render = th.dataset.render;
+                    return window[render](row);
+                }
+            },
+            {
+                targets: '_all',
+                data: function (row, type, set, meta) {
+                    let th = thCols.eq(meta.col)[0];
+                    let key = th.dataset.key;
+                    return row[key] ? row[key] : '';
+                }
+            }
+        ]
+    };
+    let dt = $(this).DataTable(Object.assign(defOptions, dtOptions));
+    let dtSearchField = $(this).closest(".dataTables_wrapper").find("div.dataTables_filter input");
+    let searchTimeout = null;
+    dtSearchField.off("keyup.DT input.DT cut.DT paste.DT")
+        .on("paste.DT cut.DT input.DT", function () {
+            clearTimeout(searchTimeout);
+            searchTimeout = setTimeout(function () {
+                let searchText = dtSearchField.val();
+                if (searchText === '' || searchText.length >= 2) {
+                    dt.search(searchText).draw();
+                }
+            }, dt.settings().searchDelay);
+        });
+    return dt;
+};
+
 $(document).on("shown.bs.modal", ".modal", function () {
     $(this).find(":focusable:not(button)").first().focus();
 });

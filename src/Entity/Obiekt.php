@@ -30,21 +30,23 @@ class Obiekt
 
     /**
      * @ORM\Column(name="nazwa", type="string", nullable=false)
-     *  @Assert\NotBlank()
+     * @Assert\NotBlank()
      */
-    private ?string $nazwa ="";
+    private ?string $nazwa = "";
 
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\GrupaObiektow", inversedBy="obiekty")
      * @ORM\JoinColumn(name="grupa_id", referencedColumnName="id")
+     * @Assert\NotBlank()
      */
     private ?GrupaObiektow $grupa = null;
 
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\Parametr", mappedBy="obiekt", cascade={"persist", "remove"}, orphanRemoval=true)
+     * @ORM\OneToMany(targetEntity="App\Entity\Parametr", mappedBy="obiekt", cascade={"persist","remove"}, orphanRemoval=true)
      * @Assert\Valid()
      */
     private Collection $parametry;
+
 
     public function __construct()
     {
@@ -114,5 +116,4 @@ class Obiekt
     {
         return $this->parametry->removeElement($parametr);
     }
-
 }

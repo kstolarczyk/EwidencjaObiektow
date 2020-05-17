@@ -7,6 +7,7 @@ use App\Entity\TypParametru;
 use App\Form\DataTransformer\TypParametruTransformer;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -39,7 +40,14 @@ class ParametrType extends AbstractType
                     if ($jm) {
                         $label .= " [$jm]";
                     }
-                    $form->add('value', TextType::class, ['label' => $label]);
+                    if ($typ->getTypDanych() === TypParametru::ENUM) {
+                        $form->add('value', ChoiceType::class, [
+                            'label' => $label,
+                            'choices' => array_combine($typ->getAkceptowalneWartosci() ?? [], $typ->getAkceptowalneWartosci() ?? [])
+                        ]);
+                    } else {
+                        $form->add('value', TextType::class, ['label' => $label]);
+                    }
                 }
             }
         });

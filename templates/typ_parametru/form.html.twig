@@ -1,13 +1,35 @@
 {% trans_default_domain 'App' %}
 {{ form_start(form) }}
+{% if akceptowalne_hidden %}
+    {{ form_errors(form.akceptowalneWartosci) }}
+{% endif %}
 {{ form_row(form.nazwa) }}
 {{ form_row(form.symbol) }}
 {{ form_row(form.typDanych) }}
+<div class="form-group {% if akceptowalne_hidden %}d-none{% endif %}">
+    {{ form_label(form.akceptowalneWartosci) }}
+    {{ form_widget(form.akceptowalneWartosci) }}
+</div>
 {{ form_row(form.jednostkaMiary) }}
 {{ form_end(form) }}
 <script>
+    $("#typ_parametru_akceptowalneWartosci").select2({
+        allowClear: false,
+        width: '100%',
+        tags: true,
+        tokenSeparators: [';']
+    });
     $("#typ_parametru_typDanych").select2({
         allowClear: false,
         width: '100%'
+    }).change(function () {
+        let value = $(this).val();
+        let select = $("#typ_parametru_akceptowalneWartosci");
+        if (value === '{{ enum_type }}') {
+            select.parent().removeClass('d-none');
+        } else if (!select.parent().hasClass('d-none')) {
+            select.parent().addClass('d-none');
+            select.val('');
+        }
     });
 </script>
