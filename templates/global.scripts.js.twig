@@ -103,3 +103,38 @@ $(document).ajaxComplete(function (event, xhr) {
             break;
     }
 });
+
+function initMapsApi() {
+    google.maps.Map.prototype.clearMarkers = function () {
+        for (let i in this.markers) {
+            this.markers[i].setMap(null);
+        }
+        this.markers.length = 0;
+    }
+    google.maps.Map.prototype.setMarkers = function (markers) {
+        this.clearMarkers();
+        for (let i in markers) {
+            let marker = new google.maps.Marker({
+                position: markers[i].position,
+                map: this
+            });
+            this.markers.push(marker);
+        }
+    }
+    google.maps.Map.prototype.addEventListener = function (eventName, callback) {
+        google.maps.event.addListener(this, eventName, callback);
+    }
+    $.prototype.initMapSingleMarker = function (coords) {
+        let map = new google.maps.Map($(this)[0], {zoom: 8, center: coords});
+        map.markers = [];
+        google.maps.event.addListener(map, 'click', function (event) {
+            map.clearMarkers();
+            let marker = new google.maps.Marker({
+                position: event.latLng,
+                map: map
+            });
+            map.markers.push(marker);
+        });
+        return map;
+    }
+}

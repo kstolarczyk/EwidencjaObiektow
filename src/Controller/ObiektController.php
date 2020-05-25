@@ -31,7 +31,7 @@ class ObiektController extends AbstractController
 
         }
 
-        $viewData = ['lista' => $lista, 'grupaId' => $grupaId, 'typyParametrow' => $typyParametrow];
+        $viewData = ['lista' => $lista, 'grupaId' => $grupaId, 'typyParametrow' => $typyParametrow, 'maps_used' => true];
         if ($request->isXmlHttpRequest()) {
             return new JsonResponse($this->renderView('obiekt/tabela.ajax.html.twig', $viewData));
         }

@@ -1,5 +1,5 @@
 {% trans_default_domain 'App' %}
-    {{ form_start(form) }}
+{{ form_start(form) }}
 <div class="row">
     <div class="col-12">
         {{ form_row(form.nazwa) }}
@@ -18,8 +18,32 @@
 <div id="obiekt-parametry-content" data-prototype="{{ form_row(form.parametry.vars.prototype)|e('html_attr') }}">
     {{ form_row(form.parametry) }}
 </div>
+<div class="row">
+    <div class="col-12">
+        {{ form_errors(form.dlugosc) }}
+        <div id="map" style="height:300px;"></div>
+    </div>
+</div>
+{{ form_row(form.dlugosc) }}
+{{ form_row(form.szerokosc) }}
 {{ form_end(form) }}
+
 <script>
+    $(function () {
+        let coords = {
+            lat: {{ form.vars.value.szerokosc ?: gmap_default_lat }},
+            lng: {{ form.vars.value.dlugosc ?: gmap_default_lon }} };
+        let map = $("#map").initMapSingleMarker(coords);
+        {% if form.vars.value.szerokosc %}
+        map.setMarkers([{position: coords}]);
+        {% endif %}
+        map.addEventListener('click', function () {
+            let coords = this.markers[0];
+            $("#obiekt_szerokosc").val(coords.position.lat);
+            $("#obiekt_dlugosc").val(coords.position.lng);
+        });
+    });
+
     $("select").select2({
         allowClear: false,
         width: '100%'

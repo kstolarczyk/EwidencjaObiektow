@@ -11,6 +11,9 @@
     {{ encore_entry_script_tags('app') }}
     {{ encore_entry_script_tags(theme == 'dark' ? 'dark-theme' : 'light-theme') }}
     <script type="text/javascript">{% include 'global.scripts.js.twig' %}</script>
+    {% if maps_used is defined %}
+        <script async defer src="https://maps.googleapis.com/maps/api/js?key={{ gmap_api_key }}&callback=initMapsApi"></script>
+    {% endif %}
 </head>
 <body class="sb-nav-fixed">
 {% if is_granted('ROLE_USER') %}
