@@ -59,7 +59,7 @@
 
     $("#obiekt_grupa").select2({
         allowClear: true,
-        dropdownParent: $("#obiekt-modal"),
+        dropdownParent: $("#obiekt_grupa").parent(),
         placeholder: "{{ 'Wybierz.grupe'|trans }}...",
         width: '100%'
     }).change(function () {
@@ -76,10 +76,11 @@
                     if (typ.typDanych === '{{ enum_type }}') {
                         html = html.replace('input', 'select');
                         contentElement.append(html);
-                        $("#obiekt_parametry_" + i + "_value").select2({
+                        let element = $("#obiekt_parametry_" + i + "_value");
+                        element.select2({
                             allowClear: false,
                             width: '100%',
-                            dropdownParent: $("#obiekt-modal"),
+                            dropdownParent: element.parent(),
                             data: typ.akceptowalneWartosci
                         });
                     } else {
