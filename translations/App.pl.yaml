@@ -1,8 +1,8 @@
 Registration.success: 'Rejestracja przebiegła pomyślnie'
 Password.reset.link.sent: 'Link do zresetowania hasła został wysłany na adres: %email%'
 Nie.odnaleziono.uzytkownika.podany.email: Nie znaleziono użytkownika o podanym adresie email
-Password.request.subject: todo_Password.request.subject
-email.sending.failure.message: todo_email.sending.failure.message
+Password.request.subject: Odzyskiwanie hasła
+email.sending.failure.message: Wystąpił błąd podczas wysyłania wiadomości
 Zapisz: Zapisz
 Typy.parametrow: Typy parametrów
 Nowy.typ.parametru: Nowy typ parametru
@@ -12,7 +12,7 @@ Tak: Tak
 Nie: Nie
 Nazwa: Nazwa
 Symbol: Symbol
-Typ.danych.1: todo_Typ.danych.1
+Typ.danych.1: Typ danych
 Jednostka.miary: Jednostka miary
 Akcje: Akcje
 Edytuj: Edytuj
@@ -61,7 +61,7 @@ Odzyskiwanie.hasla: Odzyskiwanie hasła
 Wprowadz.adres.email.wyslemy.link.do.resetu: Na podany adres email wyślemy link do resetowania hasła
 Wyslij: Wyślij
 Powrot.do.logowania: Powrót do logowania
-Password.request.message: todo_Password.request.message
+Password.request.message: Jeśli chcesz zresetować hasło kliknij w poniższy link
 Ustawienia: Ustawienia
 Profil: Profil
 Nawigacja: Nawigacja
