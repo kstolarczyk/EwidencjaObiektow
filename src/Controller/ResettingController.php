@@ -11,6 +11,7 @@ use App\Security\AppAuthenticator;
 use Doctrine\ORM\EntityManagerInterface;
 use Psr\Log\LoggerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\Form\FormError;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Mailer\Exception\TransportExceptionInterface;
 use Symfony\Component\Mailer\MailerInterface;
@@ -36,9 +37,10 @@ class ResettingController extends AbstractController
             $email = $form->get('email')->getData();
             $user = $entityManager->getRepository(User::class)->findOneBy(['email' => $email]);
             if (!$user instanceof User) {
-                return $this->render('error.html.twig',
-                    ['message' => $translator->trans('User.with.email.not.found', [], 'App')]
+                $form->get('email')->addError(
+                    new FormError($translator->trans('Nie.odnaleziono.uzytkownika.podany.email', [], 'App'))
                 );
+                return $this->render('resetting/request.html.twig', ['form' => $form->createView()]);
             }
             $token = bin2hex(random_bytes(48));
             $user->setPasswordRequestToken($token);

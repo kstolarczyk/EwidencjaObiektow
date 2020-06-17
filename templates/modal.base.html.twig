@@ -1,5 +1,5 @@
 {% trans_default_domain 'App' %}
-<div class="modal fade" id="{% block modal_id %}{% endblock %}" tabindex="-1" role="dialog">
+<div class="modal fade" id="{% block modal_id %}{% endblock %}" tabindex="-1" role="dialog" style="z-index:{% block modal_zindex %}1050{% endblock %}">
     <div class="modal-dialog {% block modal_size %}{% endblock %}" role="document">
         <div class="modal-content">
             <div class="modal-header">

@@ -1,9 +1,12 @@
+{% trans_default_domain 'App' %}
 {% extends 'base.html.twig' %}
 
 {% block title %}{{ 'Lista.obiektow'|trans }}{% endblock %}
 {% block body %}
     <h2 class="mb-3">{{ 'Obiekty'|trans }}</h2>
     <button class="btn btn-primary btn-lg" onclick="Dodaj()"><i class="fas fa-fw fa-plus"></i></button>
+    <button class="btn btn-success btn-lg float-right" onclick="Mapa()">
+        <i class="fas fa-fw fa-lg fa-map-marked-alt"></i></button>
     <div class="row mt-3">
         <div class="col-md-4">
             <select id="grupa_obiektow-select" class="form-control" data-placeholder="{{ 'Wybierz.grupe'|trans }}..." data-allow-clear="true">
@@ -16,6 +19,7 @@
     </div>
 
     {% include 'obiekt/modal.html.twig' %}
+    {% include 'obiekt/mapa.modal.html.twig' %}
 {% endblock %}
 {% block javascripts %}
     <script>
@@ -45,25 +49,28 @@
             });
         }
 
-        function Edytuj(id) {
-            $.post("{{ path('obiekt_edytuj', {id: '999999'}) }}".replace('999999', id), {}, function (response, status) {
+        function Edytuj(obiekt) {
+            $.post("{{ path('obiekt_edytuj', {id: '999999'}) }}".replace('999999', obiekt.id), {}, function (response, status) {
                 if (status === "success") {
                     $("#obiekt-modal-content").html(response);
-                    $("#obiekt-modal-title").html("{{ 'Obiekt'|trans }} #" + id);
-                    $("#obiekt-modal-zapisz").data("id", id);
+                    $("#obiekt-modal-title").html(`{{ 'Obiekt'|trans }} #${obiekt.symbol}`);
+                    $("#obiekt-modal-zapisz").data("id", obiekt.id);
                     $("#obiekt-modal").modal("show");
                 }
             });
         }
 
-        function Usun(id) {
+        function Usun(obiekt) {
             bootbox.confirm({
                 centerVertical: true,
-                message: "{{ 'Usun.potwierdz'|trans }} #" + id,
+                message: `{{ 'Usun.potwierdz'|trans }} #${obiekt.symbol}`,
                 callback: function (result) {
                     if (result) {
-                        $.post("{{ path('obiekt_usun', {id: '9999999'}) }}".replace('9999999', id), {}, function (response, status) {
+                        $.post("{{ path('obiekt_usun', {id: '9999999'}) }}".replace('9999999', obiekt.id), {}, function (response, status) {
                             if (status === "success") {
+                                if ($("#mapa-modal").hasClass("show")) {
+                                    RefreshMap();
+                                }
                                 Odswiez();
                             }
                         });
@@ -92,6 +99,9 @@
                         $("#obiekt-modal-content").html(response);
                     } else {
                         $("#obiekt-modal").modal("hide");
+                        if ($("#mapa-modal").hasClass("show")) {
+                            RefreshMap();
+                        }
                         Odswiez();
                     }
                 }
@@ -106,6 +116,63 @@
             $.get("{{ path('obiekt_index') }}", {grupaId: id}, function (response, status) {
                 if (status === "success") {
                     $("#obiekt-lista").empty().html(response);
+                }
+            });
+        }
+
+        function RefreshMap() {
+            Mapa();
+        }
+
+        function InitializeMap($mapa, response) {
+            let map = $mapa.initMapNoMarker(response.coords, response.zoom);
+            $.each(response.obiekty, function (i, obiekt) {
+                let marker = new google.maps.Marker({
+                    position: {lat: obiekt['szerokosc'], lng: obiekt['dlugosc']},
+                    map: map
+                });
+                let latTrans = '{{ 'Dlugosc'|trans }}';
+                let lngTrans = '{{ 'Szerokosc'|trans }}';
+                let infoWindow = new google.maps.InfoWindow({
+                    content: `<h6 class="mt-2">${obiekt.nazwa}</h6>
+                             <table class="table">
+                                <tbody>
+                                    <tr>
+                                        <th>${lngTrans}:</th>
+                                        <th>${obiekt.dlugosc.toFixed(6)}</th>
+                                    </tr>
+                                    <tr>
+                                        <th>${latTrans}:</th>
+                                        <th>${obiekt.szerokosc.toFixed(6)}</th>
+                                    </tr>
+                                </tbody>
+                            </table>
+                             <div class="row no-gutters">
+                                <div class="col-6 p-2">
+                                     <button class="btn btn-sm btn-block btn-dark" onclick='Edytuj(${JSON.stringify(obiekt)})'><i class="fas fa-edit"></i></button>
+                                </div>
+                                <div class="col-6 p-2">
+                                     <button class="btn btn-sm btn-block btn-danger" onclick='Usun(${JSON.stringify(obiekt)})' ><i class="fas fa-times"></i></button>
+                                </div>
+                             </div>`
+                });
+                map.markers.push(marker);
+                map.infoWindows.push(infoWindow);
+                marker.addListener('click', function () {
+                    map.infoWindows.forEach(w => w.close());
+                    infoWindow.open(map, marker);
+                });
+            });
+            map.addEventListener('click', function (e) {
+                this.infoWindows.forEach(w => w.close());
+            })
+        }
+
+        function Mapa() {
+            $.get("{{ path('obiekty_mapa') }}", {}, function (response, status) {
+                if (status === "success") {
+                    InitializeMap($("#mapa-modal-content"), response);
+                    $("#mapa-modal").modal("show");
                 }
             });
         }

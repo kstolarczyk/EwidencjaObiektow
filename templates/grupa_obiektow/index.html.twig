@@ -25,24 +25,24 @@
             });
         }
 
-        function Edytuj(id) {
-            $.post("{{ path('grupa_obiektow_edytuj', {id: '9999999'}) }}".replace('9999999', id), {}, function (response, status) {
+        function Edytuj(grupa) {
+            $.post("{{ path('grupa_obiektow_edytuj', {id: '9999999'}) }}".replace('9999999', grupa.id), {}, function (response, status) {
                 if (status === "success") {
                     $("#grupa_obiektow-modal-content").html(response);
-                    $("#grupa_obiektow-modal-title").html("{{ 'Grupa.obiektow'|trans }} #" + id)
-                    $("#grupa_obiektow-modal-zapisz").data("id", id);
+                    $("#grupa_obiektow-modal-title").html(`{{ 'Grupa.obiektow'|trans }} #${grupa.symbol}`);
+                    $("#grupa_obiektow-modal-zapisz").data("id", grupa.id);
                     $("#grupa_obiektow-modal").modal("show");
                 }
             });
         }
 
-        function Usun(id) {
+        function Usun(grupa) {
             bootbox.confirm({
                 centerVertical: true,
-                message: "{{ 'Usun.potwierdz'|trans }} #" + id,
+                message: `{{ 'Usun.potwierdz'|trans }} #${grupa.symbol}`,
                 callback: function (result) {
                     if (result) {
-                        $.post("{{ path('grupa_obiektow_usun', {id: '9999999'}) }}".replace('9999999', id), {}, function (response, status) {
+                        $.post("{{ path('grupa_obiektow_usun', {id: '9999999'}) }}".replace('9999999', grupa.id), {}, function (response, status) {
                             if (status === "success") {
                                 Odswiez();
                             }
@@ -86,12 +86,12 @@
             });
         }
 
-        function Szczegoly(id, nazwa) {
-            let path = "{{ path('grupa_obiektow_szczegoly', {id: '9999999'}) }}".replace('9999999', id)
+        function Szczegoly(grupa) {
+            let path = "{{ path('grupa_obiektow_szczegoly', {id: '9999999'}) }}".replace('9999999', grupa.id)
             $.get(path, function (response, status) {
                 if (status === "success") {
                     $("#grupa_obiektow-szczegoly-modal-content").html(response);
-                    $("#grupa_obiektow-szczegoly-modal-title").html(nazwa);
+                    $("#grupa_obiektow-szczegoly-modal-title").html(`{{ 'Szczegoly'|trans }} #${grupa.symbol}`);
                     $("#grupa_obiektow-szczegoly-modal").modal("show");
                 }
 

@@ -10,6 +10,7 @@
     </thead>
     <tbody>
     {% for grupa in lista %}
+        {% set grupaJson = grupa|json_encode|raw %}
         <tr>
             <td>{{ loop.index }}</td>
             <td>{{ grupa.nazwa }}</td>
@@ -18,15 +19,15 @@
                 <button class="btn btn-secondary dropdown-toggle" data-toggle="dropdown">
                     <i class="fas fa-fw fa-cogs"></i></button>
                 <div class="dropdown-menu">
-                    <a class="dropdown-item" href="javascript:void(0)" onclick="Szczegoly({{ grupa.id }}, '{{ grupa.nazwa }}')">
+                    <a class="dropdown-item" href="javascript:void(0)" onclick='Szczegoly({{ grupaJson }})'>
                         <i class="fas fa-fw fa-info-circle"></i>
                         {{ 'Szczegoly'|trans }}
                     </a>
-                    <a class="dropdown-item" href="javascript:void(0)" onclick="Edytuj({{ grupa.id }})">
+                    <a class="dropdown-item" href="javascript:void(0)" onclick='Edytuj({{ grupaJson }})'>
                         <i class="fas fa-fw fa-edit"></i>
                         {{ 'Edytuj'|trans }}
                     </a>
-                    <a class="dropdown-item" href="javascript:void(0)" onclick="Usun({{ grupa.id }})">
+                    <a class="dropdown-item" href="javascript:void(0)" onclick='Usun({{ grupaJson }})'>
                         <i class="fas fa-fw fa-trash"></i>
                         {{ 'Usun'|trans }}
                     </a>

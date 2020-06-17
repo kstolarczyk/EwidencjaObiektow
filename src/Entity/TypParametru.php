@@ -9,7 +9,7 @@ use Symfony\Component\Validator\Constraints as Assert;
  * @ORM\Entity(repositoryClass="App\Repository\TypParametruRepository")
  * @ORM\Table(name="typy_parametrow")
  */
-class TypParametru
+class TypParametru implements \JsonSerializable
 {
     /**
      * @ORM\Id()
@@ -126,5 +126,10 @@ class TypParametru
             static::DATETIME,
             static::ENUM
         ];
+    }
+
+    public function jsonSerialize()
+    {
+        return get_object_vars($this);
     }
 }

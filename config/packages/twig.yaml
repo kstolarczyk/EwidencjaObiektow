@@ -4,3 +4,7 @@ twig:
     strict_variables: '%kernel.debug%'
     form_themes: ['bootstrap_4_layout.html.twig']
     exception_controller: null
+    globals:
+        gmap_api_key: '%env(MAPS_API_KEY)%'
+        gmap_default_lat: '%env(MAPS_DEFAULT_LAT)%'
+        gmap_default_lon: '%env(MAPS_DEFAULT_LON)%'

@@ -1,25 +1,62 @@
 {% trans_default_domain 'App' %}
     {{ form_start(form) }}
 <div class="row">
-    <div class="col-12">
-        {{ form_row(form.nazwa) }}
+    <div class="col-lg-5">
+        <div class="row">
+            <div class="col-12">
+                {{ form_row(form.nazwa) }}
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-12">
+                {{ form_row(form.symbol) }}
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-12">
+                {{ form_row(form.grupa) }}
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-12">
+                <div id="obiekt-parametry-content" data-prototype="{{ form_row(form.parametry.vars.prototype)|e('html_attr') }}">
+                    {{ form_row(form.parametry) }}
+                </div>
+            </div>
+        </div>
     </div>
-</div>
-<div class="row">
-    <div class="col-12">
-        {{ form_row(form.symbol) }}
+    <div class="col-lg-7">
+        {{ form_errors(form.dlugosc) }}
+        <div id="map" class="h-100" style="min-height: 450px;"></div>
+        {{ form_row(form.dlugosc) }}
+        {{ form_row(form.szerokosc) }}
     </div>
-</div>
-<div class="row">
-    <div class="col-12">
-        {{ form_row(form.grupa) }}
-    </div>
-</div>
-<div id="obiekt-parametry-content" data-prototype="{{ form_row(form.parametry.vars.prototype)|e('html_attr') }}">
-    {{ form_row(form.parametry) }}
 </div>
 {{ form_end(form) }}
+
 <script>
+    $(function () {
+        let coords = {
+            lat: {{ form.vars.value.szerokosc ?: gmap_default_lat }},
+            lng: {{ form.vars.value.dlugosc ?: gmap_default_lon }}
+        };
+        {% if form.vars.value.szerokosc %}
+        let mapEdit = $("#map").initMapNoMarker(coords, 11);
+        mapEdit.setMarkers([{position: coords, draggable: true}]);
+        mapEdit.markers[0].addListener('dragend', function (e) {
+            $("#obiekt_szerokosc").val(e.latLng.lat());
+            $("#obiekt_dlugosc").val(e.latLng.lng());
+        });
+        {% else %}
+        let map = $("#map").initMapSingleMarker(coords, 11);
+        map.addEventListener('click', function () {
+            let coords = this.markers[0];
+            $("#obiekt_szerokosc").val(coords.position.lat);
+            $("#obiekt_dlugosc").val(coords.position.lng);
+        });
+        {% endif %}
+    });
+
     $("select").select2({
         allowClear: false,
         width: '100%'

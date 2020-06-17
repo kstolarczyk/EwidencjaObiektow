@@ -13,7 +13,7 @@ use Symfony\Component\Validator\Constraints as Assert;
  * @ORM\Entity(repositoryClass="App\Repository\ObiektRepository")
  * @ORM\Table(name="obiekty")
  */
-class Obiekt
+class Obiekt implements \JsonSerializable
 {
     /**
      * @ORM\Id()
@@ -47,6 +47,19 @@ class Obiekt
      */
     private Collection $parametry;
 
+    /**
+     * @ORM\Column(name="dlugosc", type="float", nullable=false)
+     * @Assert\NotNull()
+     * @Assert\Regex(pattern="/\d+(\.\d+)?/")
+     */
+    private ?float $dlugosc = null;
+
+    /**
+     * @ORM\Column(name="szerokosc", type="float", nullable=false)
+     * @Assert\NotNull()
+     * @Assert\Regex(pattern="/\d+(\.\d+)?/")
+     */
+    private ?float $szerokosc = null;
 
     public function __construct()
     {
@@ -115,5 +128,31 @@ class Obiekt
     public function removeParametry(Parametr $parametr): bool
     {
         return $this->parametry->removeElement($parametr);
+    }
+
+    public function getDlugosc(): ?float
+    {
+        return $this->dlugosc;
+    }
+
+    public function setDlugosc(?float $dlugosc): void
+    {
+        $this->dlugosc = $dlugosc;
+    }
+
+    public function getSzerokosc(): ?float
+    {
+        return $this->szerokosc;
+    }
+
+    public function setSzerokosc(?float $szerokosc): void
+    {
+        $this->szerokosc = $szerokosc;
+    }
+
+
+    public function jsonSerialize()
+    {
+        return get_object_vars($this);
     }
 }

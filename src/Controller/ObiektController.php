@@ -15,7 +15,7 @@ use Symfony\Component\Routing\Annotation\Route;
 class ObiektController extends AbstractController
 {
     /**
-     * @Route("/Obiekt", name="obiekt_index")
+     * @Route("/", name="obiekt_index")
      */
     public function index(Request $request, EntityManagerInterface $entityManager)
     {
@@ -31,7 +31,7 @@ class ObiektController extends AbstractController
 
         }
 
-        $viewData = ['lista' => $lista, 'grupaId' => $grupaId, 'typyParametrow' => $typyParametrow];
+        $viewData = ['lista' => $lista, 'grupaId' => $grupaId, 'typyParametrow' => $typyParametrow, 'maps_used' => true];
         if ($request->isXmlHttpRequest()) {
             return new JsonResponse($this->renderView('obiekt/tabela.ajax.html.twig', $viewData));
         }
@@ -104,4 +104,24 @@ class ObiektController extends AbstractController
         return new JsonResponse(true);
     }
 
+    /**
+     * @Route("/Obiekt/Mapa", name="obiekty_mapa", condition="request.isXmlHttpRequest()")
+     */
+    public function obiekty(EntityManagerInterface $entityManager)
+    {
+        $obiekty = $entityManager->getRepository('App:Obiekt')->findAll(); //TODO: find by location square
+        return new JsonResponse([
+//            'obiekty' => $obiekty->map(fn (Obiekt $o) => [
+//                'id' => $o->getId(),
+//                'nazwa' => $o->getNazwa(),
+//                'symbol' => $o->getSymbol(),
+//                'szerokosc' => $o->getSzerokosc(),
+//                'dlugosc' => $o->getDlugosc(),
+//                'grupa' => $o->getGrupa()->getSymbol()
+//            ])->getValues(),
+            'obiekty' => $obiekty->getValues(),
+            'coords' => ['lat' => (float)$_ENV['MAPS_DEFAULT_LAT'], 'lng' => (float)$_ENV['MAPS_DEFAULT_LON']],
+            'zoom' => 10
+        ]);
+    }
 }

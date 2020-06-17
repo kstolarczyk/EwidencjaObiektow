@@ -18,7 +18,7 @@
     </div>
     <script>
         function ObiektAkcje(row) {
-            return '{{ include('obiekt/obiekt.dropdown.html.twig')|e('js') }}'.replace(/'__obiektId__'/g, row.id);
+            return '{{ include('obiekt/obiekt.dropdown.html.twig')|e('js') }}'.replace(/"__obiekt__"/g, JSON.stringify(row));
         }
 
         $("#obiekt-tabela").ajaxDataTable('{{ path('obiekt_ajax_lista', {id: grupaId}) }}', {}).on('xhr.dt', function (e) {
