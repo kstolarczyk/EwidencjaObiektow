@@ -35,11 +35,8 @@ class GrupaObiektow implements \JsonSerializable
     private ?string $nazwa = null;
 
     /**
-     * @ORM\ManyToMany(targetEntity="App\Entity\TypParametru")
-     * @ORM\JoinTable(name="grupy_obiektow_typy_parametrow",
-     *     joinColumns={@ORM\JoinColumn(name="grupa_obiektow_id", referencedColumnName="id")},
-     *     inverseJoinColumns={@ORM\JoinColumn(name="typ_parametru_id", referencedColumnName="id")}
-     *     )
+     * @ORM\ManyToMany(targetEntity="App\Entity\TypParametru", inversedBy="grupyObiektow")
+     * @ORM\JoinTable(name="grupy_obiektow_typy_parametrow")
      */
     private Collection $typyParametrow;
 

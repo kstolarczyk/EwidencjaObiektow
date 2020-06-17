@@ -57,6 +57,11 @@
         {% endif %}
     });
 
+    $("select:not(#obiekt_grupa)").each((i, e) => $(e).select2({
+        allowClear: false,
+        width: '100%',
+        dropdownParent: $(e).parent()
+    }));
     $("#obiekt_grupa").select2({
         allowClear: true,
         dropdownParent: $("#obiekt_grupa").parent(),
