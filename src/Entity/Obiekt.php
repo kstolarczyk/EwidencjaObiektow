@@ -13,7 +13,7 @@ use Symfony\Component\Validator\Constraints as Assert;
  * @ORM\Entity(repositoryClass="App\Repository\ObiektRepository")
  * @ORM\Table(name="obiekty")
  */
-class Obiekt
+class Obiekt implements \JsonSerializable
 {
     /**
      * @ORM\Id()
@@ -151,4 +151,8 @@ class Obiekt
     }
 
 
+    public function jsonSerialize()
+    {
+        return get_object_vars($this);
+    }
 }

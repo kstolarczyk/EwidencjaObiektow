@@ -3,6 +3,11 @@
     <nav class="sb-sidenav accordion sb-sidenav-dark" id="sidenavAccordion">
         <div class="sb-sidenav-menu">
             <div class="nav">
+                <div class="sb-sidenav-menu-heading">{{ 'Nawigacja'|trans }}</div>
+                <a class="nav-link" href="{{ path('obiekt_index') }}">
+                    <div class="sb-nav-link-icon"><i class="fas fa-fw fa-map-marker-alt"></i></div>
+                    {{ 'Obiekty'|trans }}
+                </a>
                 <div class="sb-sidenav-menu-heading">{{ 'Slowniki'|trans }}</div>
                 <a class="nav-link" href="{{ path('typ_parametru_index') }}">
                     <div class="sb-nav-link-icon"><i class="fas fa-fw fa-certificate"></i></div>
@@ -11,10 +16,6 @@
                 <a class="nav-link" href="{{ path('grupa_obiektow_index') }}">
                     <div class="sb-nav-link-icon"><i class="fas fa-fw fa-layer-group"></i></div>
                     {{ 'Grupy.obiektow'|trans }}
-                </a>
-                <a class="nav-link" href="{{ path('obiekt_index') }}">
-                    <div class="sb-nav-link-icon"><i class="fas fa-fw fa-map-marker-alt"></i></div>
-                    {{ 'Obiekty'|trans }}
                 </a>
                 {#                <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapsePages" aria-expanded="false" aria-controls="collapsePages">#}
                 {#                    <div class="sb-nav-link-icon"><i class="fas fa-book-open"></i></div>#}

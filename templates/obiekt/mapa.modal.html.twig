@@ -1,0 +1,8 @@
+{% trans_default_domain 'App' %}
+{% extends 'modal.base.html.twig' %}
+{% block modal_id %}mapa-modal{% endblock %}
+{% block modal_title %}{{ 'Mapa.obiektow'|trans }}{% endblock %}
+{% block modal_size %}mw-100 w-auto p-0 m-1 m-lg-3 modal-dialog-centered{% endblock %}
+{% block modal_body %}
+    <div style="height: calc(100vh - 12rem);" id="mapa-modal-content"></div>
+{% endblock %}

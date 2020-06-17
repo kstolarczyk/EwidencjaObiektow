@@ -12,6 +12,7 @@
     </thead>
     <tbody>
     {% for typ in lista %}
+        {% set typJson = typ|json_encode|raw %}
         <tr>
             <td>{{ loop.index }}</td>
             <td>{{ typ.nazwa }}</td>
@@ -22,11 +23,11 @@
                 <button class="btn btn-secondary dropdown-toggle" data-toggle="dropdown">
                     <i class="fas fa-fw fa-cogs"></i></button>
                 <div class="dropdown-menu">
-                    <a class="dropdown-item" href="javascript:void(0)" onclick="Edytuj({{ typ.id }})">
+                    <a class="dropdown-item" href="javascript:void(0)" onclick='Edytuj({{ typJson }})'>
                         <i class="fas fa-fw fa-edit"></i>
                         {{ 'Edytuj'|trans }}
                     </a>
-                    <a class="dropdown-item" href="javascript:void(0)" onclick="Usun({{ typ.id }})">
+                    <a class="dropdown-item" href="javascript:void(0)" onclick='Usun({{ typJson }})'>
                         <i class="fas fa-fw fa-trash"></i>
                         {{ 'Usun'|trans }}
                     </a>

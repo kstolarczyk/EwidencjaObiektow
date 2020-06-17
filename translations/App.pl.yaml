@@ -1,6 +1,68 @@
-Registration.success: Rejestracja przebiegła pomyślnie
-Password:
-  reset:
-    link:
-      sent: 'Link do zresetowania hasła został wysłany na adres: %email%'
-
+Registration.success: 'Rejestracja przebiegła pomyślnie'
+Password.reset.link.sent: 'Link do zresetowania hasła został wysłany na adres: %email%'
+Nie.odnaleziono.uzytkownika.podany.email: Nie znaleziono użytkownika o podanym adresie email
+Password.request.subject: todo_Password.request.subject
+email.sending.failure.message: todo_email.sending.failure.message
+Zapisz: Zapisz
+Typy.parametrow: Typy parametrów
+Nowy.typ.parametru: Nowy typ parametru
+Typ.parametru: Typ parametru
+Usun.potwierdz: Czy na pewno chcesz usunąć?
+Tak: Tak
+Nie: Nie
+Nazwa: Nazwa
+Symbol: Symbol
+Typ.danych.1: todo_Typ.danych.1
+Jednostka.miary: Jednostka miary
+Akcje: Akcje
+Edytuj: Edytuj
+Usun: Usuń
+Zarejestruj.sie: Zarejestruj się
+Stworz.konto: Tworzenie konta
+Wprowadz.uzytkownika: Wprowadź nazwę użytkownika
+Wprowadz.email: Wprowadź adres email
+Wprowadz.haslo: Wprowadź hasło
+Powtorz.haslo: Powtórz hasło
+Zarejestruj: Zarejestruj
+Masz.juz.konto.zaloguj: Masz już konto? Zaloguj się
+Lista.obiektow: Lista obiektów
+Obiekty: Obiekty
+Wybierz.grupe: Wybierz grupę obiektów
+Nowy.obiekt: Nowy obiekt
+Obiekt: Obiekt
+Dlugosc: Długość
+Szerokosc: Szerokość
+Prosze.wybrac.grupe: Proszę wybrać grupę obiektów
+Mapa.obiektow: Mapa obiektów
+Zamknij: Zamknij
+Slowniki: Słowniki
+Grupy.obiektow: Grupy obiektów
+Zalogowany.jako: Zalogowany jako
+Ewidencja.obiektow: Ewidencja obiektów
+Nowa.grupa.obiektow: Nowa grupa obiektów
+Grupa.obiektow: Grupa obiektów
+Typ.danych: Typ danych
+Wybierz.parametry: Wybierz parametry
+Szczegoly: Szczegóły
+Nie.odnaleziono.obiektu: Nie odnaleziono obiektu
+Nieoczekiwany.blad.aplikacji: Uwaga! Nieoczekiwany błąd aplikacji! Skontaktuj się z administratorem.
+Odmowa.dostepu: Odmowa dostępu
+Zaloguj.sie: Zaloguj się
+Logowanie: Logowanie
+Jestes.zalogowany.jako: Jesteś zalogowany jako
+Wyloguj: Wyloguj
+Nazwa.uzytkownika: Nazwa użytkownika
+Haslo: Hasło
+Zapamietaj.mnie: Zapamiętaj mnie
+Zaloguj: Zaloguj
+Zapomniales.hasla: Zapomniałeś hasła?
+Nie.masz.konta.zarejestruj.sie: Nie masz konta? Zarejestruj się!
+Odzyskiwanie.hasla: Odzyskiwanie hasła
+Wprowadz.adres.email.wyslemy.link.do.resetu: Na podany adres email wyślemy link do resetowania hasła
+Wyslij: Wyślij
+Powrot.do.logowania: Powrót do logowania
+Password.request.message: todo_Password.request.message
+Ustawienia: Ustawienia
+Profil: Profil
+Nawigacja: Nawigacja
+Email: Email

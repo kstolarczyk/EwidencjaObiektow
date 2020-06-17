@@ -23,13 +23,13 @@
             });
         }
 
-        function Edytuj(id) {
-            let url = "{{ path('typ_parametru_edytuj', {id: '9999999'}) }}".replace('9999999', id);
+        function Edytuj(typParametru) {
+            let url = "{{ path('typ_parametru_edytuj', {id: '9999999'}) }}".replace('9999999', typParametru.id);
             $.post(url, {}, function (response, status) {
                 if (status === "success") {
                     $("#typ_parametru-modal-content").html(response);
-                    $("#typ_parametru-modal-title").html("{{ 'Typ.parametru'|trans }} #" + id)
-                    $("#typ_parametru-modal-zapisz").data("id", id);
+                    $("#typ_parametru-modal-title").html(`{{ 'Typ.parametru'|trans }} #${typParametru.symbol}`)
+                    $("#typ_parametru-modal-zapisz").data("id", typParametru.id);
                     $("#typ_parametru-modal").modal("show");
                 }
             });
@@ -59,13 +59,13 @@
             })
         }
 
-        function Usun(id) {
+        function Usun(typParametru) {
             bootbox.confirm({
                 centerVertical: true,
-                message: "{{ 'Usun.potwierdz'|trans }} #" + id,
+                message: `{{ 'Usun.potwierdz'|trans }} #${typParametru.symbol}`,
                 callback: function (result) {
                     if (result) {
-                        $.post("{{ path('typ_parametru_usun', {id: '9999999'}) }}".replace('9999999', id), {}, function (response, status) {
+                        $.post("{{ path('typ_parametru_usun', {id: '9999999'}) }}".replace('9999999', typParametru.id), {}, function (response, status) {
                             if (status === "success") {
                                 Odswiez();
                             }

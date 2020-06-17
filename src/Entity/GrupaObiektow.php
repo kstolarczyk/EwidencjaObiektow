@@ -13,7 +13,7 @@ use Symfony\Component\Validator\Constraints as Assert;
  * @ORM\Entity(repositoryClass="App\Repository\GrupaObiektowRepository")
  * @ORM\Table(name="grupy_obiektow")
  */
-class GrupaObiektow
+class GrupaObiektow implements \JsonSerializable
 {
     /**
      * @ORM\Id()
@@ -115,14 +115,21 @@ class GrupaObiektow
         return $this->typyParametrow->removeElement($typParametru);
     }
 
-    public function addObiekt(Obiekt $obiekt):bool {
-        if(!$this->obiekty->contains($obiekt)) {
+    public function addObiekt(Obiekt $obiekt): bool
+    {
+        if (!$this->obiekty->contains($obiekt)) {
             return $this->obiekty->add($obiekt);
         }
         return false;
     }
 
-    public function removeObiekt(Obiekt $obiekt):bool {
+    public function removeObiekt(Obiekt $obiekt): bool
+    {
         return $this->obiekty->removeElement($obiekt);
+    }
+
+    public function jsonSerialize()
+    {
+        return get_object_vars($this);
     }
 }

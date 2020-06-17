@@ -114,19 +114,23 @@ function initMapsApi() {
     google.maps.Map.prototype.setMarkers = function (markers) {
         this.clearMarkers();
         for (let i in markers) {
-            let marker = new google.maps.Marker({
-                position: markers[i].position,
-                map: this
-            });
+            let properties = {map: this};
+            for (let p in markers[i]) {
+                if (markers[i].hasOwnProperty(p)) {
+                    properties[p] = markers[i][p];
+                }
+            }
+            let marker = new google.maps.Marker(properties);
             this.markers.push(marker);
         }
     }
     google.maps.Map.prototype.addEventListener = function (eventName, callback) {
         google.maps.event.addListener(this, eventName, callback);
     }
-    $.prototype.initMapSingleMarker = function (coords) {
-        let map = new google.maps.Map($(this)[0], {zoom: 8, center: coords});
+    $.prototype.initMapSingleMarker = function (coords, zoom) {
+        let map = new google.maps.Map($(this)[0], {zoom: zoom, center: coords});
         map.markers = [];
+        map.infoWindows = [];
         google.maps.event.addListener(map, 'click', function (event) {
             map.clearMarkers();
             let marker = new google.maps.Marker({
@@ -135,6 +139,13 @@ function initMapsApi() {
             });
             map.markers.push(marker);
         });
+        return map;
+    }
+
+    $.prototype.initMapNoMarker = function (coords, zoom) {
+        let map = new google.maps.Map($(this)[0], {zoom: zoom, center: coords});
+        map.markers = [];
+        map.infoWindows = [];
         return map;
     }
 }

@@ -10,6 +10,15 @@ use Doctrine\ORM\Query\Expr;
 
 class ObiektRepository extends BaseRepository
 {
+    public function findAll(): Collection
+    {
+        $return = parent::findAll();
+        if ($return instanceof Collection) {
+            return $return;
+        }
+        return new ArrayCollection($return);
+    }
+
     public function dtFindBy(array $criteria = [], array $orderBy = [], ?int $limit = null, ?int $offset = null, ?string $search = '', ?int &$total = 0, ?int &$filtered = 0): Collection
     {
         $filtered = $total = $this->count($criteria);
