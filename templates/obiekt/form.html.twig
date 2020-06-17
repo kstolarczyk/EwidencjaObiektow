@@ -57,12 +57,9 @@
         {% endif %}
     });
 
-    $("select").select2({
-        allowClear: false,
-        width: '100%'
-    });
     $("#obiekt_grupa").select2({
         allowClear: true,
+        dropdownParent: $("#obiekt-modal"),
         placeholder: "{{ 'Wybierz.grupe'|trans }}...",
         width: '100%'
     }).change(function () {
@@ -92,4 +89,5 @@
             }
         });
     });
+
 </script>
