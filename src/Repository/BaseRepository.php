@@ -11,9 +11,23 @@ use Doctrine\ORM\EntityRepository;
 
 class BaseRepository extends EntityRepository
 {
+    public function findAll(): Collection
+    {
+        $return = parent::findAll();
+        if ($return instanceof Collection) {
+            return $return;
+        }
+        return new ArrayCollection($return);
+    }
+
     public function findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null): Collection
     {
-        return new ArrayCollection(parent::findBy($criteria, $orderBy, $limit, $offset));
+        $return = parent::findBy($criteria, $orderBy, $limit, $offset);
+        if ($return instanceof Collection) {
+            return $return;
+        }
+        return new ArrayCollection($return);
+
     }
 
     public function dtFindBy(array $criteria = [], array $orderBy = [], ?int $limit = null, ?int $offset = null, ?string $search = '', ?int &$total = 0): Collection

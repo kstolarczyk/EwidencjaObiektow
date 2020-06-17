@@ -62,6 +62,12 @@ class GrupaObiektowController extends AbstractController
      */
     public function usun(EntityManagerInterface $entityManager, GrupaObiektow $grupa)
     {
+        if (!$grupa->getObiekty()->isEmpty()) {
+            return new JsonResponse(false, 400);
+        }
+        if (!$grupa->getTypyParametrow()->isEmpty()) {
+            $grupa->getTypyParametrow()->clear();
+        }
         $entityManager->remove($grupa);
         $entityManager->flush();
         return new JsonResponse(true);

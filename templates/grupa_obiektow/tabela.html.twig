@@ -27,7 +27,7 @@
                         <i class="fas fa-fw fa-edit"></i>
                         {{ 'Edytuj'|trans }}
                     </a>
-                    <a class="dropdown-item" href="javascript:void(0)" onclick='Usun({{ grupaJson }})'>
+                    <a class="dropdown-item {% if not grupa.obiekty.isEmpty() %}disabled{% endif %}" href="javascript:void(0)" onclick='Usun({{ grupaJson }})'>
                         <i class="fas fa-fw fa-trash"></i>
                         {{ 'Usun'|trans }}
                     </a>

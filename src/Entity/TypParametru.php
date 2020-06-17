@@ -2,6 +2,7 @@
 
 
 namespace App\Entity;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 
@@ -45,6 +46,11 @@ class TypParametru implements \JsonSerializable
      * @ORM\Column(name="akceptowalne_wartosci", type="array", nullable=true)
      */
     private ?array $akceptowalneWartosci = null;
+
+    /**
+     * @ORM\ManyToMany(targetEntity="App\Entity\GrupaObiektow", mappedBy="typyParametrow")
+     */
+    private Collection $grupyObiektow;
 
     public function getId(): int
     {
@@ -104,6 +110,16 @@ class TypParametru implements \JsonSerializable
     public function setAkceptowalneWartosci(?array $akceptowalneWartosci): void
     {
         $this->akceptowalneWartosci = $akceptowalneWartosci;
+    }
+
+    public function getGrupyObiektow(): Collection
+    {
+        return $this->grupyObiektow;
+    }
+
+    public function setGrupyObiektow(Collection $grupyObiektow): void
+    {
+        $this->grupyObiektow = $grupyObiektow;
     }
 
 
