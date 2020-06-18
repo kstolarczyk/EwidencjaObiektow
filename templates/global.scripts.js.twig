@@ -148,4 +148,8 @@ function initMapsApi() {
         map.infoWindows = [];
         return map;
     }
+
+    {% if maps_used is defined %}
+    {% include 'jsTemplates/infoWindow.template.es6.twig' %}
+    {% endif %}
 }

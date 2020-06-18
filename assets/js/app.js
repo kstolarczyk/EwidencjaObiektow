@@ -17,6 +17,7 @@ import {alert, defaultModules, error, info, notice, success} from '@pnotify/core
 import * as PNotifyBootstrap4 from '@pnotify/bootstrap4';
 import * as PNotifyFontAwesome5Fix from '@pnotify/font-awesome5-fix';
 import * as PNotifyFontAwesome5 from '@pnotify/font-awesome5';
+// import {html, render} from 'lit-html'
 
 require('jszip');
 require('pdfmake');
@@ -26,8 +27,12 @@ require('datatables.net-buttons/js/buttons.colVis')(window, $);
 require('datatables.net-buttons/js/buttons.html5')(window, $);
 require('datatables.net-responsive-bs4')(window, $);
 require('./select2')(window, $);
+
 global.$ = global.jQuery = $;
 global.bootbox = bootbox;
+// global.html = html;
+// global.render = render;
+
 defaultModules.set(PNotifyBootstrap4, {});
 defaultModules.set(PNotifyFontAwesome5Fix, {});
 defaultModules.set(PNotifyFontAwesome5, {});

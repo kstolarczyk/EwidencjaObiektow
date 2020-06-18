@@ -1,0 +1,26 @@
+{% trans_default_domain 'App' %}
+const lngTrans = '{{ "Dlugosc"|trans }}';
+const latTrans = '{{ "Szerokosc"|trans }}';
+$.jsTemplates = $.jsTemplates ?? {};
+$.jsTemplates['infoWindow'] = (obiekt) =>
+    `<h6 class="mt-2">${obiekt.nazwa}</h6>
+         <table class="table">
+            <tbody>
+                <tr>
+                    <th>${lngTrans}:</th>
+                    <th>${obiekt.dlugosc.toFixed(6)}</th>
+                </tr>
+                <tr>
+                    <th>${latTrans}:</th>
+                    <th>${obiekt.szerokosc.toFixed(6)}</th>
+                </tr>
+            </tbody>
+        </table>
+         <div class="row no-gutters">
+            <div class="col-6 p-2">
+                 <button class="btn btn-sm btn-block btn-dark" onclick='Edytuj(${JSON.stringify(obiekt)})'><i class="fas fa-edit"></i></button>
+            </div>
+            <div class="col-6 p-2">
+                 <button class="btn btn-sm btn-block btn-danger" onclick='Usun(${JSON.stringify(obiekt)})' ><i class="fas fa-times"></i></button>
+            </div>
+         </div>`;
