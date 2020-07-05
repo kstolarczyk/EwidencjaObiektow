@@ -10,6 +10,20 @@ use Doctrine\ORM\Query\Expr;
 
 class ObiektRepository extends BaseRepository
 {
+    public function findInBounds($neLat, $neLng, $swLat, $swLng)
+    {
+        $qb = $this->createQueryBuilder('o');
+        $query = $qb
+            ->andWhere($qb->expr()->between('o.dlugosc', ':swLng', ':neLng'))
+            ->andWhere($qb->expr()->between('o.szerokosc', ':swLat', ':neLat'))
+            ->setParameters([
+                'swLng' => $swLng,
+                'swLat' => $swLat,
+                'neLng' => $neLng,
+                'neLat' => $neLat
+            ])->getQuery();
+        return $query->getResult();
+    }
 
     public function dtFindBy(array $criteria = [], array $orderBy = [], ?int $limit = null, ?int $offset = null, ?string $search = '', ?int &$total = 0, ?int &$filtered = 0): Collection
     {

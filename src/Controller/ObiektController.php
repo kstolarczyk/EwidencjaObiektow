@@ -110,21 +110,17 @@ class ObiektController extends AbstractController
     public function obiekty(EntityManagerInterface $entityManager, Request $request)
     {
         $NELat = $request->query->get('NELat', 0.0);
-        $NELng = $request->query->get('amp;NELng', 0.0); // tak dziwnie jest przesyłany klucz GET'em, zerknij co źle zrobiłem
-        $SWLat = $request->query->get('amp;SWLat', 0.0);
-        $SWLng = $request->query->get('amp;SWLng', 0.0);
-        $query = $entityManager->createQuery(
-            'SELECT o
-                 FROM  App:Obiekt o
-                 WHERE o.szerokosc < :NELat 
-                 and o.szerokosc > :SWLat 
-                 and o.dlugosc < :NELng
-                 and o.dlugosc > :SWLng')
-            ->setParameter('NELat', $NELat)
-            ->setParameter('SWLat', $SWLat)
-            ->setParameter('NELng', $NELng)
-            ->setParameter('SWLng', $SWLng);
-        $obiekty=$query->getResult();
+        $NELng = $request->query->get('NELng', 0.0);
+        $SWLat = $request->query->get('SWLat', 0.0);
+        $SWLng = $request->query->get('SWLng', 0.0);
+
+        $obiekty = $entityManager->getRepository(Obiekt::class)->findInBounds(
+            $NELat,
+            $NELng,
+            $SWLat,
+            $SWLng
+        );
+
         return new JsonResponse([
             'obiekty' => $obiekty,
             'coords' => ['lat' => (float)$_ENV['MAPS_DEFAULT_LAT'], 'lng' => (float)$_ENV['MAPS_DEFAULT_LON']],

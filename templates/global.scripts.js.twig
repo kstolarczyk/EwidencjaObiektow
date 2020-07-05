@@ -21,7 +21,7 @@ $.fn.ajaxDataTable = function (url, data, dtOptions) {
                     map[key] = obj.dir;
                     return map;
                 }, {});
-                return Object.assign(readyData, data);
+                return Object.assign(readyData, data());
             }
         },
         columnDefs: [

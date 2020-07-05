@@ -141,34 +141,27 @@
             });
             map.addEventListener('click', function (e) {
                 this.infoWindows.forEach(w => w.close());
-            })
+            });
+            let currentRequest = null;
             map.addEventListener('bounds_changed', function (e) {
-                let bounds=this.getBounds();
+                if (currentRequest !== null) clearTimeout(currentRequest);
+                let bounds = this.getBounds();
                 let NECorner = bounds.getNorthEast();
                 let SWCorner = bounds.getSouthWest();
-                MapaUpdate(NECorner,SWCorner,map);
-            })
+                currentRequest = setTimeout(() => MapaUpdate(NECorner, SWCorner, map), 250);
+            });
         }
 
 
-        function MapaUpdate(NECorner, SWCorner,map) {
-            let path = "{{ path('obiekty_mapa',
-                {
-                    NELat: '9999991',
-                    NELng: '9999992',
-                    SWLat: '9999993',
-                    SWLng: '9999994',
-                })}}"
-                .replace('9999991', NECorner.lat())
-                .replace('9999992', NECorner.lng())
-                .replace('9999993', SWCorner.lat())
-                .replace('9999994', SWCorner.lng());
-            $.get(path, function (response, status) {
+        function MapaUpdate(NECorner, SWCorner, map) {
+            $.get("{{ path('obiekty_mapa') }}", {
+                NELat: NECorner.lat,
+                NELng: NECorner.lng,
+                SWLat: SWCorner.lat,
+                SWLng: SWCorner.lng
+            }, function (response, status) {
                 if (status === "success") {
-                    //for (var i = 0; i < map.markers.length; i++) { // czyszczenie markerow, wprowadza nieładne miganie markerów,
-                                                                     // przetestuj, nie wiem czy dobrze jest trzymać dużą liczbe markerów w pamięci
-                    //    map.markers[i].setMap(null);
-                    //}
+                    map.clearMarkers();
                     $.each(response.obiekty, function (i, obiekt) {
                         let marker = new google.maps.Marker({
                             position: {lat: obiekt['szerokosc'], lng: obiekt['dlugosc']},
