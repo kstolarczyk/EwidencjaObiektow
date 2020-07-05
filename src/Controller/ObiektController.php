@@ -107,21 +107,31 @@ class ObiektController extends AbstractController
     /**
      * @Route("/Obiekt/Mapa", name="obiekty_mapa", condition="request.isXmlHttpRequest()")
      */
-    public function obiekty(EntityManagerInterface $entityManager)
+    public function obiekty(EntityManagerInterface $entityManager, Request $request)
     {
-        $obiekty = $entityManager->getRepository('App:Obiekt')->findAll(); //TODO: find by location square
+        $NELat = $request->query->get('NELat', 0.0);
+        $NELng = $request->query->get('amp;NELng', 0.0); // tak dziwnie jest przesyłany klucz GET'em, zerknij co źle zrobiłem
+        $SWLat = $request->query->get('amp;SWLat', 0.0);
+        $SWLng = $request->query->get('amp;SWLng', 0.0);
+        $query = $entityManager->createQuery(
+            'SELECT o
+                 FROM  App:Obiekt o
+                 WHERE o.szerokosc < :NELat 
+                 and o.szerokosc > :SWLat 
+                 and o.dlugosc < :NELng
+                 and o.dlugosc > :SWLng')
+            ->setParameter('NELat', $NELat)
+            ->setParameter('SWLat', $SWLat)
+            ->setParameter('NELng', $NELng)
+            ->setParameter('SWLng', $SWLng);
+        $obiekty=$query->getResult();
         return new JsonResponse([
-//            'obiekty' => $obiekty->map(fn (Obiekt $o) => [
-//                'id' => $o->getId(),
-//                'nazwa' => $o->getNazwa(),
-//                'symbol' => $o->getSymbol(),
-//                'szerokosc' => $o->getSzerokosc(),
-//                'dlugosc' => $o->getDlugosc(),
-//                'grupa' => $o->getGrupa()->getSymbol()
-//            ])->getValues(),
-            'obiekty' => $obiekty->getValues(),
+            'obiekty' => $obiekty,
             'coords' => ['lat' => (float)$_ENV['MAPS_DEFAULT_LAT'], 'lng' => (float)$_ENV['MAPS_DEFAULT_LON']],
-            'zoom' => 10
+            'zoom' => 10,
         ]);
     }
+
+
+
 }
