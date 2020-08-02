@@ -33,6 +33,8 @@ class RegistrationController extends AbstractController
                     $form->get('plainPassword')->getData()
                 )
             );
+            //TODO: make it configurable with APP_ENV (first ever user should be enabled automatically)
+            $user->setEnabled(true);
 
             $entityManager = $this->getDoctrine()->getManager();
             $entityManager->persist($user);

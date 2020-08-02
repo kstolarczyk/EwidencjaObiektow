@@ -45,10 +45,16 @@ class GrupaObiektow implements \JsonSerializable
      */
     private Collection $obiekty;
 
+    /**
+     * @ORM\ManyToMany(targetEntity="App\Entity\User", mappedBy="grupyObiektow")
+     */
+    private Collection $users;
+
     public function __construct()
     {
         $this->typyParametrow = new ArrayCollection();
         $this->obiekty = new ArrayCollection();
+        $this->users = new ArrayCollection();
     }
 
     public function getId(): int
@@ -123,6 +129,29 @@ class GrupaObiektow implements \JsonSerializable
     public function removeObiekt(Obiekt $obiekt): bool
     {
         return $this->obiekty->removeElement($obiekt);
+    }
+
+    public function getUsers()
+    {
+        return $this->users;
+    }
+
+    public function setUsers($users): void
+    {
+        $this->users = $users;
+    }
+
+    public function addUser(User $user): bool
+    {
+        if (!$this->users->contains($user)) {
+            return $this->users->add($user);
+        }
+        return false;
+    }
+
+    public function removeUser(User $user): bool
+    {
+        return $this->users->removeElement($user);
     }
 
     public function jsonSerialize()

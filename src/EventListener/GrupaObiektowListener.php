@@ -20,9 +20,10 @@ class GrupaObiektowListener
         foreach ($uow->getScheduledCollectionUpdates() as $collectionUpdate) {
             /** @var PersistentCollection $collectionUpdate */
             $owner = $collectionUpdate->getOwner();
-            if ($owner instanceof GrupaObiektow) {
-                $inserted = $collectionUpdate->getInsertDiff();
-                $deleted = $collectionUpdate->getDeleteDiff();
+            $class = $collectionUpdate->getTypeClass();
+            $inserted = $collectionUpdate->getInsertDiff();
+            $deleted = $collectionUpdate->getDeleteDiff();
+            if ($owner instanceof GrupaObiektow && $class->name == TypParametru::class) {
                 foreach ($inserted as $typ) {
                     /** @var TypParametru $typ */
                     foreach ($owner->getObiekty() as $obiekt) {
@@ -38,12 +39,12 @@ class GrupaObiektowListener
                 foreach ($deleted as $typ) {
                     /** @var TypParametru $typ */
                     $query = $em->createQuery('
-                        select param from App\Entity\Parametr param
-                        inner join param.typ typ 
-                        inner join param.obiekt obiekt
-                        inner join obiekt.grupa grupa
-                        where typ = :typ and grupa = :grupa
-                        ')->setParameter('typ', $typ)->setParameter('grupa', $owner);
+                    select param from App\Entity\Parametr param
+                    inner join param.typ typ 
+                    inner join param.obiekt obiekt
+                    inner join obiekt.grupa grupa
+                    where typ = :typ and grupa = :grupa
+                    ')->setParameter('typ', $typ)->setParameter('grupa', $owner);
                     foreach ($query->getResult() as $parametr) {
                         /** @var Parametr $parametr */
                         $em->remove($parametr);

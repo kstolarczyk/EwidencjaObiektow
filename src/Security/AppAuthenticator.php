@@ -69,6 +69,10 @@ class AppAuthenticator extends AbstractFormLoginAuthenticator
             throw new CustomUserMessageAuthenticationException('Username could not be found.');
         }
 
+        if (!$user->isEnabled()) {
+            throw new CustomUserMessageAuthenticationException("User %username% is disabled. Please contact with system administrator.", ['%username%' => $user->getUsername()]);
+        }
+
         return $user;
     }
 

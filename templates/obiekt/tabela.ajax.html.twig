@@ -21,7 +21,8 @@
             return '{{ include('obiekt/obiekt.dropdown.html.twig')|e('js') }}'.replace(/"__obiekt__"/g, JSON.stringify(row));
         }
 
-        $("#obiekt-tabela").ajaxDataTable('{{ path('obiekt_ajax_lista', {id: grupaId}) }}', {}).on('xhr.dt', function (e) {
+        $("#obiekt-tabela").ajaxDataTable('{{ path('obiekt_ajax_lista', {id: grupaId}) }}', () => {
+        }).on('xhr.dt', function (e) {
             history.pushState({grupaId: '{{ grupaId }}'}, '', '{{ app.request.uri }}');
         });
     </script>

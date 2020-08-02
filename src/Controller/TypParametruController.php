@@ -6,6 +6,7 @@ use App\Entity\GrupaObiektow;
 use App\Entity\TypParametru;
 use App\Form\TypParametruType;
 use Doctrine\ORM\EntityManagerInterface;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
@@ -14,6 +15,7 @@ class TypParametruController extends BaseController
 {
     /**
      * @Route("/TypParametru/Dodaj", name="typ_parametru_dodaj", condition="request.isXmlHttpRequest()", methods={"POST"})
+     * @IsGranted("ROLE_ADMIN")
      */
     public function dodaj(Request $request, EntityManagerInterface $entityManager)
     {
@@ -34,6 +36,7 @@ class TypParametruController extends BaseController
 
     /**
      * @Route("/TypParametru/Edytuj/{id}", name="typ_parametru_edytuj", condition="request.isXmlHttpRequest()", requirements={"id":"\d+"}, methods={"POST"})
+     * @IsGranted("ROLE_ADMIN")
      */
     public function edytuj(Request $request, EntityManagerInterface $entityManager, TypParametru $typParametru)
     {
@@ -53,8 +56,9 @@ class TypParametruController extends BaseController
 
     /**
      * @Route("/TypParametru/Usun/{id}", name="typ_parametru_usun", condition="request.isXmlHttpRequest()", requirements={"id":"\d+"}, methods={"POST"})
+     * @IsGranted("ROLE_ADMIN")
      */
-    public function usun(Request $request, EntityManagerInterface $entityManager, TypParametru $typParametru)
+    public function usun(EntityManagerInterface $entityManager, TypParametru $typParametru)
     {
         $entityManager->remove($typParametru);
         $entityManager->flush();

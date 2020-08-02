@@ -5,21 +5,19 @@
     <button class="btn btn-link btn-sm order-1 order-md-0" id="sidebarToggle">
         <i class="fas fa-bars"></i>
     </button><!-- Navbar Search-->
-    <form class="d-none d-md-inline-block form-inline ml-auto mr-0 mr-md-3 my-2 my-md-0">
-        <div class="input-group">
-            <input class="form-control" disabled type="text" placeholder="Search for..." aria-label="Search" aria-describedby="basic-addon2"/>
-            <div class="input-group-append">
-                <button class="btn btn-primary" disabled type="button"><i class="fas fa-search"></i></button>
-            </div>
-        </div>
-    </form>
+
     <!-- Navbar-->
-    <ul class="navbar-nav mr-0 ml-auto ml-md-0">
+    <ul class="navbar-nav mr-0 ml-auto">
         <li class="nav-item dropdown">
-            <a class="nav-link dropdown-toggle" id="userDropdown" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="fas fa-user fa-fw"></i></a>
+            <a class="nav-link dropdown-toggle" id="userDropdown" href="javascript:void(0)" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                <i class="fas fa-user fa-fw"></i>
+                <span class="d-none d-md-inline-block">{{ app.user.username }}</span>
+            </a>
             <div class="dropdown-menu dropdown-menu-right" aria-labelledby="userDropdown">
-                <a class="dropdown-item disabled" href="javascript:void(0)"><i class="fas fa-fw fa-user-cog"></i> {{ 'Ustawienia'|trans }}
-                </a>
+                {% if is_granted('ROLE_SUPER_ADMIN') %}
+                    <a class="dropdown-item" href="{{ path('user_index') }}"><i class="fas fa-fw fa-user-cog"></i> {{ 'Zarzadzanie'|trans }}
+                    </a>
+                {% endif %}
                 <a class="dropdown-item disabled" href="javascript:void(0)"><i class="fas fa-fw fa-user-edit"></i> {{ 'Profil'|trans }}
                 </a>
                 <div class="dropdown-divider"></div>

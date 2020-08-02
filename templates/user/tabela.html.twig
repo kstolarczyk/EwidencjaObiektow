@@ -1,0 +1,47 @@
+{% trans_default_domain 'App' %}
+<table class="table table-bordered w-100" id="user-tabela">
+    <thead>
+    <tr>
+        <th>{{ 'Nazwa.uzytkownika'|trans }}</th>
+        <th>{{ 'Email'|trans }}</th>
+        <th>{{ 'Aktywny'|trans }}</th>
+        <th>{{ 'Akcje'|trans }}</th>
+    </tr>
+    </thead>
+    <tbody>
+    {% for user in users %}
+        <tr>
+            <td>{{ user.username }}</td>
+            <td>{{ user.email }}</td>
+            <td>
+                <button class="btn btn-warning mr-2" title="{{ 'Zmien.status'|trans }}" onclick="ZmienStatus({{ user.id }}, {{ user.enabled }})">
+                    <i class="fas fa-fw fa-exchange-alt"></i>
+                </button>
+                {% if user.enabled %}
+                    <strong class="text-success">{{ 'Aktywny'|trans }}</strong>
+                {% else %}
+                    <strong class="text-danger">{{ 'Wylaczony'|trans }}</strong>
+                {% endif %}
+            </td>
+            <td>
+                <button class="btn btn-dark dropdown-toggle" data-toggle="dropdown">
+                    <i class="fas fa-fw fa-lg fa-cogs"></i>
+                </button>
+                <div class="dropdown-menu">
+                    <a class="dropdown-item" href="javascript:void(0)" onclick="Edytuj({{ user.id }})">
+                        <i class="fas fa-fw fa-edit"></i>
+                        {{ 'Edytuj'|trans }}
+                    </a>
+                    <a class="dropdown-item" href="javascript:void(0)" onclick="Usun({{ user.id }})">
+                        <i class="fas fa-fw fa-trash"></i>
+                        {{ 'Usun'|trans }}
+                    </a>
+                </div>
+            </td>
+        </tr>
+    {% endfor %}
+    </tbody>
+</table>
+<script>
+    $("#user-tabela").DataTable();
+</script>

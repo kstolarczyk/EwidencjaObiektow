@@ -5,10 +5,12 @@ namespace App\Controller;
 use App\Entity\GrupaObiektow;
 use App\Form\GrupaObiektowType;
 use Doctrine\ORM\EntityManagerInterface;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Security\Core\User\UserInterface;
 
 class GrupaObiektowController extends AbstractController
 {
@@ -27,6 +29,7 @@ class GrupaObiektowController extends AbstractController
 
     /**
      * @Route("/GrupaObiektow/Dodaj", name="grupa_obiektow_dodaj", condition="request.isXmlHttpRequest()", methods={"POST"})
+     * @IsGranted("ROLE_ADMIN")
      */
     public function dodaj(Request $request, EntityManagerInterface $entityManager)
     {
@@ -44,6 +47,7 @@ class GrupaObiektowController extends AbstractController
 
     /**
      * @Route("/GrupaObiektow/Edytuj/{id}", name="grupa_obiektow_edytuj", condition="request.isXmlHttpRequest()", requirements={"id":"\d+"}, methods={"POST"})
+     * @IsGranted("ROLE_ADMIN")
      */
     public function edytuj(Request $request, EntityManagerInterface $entityManager, GrupaObiektow $grupa)
     {
@@ -59,6 +63,7 @@ class GrupaObiektowController extends AbstractController
 
     /**
      * @Route("/GrupaObiektow/Usun/{id}", name="grupa_obiektow_usun", condition="request.isXmlHttpRequest()", requirements={"id":"\d+"}, methods={"POST"})
+     * @IsGranted("ROLE_ADMIN")
      */
     public function usun(EntityManagerInterface $entityManager, GrupaObiektow $grupa)
     {
@@ -76,9 +81,9 @@ class GrupaObiektowController extends AbstractController
     /**
      * @Route("/GrupaObiektow/Ajax", name="grupa_obiektow_ajax", condition="request.isXmlHttpRequest()")
      */
-    public function ajaxGet(EntityManagerInterface $entityManager)
+    public function ajaxGet(UserInterface $user)
     {
-        $grupyObiektow = $entityManager->getRepository(GrupaObiektow::class)->findAll();
+        $grupyObiektow = $user->getGrupyObiektow();
         $return = [];
         foreach ($grupyObiektow as $grupa) {
             /** @var GrupaObiektow $grupa */
@@ -93,6 +98,7 @@ class GrupaObiektowController extends AbstractController
 
     /**
      * @Route("/GrupaObiektow/Szczegoly/{id}", name="grupa_obiektow_szczegoly", condition="request.isXmlHttpRequest()")
+     * @IsGranted("ROLE_ADMIN")
      */
     public function szczegoly(GrupaObiektow $grupaObiektow)
     {

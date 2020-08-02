@@ -1,0 +1,31 @@
+{% trans_default_domain 'App' %}
+{% extends 'base.html.twig' %}
+{% block body %}
+    <h2 class="mb-3">{{ 'Uzytkownicy'|trans }}</h2>
+    <div class="card bg-light mt-4">
+        <div class="card-body" id="user-lista">
+            {% include 'user/tabela.html.twig' %}
+        </div>
+    </div>
+{% endblock %}
+{% block javascripts %}
+    <script>
+        function ZmienStatus(id, enabled) {
+            $.post(`{{ path('user_status') }}/${id}`, {enabled: !enabled}).done(Odswiez);
+        }
+
+        function Odswiez() {
+            $.get('{{ path('user_index') }}').done(r => $("#user-lista").html(r));
+        }
+
+        function Edytuj(id) {
+            bootbox.form(`{{ path('user_edytuj') }}/${id}`, "{{ 'Edycja'|trans }}");
+        }
+
+        function Usun(id) {
+            bootbox.confirm("{{ 'Usun.potwierdz'|trans }}",
+                ok => !ok ? true : $.post(`{{ path('user_usun') }}/${id}`).done(Odswiez)
+            );
+        }
+    </script>
+{% endblock %}

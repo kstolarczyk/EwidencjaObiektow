@@ -5,7 +5,9 @@
         <th>#</th>
         <th>{{ 'Nazwa'|trans }}</th>
         <th>{{ 'Symbol'|trans }}</th>
-        <th>{{ 'Akcje'|trans }}</th>
+        {% if is_granted('ROLE_ADMIN') %}
+            <th>{{ 'Akcje'|trans }}</th>
+        {% endif %}
     </tr>
     </thead>
     <tbody>
@@ -15,24 +17,26 @@
             <td>{{ loop.index }}</td>
             <td>{{ grupa.nazwa }}</td>
             <td>{{ grupa.symbol }}</td>
-            <td>
-                <button class="btn btn-secondary dropdown-toggle" data-toggle="dropdown">
-                    <i class="fas fa-fw fa-cogs"></i></button>
-                <div class="dropdown-menu">
-                    <a class="dropdown-item" href="javascript:void(0)" onclick='Szczegoly({{ grupaJson }})'>
-                        <i class="fas fa-fw fa-info-circle"></i>
-                        {{ 'Szczegoly'|trans }}
-                    </a>
-                    <a class="dropdown-item" href="javascript:void(0)" onclick='Edytuj({{ grupaJson }})'>
-                        <i class="fas fa-fw fa-edit"></i>
-                        {{ 'Edytuj'|trans }}
-                    </a>
-                    <a class="dropdown-item {% if not grupa.obiekty.isEmpty() %}disabled{% endif %}" href="javascript:void(0)" onclick='Usun({{ grupaJson }})'>
-                        <i class="fas fa-fw fa-trash"></i>
-                        {{ 'Usun'|trans }}
-                    </a>
-                </div>
-            </td>
+            {% if is_granted('ROLE_ADMIN') %}
+                <td>
+                    <button class="btn btn-secondary dropdown-toggle" data-toggle="dropdown">
+                        <i class="fas fa-fw fa-cogs"></i></button>
+                    <div class="dropdown-menu">
+                        <a class="dropdown-item" href="javascript:void(0)" onclick='Szczegoly({{ grupaJson }})'>
+                            <i class="fas fa-fw fa-info-circle"></i>
+                            {{ 'Szczegoly'|trans }}
+                        </a>
+                        <a class="dropdown-item" href="javascript:void(0)" onclick='Edytuj({{ grupaJson }})'>
+                            <i class="fas fa-fw fa-edit"></i>
+                            {{ 'Edytuj'|trans }}
+                        </a>
+                        <a class="dropdown-item {% if not grupa.obiekty.isEmpty() %}disabled{% endif %}" href="javascript:void(0)" onclick='Usun({{ grupaJson }})'>
+                            <i class="fas fa-fw fa-trash"></i>
+                            {{ 'Usun'|trans }}
+                        </a>
+                    </div>
+                </td>
+            {% endif %}
         </tr>
     {% endfor %}
     </tbody>

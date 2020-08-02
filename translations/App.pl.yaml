@@ -66,3 +66,15 @@ Ustawienia: Ustawienia
 Profil: Profil
 Nawigacja: Nawigacja
 Email: Email
+Przydziel:
+  uzytkownikow: Przydziel użytkowników
+  role: Przydziel role
+  grupy:
+    obiektow: Przydziel grupy obiektów
+Uzytkownicy: Użytkownicy
+Aktywny: Aktywny
+Wylaczony: Wyłączony
+Zmien:
+  status: Zmień status
+Edycja: Edycja
+Zarzadzanie: Zarządzanie

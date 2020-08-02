@@ -7,10 +7,13 @@ use App\Entity\Obiekt;
 use App\Entity\TypParametru;
 use App\Form\ObiektType;
 use Doctrine\ORM\EntityManagerInterface;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Security\Core\User\UserInterface;
 
 class ObiektController extends AbstractController
 {
@@ -41,8 +44,11 @@ class ObiektController extends AbstractController
     /**
      * @Route("/Obiekt/Ajax/{id}", name="obiekt_ajax_lista", condition="request.isXmlHttpRequest()")
      */
-    public function listaObiektow(Request $request, EntityManagerInterface $entityManager, GrupaObiektow $grupaObiektow)
+    public function listaObiektow(Request $request, EntityManagerInterface $entityManager, GrupaObiektow $grupaObiektow, UserInterface $user)
     {
+        if (!$grupaObiektow->getUsers()->contains($user)) {
+            throw new NotFoundHttpException();
+        }
         $params = $request->query->all();
         $lista = $entityManager->getRepository(Obiekt::class)
             ->dtFindBy(['grupa' => $grupaObiektow],
@@ -106,6 +112,7 @@ class ObiektController extends AbstractController
 
     /**
      * @Route("/Obiekt/Mapa", name="obiekty_mapa", condition="request.isXmlHttpRequest()")
+     * @IsGranted("ROLE_ADMIN")
      */
     public function obiekty(EntityManagerInterface $entityManager, Request $request)
     {

@@ -7,7 +7,9 @@
         <th>{{ 'Symbol'|trans }}</th>
         <th>{{ 'Typ.danych.1'|trans }}</th>
         <th>{{ 'Jednostka.miary'|trans }}</th>
-        <th>{{ 'Akcje'|trans }}</th>
+        {% if is_granted('ROLE_ADMIN') %}
+            <th>{{ 'Akcje'|trans }}</th>
+        {% endif %}
     </tr>
     </thead>
     <tbody>
@@ -19,20 +21,22 @@
             <td>{{ typ.symbol }}</td>
             <td>{{ typ.typDanych|trans([],'TypDanych') }}</td>
             <td>{{ typ.jednostkaMiary }}</td>
-            <td>
-                <button class="btn btn-secondary dropdown-toggle" data-toggle="dropdown">
-                    <i class="fas fa-fw fa-cogs"></i></button>
-                <div class="dropdown-menu">
-                    <a class="dropdown-item" href="javascript:void(0)" onclick='Edytuj({{ typJson }})'>
-                        <i class="fas fa-fw fa-edit"></i>
-                        {{ 'Edytuj'|trans }}
-                    </a>
-                    <a class="dropdown-item {% if not typ.grupyObiektow.isEmpty() %}disabled{% endif %}" href="javascript:void(0)" onclick='Usun({{ typJson }})'>
-                        <i class="fas fa-fw fa-trash"></i>
-                        {{ 'Usun'|trans }}
-                    </a>
-                </div>
-            </td>
+            {% if is_granted('ROLE_ADMIN') %}
+                <td>
+                    <button class="btn btn-secondary dropdown-toggle" data-toggle="dropdown">
+                        <i class="fas fa-fw fa-cogs"></i></button>
+                    <div class="dropdown-menu">
+                        <a class="dropdown-item" href="javascript:void(0)" onclick='Edytuj({{ typJson }})'>
+                            <i class="fas fa-fw fa-edit"></i>
+                            {{ 'Edytuj'|trans }}
+                        </a>
+                        <a class="dropdown-item {% if not typ.grupyObiektow.isEmpty() %}disabled{% endif %}" href="javascript:void(0)" onclick='Usun({{ typJson }})'>
+                            <i class="fas fa-fw fa-trash"></i>
+                            {{ 'Usun'|trans }}
+                        </a>
+                    </div>
+                </td>
+            {% endif %}
         </tr>
     {% endfor %}
     </tbody>

@@ -5,6 +5,7 @@ namespace App\Entity;
 
 
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Security\Core\User\UserInterface;
@@ -60,9 +61,21 @@ class User implements UserInterface
      */
     private ArrayCollection $roles;
 
+    /**
+     * @ORM\ManyToMany(targetEntity="App\Entity\GrupaObiektow", inversedBy="users")
+     * @ORM\JoinTable(name="users_grupy_obiektow")
+     */
+    private Collection $grupyObiektow;
+
+    /**
+     * @ORM\Column(name="enabled", type="boolean", nullable=false)
+     */
+    private bool $enabled;
+
     public function __construct()
     {
         $this->roles = new ArrayCollection(['ROLE_USER']);
+        $this->grupyObiektow = new ArrayCollection();
     }
 
     public function setRoles(array $roles): void
@@ -158,5 +171,35 @@ class User implements UserInterface
         $this->email = $email;
     }
 
+    public function getGrupyObiektow()
+    {
+        return $this->grupyObiektow;
+    }
 
+    public function setGrupyObiektow($grupyObiektow): void
+    {
+        $this->grupyObiektow = $grupyObiektow;
+    }
+
+    public function addGrupaObiektow(GrupaObiektow $grupaObiektow): bool
+    {
+        if (!$this->grupyObiektow->contains($grupaObiektow)) {
+            return $this->grupyObiektow->add($grupaObiektow);
+        }
+    }
+
+    public function removeGrupaObiektow(GrupaObiektow $grupaObiektow): bool
+    {
+        return $this->grupyObiektow->removeElement($grupaObiektow);
+    }
+
+    public function isEnabled(): bool
+    {
+        return $this->enabled;
+    }
+
+    public function setEnabled(bool $enabled): void
+    {
+        $this->enabled = $enabled;
+    }
 }

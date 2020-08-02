@@ -153,3 +153,44 @@ function initMapsApi() {
     {% include 'jsTemplates/infoWindow.template.es6.twig' %}
     {% endif %}
 }
+
+bootbox.form = function (url, title) {
+    var dialog = this.confirm({
+        message: '<div class="bootbox-dialog-content"><i class="fas fa-fw fa-2x fa-spinner fa-pulse"></i></div>',
+        title: title,
+        buttons: {
+            confirm: {
+                label: "{{ 'Zapisz'|trans }}",
+                className: "btn-primary btn-lg"
+            },
+            cancel: {
+                label: "{{ 'Zamknij'|trans }}",
+                className: "btn-secondary btn-lg"
+            }
+        },
+        onShow: function () {
+            $.ajax(url, {
+                method: 'POST',
+                success: function (response) {
+                    dialog.find("div.bootbox-dialog-content").html(response);
+                }
+            });
+        },
+        callback: function (result) {
+            if (!result) return true;
+            var form = dialog.find("form");
+            $.ajax(url, {
+                method: 'POST',
+                data: form.serialize(),
+                success: function (response) {
+                    if (response === true) {
+                        dialog.modal('hide');
+                        return;
+                    }
+                    dialog.find("div.bootbox-dialog-content").html(response);
+                }
+            });
+            return false;
+        }
+    });
+};
