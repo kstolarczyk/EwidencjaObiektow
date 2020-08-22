@@ -25,10 +25,15 @@ class ObiektApiController extends BaseApiController
      */
     public function index(Request $request, EntityManagerInterface $entityManager, GrupaObiektow $grupaObiektow)
     {
-        if(!$this->autoryzacja("", ""))
-            return new JsonResponse(false,401,[
-                'error' => "InvalidCredentials",
-            ]);
+        $data = json_decode($request->getContent(), true);
+        $login = $data['credentials']['base64_login'];
+        $password = $data['credentials']['base64_password'];
+        if(($code = $this->autoryzacja($login, $password)) !== true)
+            return new JsonResponse( [
+                'errors' => $code,
+                'data' => []
+            ], $code);
+
         $lista = $entityManager->getRepository(Obiekt::class)->findBy(['grupa' => $grupaObiektow]);
         $return = [];
         foreach ($lista as $obiekt) {
@@ -42,9 +47,10 @@ class ObiektApiController extends BaseApiController
                 'szerokosc' => $obiekt->getSzerokosc(),
             ];
         }
-        return new JsonResponse(true, 200,[
-            'data' => $return
-        ]);
+        return new JsonResponse([
+            'errors' => [],
+            'data' => []
+        ],200);
     }
     /**
      * @Route("/Api/Obiekt/Mapa", name="obiekty_mapa_api", methods={"POST"})
@@ -52,10 +58,15 @@ class ObiektApiController extends BaseApiController
      */
     public function obiekty(EntityManagerInterface $entityManager, Request $request)
     {
+        $data = json_decode($request->getContent(), true);
+        $login = $data['credentials']['base64_login'];
+        $password = $data['credentials']['base64_password'];
+        if(($code = $this->autoryzacja($login, $password)) !== true)
+            return new JsonResponse( [
+                'errors' => $code,
+                'data' => []
+            ], $code);
 
-        if(!$this->autoryzacja("", "")) {
-            return new JsonResponse(false, 401);
-        }
         $NELat = $request->query->get('NELat', 0.0);
         $NELng = $request->query->get('NELng', 0.0);
         $SWLat = $request->query->get('SWLat', 0.0);
@@ -68,23 +79,34 @@ class ObiektApiController extends BaseApiController
             $SWLng
         );
 
-        return new JsonResponse(true, 200,
-            [
-            'obiekty' => $obiekty,
-            'coords' => ['lat' => (float)$_ENV['MAPS_DEFAULT_LAT'], 'lng' => (float)$_ENV['MAPS_DEFAULT_LON']],
-            'zoom' => 10,
-            ]);
+        return new JsonResponse([
+            'errors' => [],
+            'data' => [
+                'obiekty' => $obiekty,
+                'coords' => ['lat' => (float)$_ENV['MAPS_DEFAULT_LAT'], 'lng' => (float)$_ENV['MAPS_DEFAULT_LON']],
+                'zoom' => 10,
+            ]],200);
     }
     /**
      * @Route("/Api/Obiekt/Usun/{id}", name="obiekt_usun_api", requirements={"id":"\d+"}, methods={"POST"})
      */
     public function usun(Request $request, EntityManagerInterface $entityManager, Obiekt $obiekt)
     {
-        if(!$this->autoryzacja("", ""))
-            return new JsonResponse(false, 401);
+        $data = json_decode($request->getContent(), true);
+        $login = $data['credentials']['base64_login'];
+        $password = $data['credentials']['base64_password'];
+        if(($code = $this->autoryzacja($login, $password)) !== true)
+            return new JsonResponse( [
+                'errors' => $code,
+                'data' => []
+            ], $code);
+
         $entityManager->remove($obiekt);
         $entityManager->flush();
-        return new JsonResponse(true, 200);
+        return new JsonResponse([
+            'errors' => [],
+            'data' => []
+        ],200);;
 
     }
     /**
@@ -92,18 +114,30 @@ class ObiektApiController extends BaseApiController
      */
     public function edytuj(Request $request, EntityManagerInterface $entityManager, Obiekt $obiekt)
     {
-        if(!$this->autoryzacja("", ""))
-            return new JsonResponse(false, 401);
         $data = json_decode($request->getContent(), true);
+        $login = $data['credentials']['base64_login'];
+        $password = $data['credentials']['base64_password'];
+        if(($code = $this->autoryzacja($login, $password)) !== true)
+            return new JsonResponse( [
+                'errors' => $code,
+                'data' => []
+            ], $code);
+
+        unset($data['credentials']);
         $form = $this->createForm(ObiektType::class, $obiekt, ["csrf_protection" => false]);
         $form->submit($data);
         if ($form->isSubmitted() && $form->isValid()) {
             $entityManager->flush();
-            return new JsonResponse(true, 200);
+            return new JsonResponse([
+                'errors' => [],
+                'data' => []
+            ],200);
         }
-        return new JsonResponse(false, 402,[
-            $form->getErrors()
-        ]);
+        return new JsonResponse(
+            [
+                'errors' => $form->getErrors(),
+                'data' => []
+            ], 402);
 
     }
     /**
@@ -111,20 +145,32 @@ class ObiektApiController extends BaseApiController
      */
     public function dodaj(Request $request, EntityManagerInterface $entityManager)
     {
-        if(!$this->autoryzacja("", ""))
-            return new JsonResponse(false, 401);
-        $obiekt = new Obiekt();
         $data = json_decode($request->getContent(), true);
+        $login = $data['credentials']['base64_login'];
+        $password = $data['credentials']['base64_password'];
+        if(($code = $this->autoryzacja($login, $password)) !== true)
+            return new JsonResponse( [
+                'errors' => $code,
+                'data' => []
+            ], $code);
+
+        unset($data['credentials']);
+        $obiekt = new Obiekt();
         $form = $this->createForm(ObiektType::class, $obiekt, ["csrf_protection" => false]);
         $form->submit($data);
         if ($form->isSubmitted() && $form->isValid()) {
             $entityManager->persist($obiekt);
             $entityManager->flush();
-            return new JsonResponse(true, 200);
+            return new JsonResponse([
+                'errors' => [],
+                'data' => []
+            ],200);
         }
-        return new JsonResponse(false, 402, [
-            $form->getErrors()
-        ]);
+        return new JsonResponse(
+            [
+                'errors' => $form->getErrors(),
+                'data' => []
+            ], 402);
 
     }
 }

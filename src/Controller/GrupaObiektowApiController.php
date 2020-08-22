@@ -122,14 +122,20 @@ class GrupaObiektowApiController extends BaseApiController
             ], $code);
 
         if (!$grupa->getObiekty()->isEmpty()) {
-            return new JsonResponse(false, 400);
+            return new JsonResponse([
+                'errors' => [],
+                'data' => []
+            ], 400);
         }
         if (!$grupa->getTypyParametrow()->isEmpty()) {
             $grupa->getTypyParametrow()->clear();
         }
         $entityManager->remove($grupa);
         $entityManager->flush();
-        return new JsonResponse(true, 200);
+        return new JsonResponse([
+            'errors' => [],
+            'data' => []
+        ], 200);
     }
 
 
