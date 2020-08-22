@@ -16,10 +16,15 @@ class GrupaObiektowApiController extends BaseApiController
      */
     public function index(Request $request, EntityManagerInterface $entityManager)
     {
-        if(!$this->autoryzacja("", ""))
-            return new JsonResponse(false,401,[
-                'error' => "InvalidCredentials",
-            ]);
+        $data = json_decode($request->getContent(), true);
+        $login = $data['credentials']['base64_login'];
+        $password = $data['credentials']['base64_password'];
+        if(($code = $this->autoryzacja($login, $password)) !== true)
+            return new JsonResponse( [
+                'errors' => $code,
+                'data' => []
+            ], $code);
+
         $lista = $entityManager->getRepository(GrupaObiektow::class)->findAll();
         foreach ($lista as $grupa) {
             /** @var GrupaObiektow $grupa */
@@ -33,8 +38,9 @@ class GrupaObiektowApiController extends BaseApiController
             ];
         }
         return new JsonResponse([
-            'lista' => $return
-        ]);
+            'errors' => [],
+            'data' => $return
+        ], 200);
     }
 
     /**
@@ -42,22 +48,32 @@ class GrupaObiektowApiController extends BaseApiController
      */
     public function dodaj(Request $request, EntityManagerInterface $entityManager)
     {
-        if(!$this->autoryzacja("", ""))
-            return new JsonResponse(false,401,[
-                'error' => "InvalidCredentials",
-            ]);
-        $grupa = new GrupaObiektow();
         $data = json_decode($request->getContent(), true);
+        $login = $data['credentials']['base64_login'];
+        $password = $data['credentials']['base64_password'];
+        if(($code = $this->autoryzacja($login, $password)) !== true)
+            return new JsonResponse( [
+                'errors' => $code,
+                'data' => []
+            ], $code);
+
+        unset($data['credentials']);
+        $grupa = new GrupaObiektow();
         $form = $this->createForm(GrupaObiektowType::class, $grupa, ["csrf_protection" => false]);
         $form->submit($data);
         if ($form->isSubmitted() && $form->isValid()) {
             $entityManager->persist($grupa);
             $entityManager->flush();
-            return new JsonResponse(true,200);
+            return new JsonResponse([
+                'errors' => [],
+                'data' => []
+            ],200);
         }
-        return new JsonResponse(false, 402,[
-            $form->getErrors()
-        ]);
+        return new JsonResponse(
+            [
+                'errors' => $form->getErrors(),
+                'data' => []
+            ], 402);
     }
 
     /**
@@ -65,32 +81,46 @@ class GrupaObiektowApiController extends BaseApiController
      */
     public function edytuj(Request $request, EntityManagerInterface $entityManager, GrupaObiektow $grupa)
     {
-        if(!$this->autoryzacja("", ""))
-            return new JsonResponse(false,401,[
-                'error' => "InvalidCredentials",
-            ]);
         $data = json_decode($request->getContent(), true);
+        $login = $data['credentials']['base64_login'];
+        $password = $data['credentials']['base64_password'];
+        if(($code = $this->autoryzacja($login, $password)) !== true)
+            return new JsonResponse([
+                'errors' => $code,
+                'data' => []
+            ], $code);
+
+        unset($data['credentials']);
         $form = $this->createForm(GrupaObiektowType::class, $grupa, ["csrf_protection" => false]);
         $form->submit($data);
         if ($form->isSubmitted() && $form->isValid()) {
             $entityManager->flush();
-            return new JsonResponse(true,200);
+            return new JsonResponse([
+                'errors' => [],
+                'data' => []
+            ],200);
         }
 
-        return new JsonResponse(false, 402,[
-            $form->getErrors()
-        ]);
+        return new JsonResponse([
+            'errors' => $form->getErrors(),
+            'data' => []
+        ], 402);
     }
 
     /**
      * @Route("/Api/GrupaObiektow/Usun/{id}", name="grupa_obiektow_usun_api", requirements={"id":"\d+"}, methods={"POST"})
      */
-    public function usun(EntityManagerInterface $entityManager, GrupaObiektow $grupa)
+    public function usun(Request $request, EntityManagerInterface $entityManager, GrupaObiektow $grupa)
     {
-        if(!$this->autoryzacja("", ""))
-            return new JsonResponse(false,401,[
-                'error' => "InvalidCredentials",
-            ]);
+        $data = json_decode($request->getContent(), true);
+        $login = $data['credentials']['base64_login'];
+        $password = $data['credentials']['base64_password'];
+        if(($code = $this->autoryzacja($login, $password)) !== true)
+            return new JsonResponse([
+                'errors' => $code,
+                'data' => []
+            ], $code);
+
         if (!$grupa->getObiekty()->isEmpty()) {
             return new JsonResponse(false, 400);
         }
