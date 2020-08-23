@@ -4,6 +4,8 @@ namespace App\Form;
 
 use App\Entity\GrupaObiektow;
 use App\Entity\Obiekt;
+use App\Entity\Parametr;
+use App\Entity\TypParametru;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
@@ -11,6 +13,8 @@ use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\Form\FormEvent;
+use Symfony\Component\Form\FormEvents;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class ObiektType extends AbstractType
@@ -44,8 +48,25 @@ class ObiektType extends AbstractType
                 'allow_delete' => true,
                 'entry_options' => [
                     'label' => false
-                ]
+                ],
             ]);
+        $builder->addEventListener(FormEvents::SUBMIT, function (FormEvent $event) {
+            $form = $event->getForm();
+            $obiekt = $event->getData();
+            if (!$obiekt instanceof Obiekt) return;
+            $grupa = $obiekt->getGrupa();
+            if (!$grupa) return;
+            foreach ($grupa->getTypyParametrow() as $typ) {
+                if (!$typ instanceof TypParametru) continue;
+                if ($obiekt->getParametry()->exists(
+                    fn(int $i, Parametr $p) => $p->getTyp() !== null && $p->getTyp()->getId() === $typ->getId()
+                )) continue;
+                $parametr = new Parametr();
+                $parametr->setObiekt($obiekt);
+                $parametr->setTyp($typ);
+                $obiekt->addParametry($parametr);
+            }
+        });
     }
 
     public function configureOptions(OptionsResolver $resolver)

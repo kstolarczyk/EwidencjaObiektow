@@ -3,19 +3,17 @@
 
 namespace App\Controller;
 
-use App\Controller\BaseApiController;
-use App\Entity\Parametr;
-use App\Form\ObiektType;
-use App\Form\ParametrType;
-use App\Kernel;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
-use Symfony\Component\Routing\Annotation\Route;
 use App\Entity\GrupaObiektow;
 use App\Entity\Obiekt;
+use App\Entity\Parametr;
+use App\Entity\TypParametru;
+use App\Form\ObiektType;
 use Doctrine\ORM\EntityManagerInterface;
-use phpDocumentor\Reflection\Types\Boolean;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Validator\ConstraintViolation;
+use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 
 class ObiektApiController extends BaseApiController
@@ -106,38 +104,67 @@ class ObiektApiController extends BaseApiController
         return new JsonResponse([
             'errors' => [],
             'data' => []
-        ],200);;
+        ], 200);
 
     }
+
     /**
      * @Route("/Api/Obiekt/Edytuj/{id}", name="obiekt_edytuj_api", requirements={"id":"\d+"} , methods={"POST"})
      */
-    public function edytuj(Request $request, EntityManagerInterface $entityManager, Obiekt $obiekt)
+    public function edytuj(Request $request, EntityManagerInterface $entityManager,
+                           ValidatorInterface $validator, Obiekt $obiekt)
     {
         $data = json_decode($request->getContent(), true);
         $login = $data['credentials']['base64_login'];
         $password = $data['credentials']['base64_password'];
-        if(($code = $this->autoryzacja($login, $password)) !== true)
-            return new JsonResponse( [
+        if (($code = $this->autoryzacja($login, $password)) !== true)
+            return new JsonResponse([
                 'errors' => $code,
                 'data' => []
             ], $code);
 
         unset($data['credentials']);
-        $form = $this->createForm(ObiektType::class, $obiekt, ["csrf_protection" => false]);
-        $form->submit($data);
-        if ($form->isSubmitted() && $form->isValid()) {
+        foreach ($data as $key => $value) {
+            switch ($key) {
+                case "grupa":
+                    break;
+                case "parametry":
+                    if (!is_array($value)) break;
+                    foreach ($value as $param) {
+                        $typ = $entityManager->getRepository(TypParametru::class)->find($param["typ"] ?? 0);
+                        $parametr = $entityManager->getRepository(Parametr::class)->findOneBy([
+                            'typ' => $typ,
+                            'obiekt' => $obiekt
+                        ]);
+                        if (!$parametr instanceof Parametr) continue;
+                        $parametr->setValue((string)($param["value"] ?? null));
+                        $params[] = $parametr;
+                    }
+                    break;
+                default:
+                    $obiekt->setPlainData($key, $value);
+            }
+        }
+
+        $errors = $validator->validate($obiekt);
+        if ($errors->count() <= 0) {
             $entityManager->flush();
             return new JsonResponse([
                 'errors' => [],
                 'data' => []
-            ],200);
+            ], 200);
+        }
+
+        $err = [];
+        foreach ($errors as $e) {
+            if (!$e instanceof ConstraintViolation) continue;
+            $err[$e->getPropertyPath()] = $e->getMessage();
         }
         return new JsonResponse(
             [
-                'errors' => $form->getErrors(),
+                'errors' => $err,
                 'data' => []
-            ], 402);
+            ], 400);
 
     }
     /**
@@ -168,9 +195,9 @@ class ObiektApiController extends BaseApiController
         }
         return new JsonResponse(
             [
-                'errors' => $form->getErrors(),
+                'errors' => $this->buildErrorArray($form),
                 'data' => []
-            ], 402);
+            ], 400);
 
     }
 }

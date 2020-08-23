@@ -29,7 +29,7 @@ class User implements UserInterface
     /**
      * @ORM\Column(name="username", type="string", nullable=false, length=24)
      * @Assert\NotBlank()
-     * @Assert\Length(min="5", max="24")
+     * @Assert\Length(min="4", max="24")
      */
     private string $username = '';
 

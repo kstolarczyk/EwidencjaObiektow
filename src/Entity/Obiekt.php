@@ -8,6 +8,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Component\Validator\Context\ExecutionContextInterface;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\ObiektRepository")
@@ -20,8 +21,7 @@ class Obiekt implements \JsonSerializable
      * @ORM\GeneratedValue(strategy="AUTO")
      * @ORM\Column(name="id", type="integer", nullable=false)
      */
-    private int $id;
-
+    private ?int $id = null;
     /**
      * @ORM\Column(name="symbol", type="string", nullable=false)
      * @Assert\NotBlank()
@@ -66,12 +66,12 @@ class Obiekt implements \JsonSerializable
         $this->parametry = new ArrayCollection();
     }
 
-    public function getId(): int
+    public function getId(): ?int
     {
         return $this->id;
     }
 
-    public function setId(int $id): void
+    public function setId(?int $id): void
     {
         $this->id = $id;
     }
@@ -154,5 +154,34 @@ class Obiekt implements \JsonSerializable
     public function jsonSerialize()
     {
         return get_object_vars($this);
+    }
+
+    public function setPlainData($key, $value)
+    {
+        try {
+            $this->{$key} = $value;
+        } catch (\Exception $e) {
+        }
+    }
+
+    /**
+     * @Assert\Callback
+     */
+    public function valdiate(ExecutionContextInterface $context)
+    {
+        if ($this->grupa === null) return;
+        if ($this->parametry->count() !== $this->grupa->getTypyParametrow()->count()) {
+            $context->buildViolation("Liczba parametrów niezgodna z grupą obiektów")
+                ->atPath("parametry")->addViolation();
+            return;
+        }
+        foreach ($this->parametry as $i => $parametr) {
+            if (!$parametr instanceof Parametr) continue;
+            $typ = $parametr->getTyp();
+            if ($typ !== null && $this->grupa->getTypyParametrow()->exists(fn(int $j, TypParametru $t) => $t->getId() === $typ->getId())) continue;
+            $context->buildViolation("Nieprawidłowy typ parametru dla wybranej grupy obiektów")
+                ->atPath("parametry[$i]")
+                ->addViolation();
+        }
     }
 }

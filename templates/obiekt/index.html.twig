@@ -7,8 +7,10 @@
     <button class="btn btn-primary btn-lg" onclick="Dodaj()"><i class="fas fa-fw fa-plus"></i></button>
     {% if is_granted('ROLE_ADMIN') %}
         <button class="btn btn-success btn-lg float-right" onclick="Mapa()">
+            <i class="fas fa-fw fa-lg fa-map-marked-alt"></i>
+        </button>
     {% endif %}
-        <i class="fas fa-fw fa-lg fa-map-marked-alt"></i></button>
+
     <div class="row mt-3">
         <div class="col-md-4">
             <select id="grupa_obiektow-select" class="form-control" data-placeholder="{{ 'Wybierz.grupe'|trans }}..." data-allow-clear="true">
