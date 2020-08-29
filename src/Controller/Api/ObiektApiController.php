@@ -1,8 +1,9 @@
 <?php
 
 
-namespace App\Controller;
+namespace App\Controller\Api;
 
+use App\Controller\BaseApiController;
 use App\Entity\GrupaObiektow;
 use App\Entity\Obiekt;
 use App\Entity\Parametr;
@@ -50,6 +51,7 @@ class ObiektApiController extends BaseApiController
             'data' => []
         ],200);
     }
+
     /**
      * @Route("/Api/Obiekt/Mapa", name="obiekty_mapa_api", methods={"POST"})
      *
@@ -85,6 +87,7 @@ class ObiektApiController extends BaseApiController
                 'zoom' => 10,
             ]],200);
     }
+
     /**
      * @Route("/Api/Obiekt/Usun/{id}", name="obiekt_usun_api", requirements={"id":"\d+"}, methods={"POST"})
      */
@@ -167,6 +170,7 @@ class ObiektApiController extends BaseApiController
             ], 400);
 
     }
+
     /**
      * @Route("/Api/Obiekt/Dodaj", name="obiekt_dodaj_api", methods={"POST"})
      */

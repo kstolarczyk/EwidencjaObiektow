@@ -7,14 +7,12 @@
  */
 
 
-namespace App\Controller;
+namespace App\Controller\Api;
 
-use App\Entity\GrupaObiektow;
+use App\Controller\BaseApiController;
 use App\Entity\TypParametru;
 use App\Form\TypParametruType;
-use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityManagerInterface;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;

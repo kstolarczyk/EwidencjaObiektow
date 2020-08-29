@@ -14,7 +14,6 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class UserType extends AbstractType
 {
-
     protected array $roles;
 
     public function __construct(ParameterBagInterface $parameterBag)

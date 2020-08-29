@@ -32,7 +32,6 @@ class ResettingController extends AbstractController
     {
         $form = $this->createForm(PasswordRequestType::class);
         $form->handleRequest($request);
-
         if ($form->isSubmitted() && $form->isValid()) {
             $email = $form->get('email')->getData();
             $user = $entityManager->getRepository(User::class)->findOneBy(['email' => $email]);
@@ -45,11 +44,8 @@ class ResettingController extends AbstractController
             $token = bin2hex(random_bytes(48));
             $user->setPasswordRequestToken($token);
             $entityManager->flush();
-
             $message = new Email();
-            $message->from('kamilinho20@gmail.com')
-                ->to($email)
-                ->subject($translator->trans('Password.request.subject', [], 'App'))
+            $message->from('kamilinho20@gmail.com')->to($email)->subject($translator->trans('Password.request.subject', [], 'App'))
                 ->html($this->renderView('resetting/email.html.twig',
                     ['reset_url' => $this->generateUrl('password_reset', ['passwordRequestToken' => $token], UrlGeneratorInterface::ABSOLUTE_URL)]
                 ));

@@ -1,7 +1,8 @@
 <?php
 
-namespace App\Controller;
+namespace App\Controller\Api;
 
+use App\Controller\BaseApiController;
 use App\Entity\GrupaObiektow;
 use App\Form\GrupaObiektowType;
 use Doctrine\ORM\EntityManagerInterface;
@@ -137,7 +138,6 @@ class GrupaObiektowApiController extends BaseApiController
             'data' => []
         ], 200);
     }
-
 
 
 }

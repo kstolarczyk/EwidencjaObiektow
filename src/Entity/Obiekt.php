@@ -22,6 +22,7 @@ class Obiekt implements \JsonSerializable
      * @ORM\Column(name="id", type="integer", nullable=false)
      */
     private ?int $id = null;
+
     /**
      * @ORM\Column(name="symbol", type="string", nullable=false)
      * @Assert\NotBlank()
