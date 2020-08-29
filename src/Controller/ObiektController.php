@@ -9,6 +9,9 @@ use App\Form\ObiektType;
 use Doctrine\ORM\EntityManagerInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\Filesystem\Filesystem;
+use Symfony\Component\HttpFoundation\File\File;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
@@ -70,6 +73,14 @@ class ObiektController extends AbstractController
         $form = $this->createForm(ObiektType::class, $obiekt);
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
+            $file = $obiekt->getImgFile();
+            if ($file instanceof UploadedFile) {
+                $newFileName = uniqid(md5($file->getClientOriginalName())) . "." . $file->getClientOriginalExtension();
+                $path = $_ENV["IMG_DIR"];
+                $file->move($path, $newFileName);
+                $obiekt->setZdjecie($newFileName);
+                $obiekt->setImgFile(null);
+            }
             $entityManager->persist($obiekt);
             $entityManager->flush();
             return new JsonResponse(true);
@@ -85,11 +96,22 @@ class ObiektController extends AbstractController
     /**
      * @Route("/Obiekt/Edytuj/{id}", name="obiekt_edytuj", condition="request.isXmlHttpRequest()", requirements={"id":"\d+"}, methods={"POST"})
      */
-    public function edytuj(Request $request, EntityManagerInterface $entityManager, Obiekt $obiekt)
+    public function edytuj(Request $request, EntityManagerInterface $entityManager, Filesystem $fileSystem, Obiekt $obiekt)
     {
         $form = $this->createForm(ObiektType::class, $obiekt);
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
+            $file = $obiekt->getImgFile();
+            if ($file instanceof UploadedFile) {
+                $newFileName = uniqid(md5($file->getClientOriginalName())) . "." . $file->getClientOriginalExtension();
+                $path = $_ENV["IMG_DIR"];
+                $file->move($path, $newFileName);
+                if ($obiekt->getZdjecie() !== null) {
+                    $fileSystem->remove($path . $obiekt->getZdjecie());
+                }
+                $obiekt->setZdjecie($newFileName);
+                $obiekt->setImgFile(null);
+            }
             $entityManager->flush();
             return new JsonResponse(true);
         }
@@ -103,10 +125,11 @@ class ObiektController extends AbstractController
     /**
      * @Route("/Obiekt/Usun/{id}", name="obiekt_usun", condition="request.isXmlHttpRequest()", requirements={"id":"\d+"}, methods={"POST"})
      */
-    public function usun(EntityManagerInterface $entityManager, Obiekt $obiekt)
+    public function usun(EntityManagerInterface $entityManager, Filesystem $filesystem, Obiekt $obiekt)
     {
         $entityManager->remove($obiekt);
         $entityManager->flush();
+        $filesystem->remove($_ENV["IMG_DIR"] . $obiekt->getZdjecie());
         return new JsonResponse(true);
     }
 
@@ -135,6 +158,15 @@ class ObiektController extends AbstractController
         ]);
     }
 
-
+    /**
+     * @Route("/Obiekt/Zdjecie/{id}", name="obiekt_zdjecie", condition="request.isXmlHttpRequest()", requirements={"id":"\d+"}, defaults={"id"=0})
+     */
+    public function zdjecie(Obiekt $obiekt)
+    {
+        $path = $_ENV["IMG_DIR"] . $obiekt->getZdjecie();
+        $file = new File($path);
+        $data = base64_encode(file_get_contents($path));
+        return new JsonResponse(['content' => $data, 'mime' => $file->getMimeType()]);
+    }
 
 }

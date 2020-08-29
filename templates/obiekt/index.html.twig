@@ -96,9 +96,15 @@
         function Zapisz(e) {
             let form = $("#obiekt-modal-content").find("form");
             let id = $(e).data("id");
-            let url = id > 0 ? "{{ path('obiekt_edytuj', {id: '9999999'}) }}".replace('9999999', id) : "{{ path('obiekt_dodaj') }}"
-            $.post(url, form.serialize(), function (response, status) {
-                if (status === "success") {
+            let url = id > 0 ? "{{ path('obiekt_edytuj', {id: '9999999'}) }}".replace('9999999', id) : "{{ path('obiekt_dodaj') }}";
+            let data = new FormData(form[0]);
+            $.ajax({
+                url: url,
+                method: "POST",
+                data: data,
+                processData: false,
+                contentType: false,
+                success: function (response) {
                     if (response !== true) {
                         $("#obiekt-modal-content").html(response);
                     } else {
@@ -124,6 +130,12 @@
             });
         }
 
+        function PokazZdjecie(id) {
+            $.get(`{{ path('obiekt_zdjecie') }}/${id}`).then(r => bootbox.alert({
+                message: `<img src="data:${r.mime};base64,${r.content}" alt="zdjecie obiektu" class="img-fluid mx-auto mt-4 d-block" />`,
+                size: 'lg'
+            }));
+        }
 
 
         function InitializeMap($mapa, response) {

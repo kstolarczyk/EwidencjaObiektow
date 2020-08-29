@@ -5,7 +5,7 @@
             <table class="table table-responsive-md table-bordered w-100" id="obiekt-tabela">
                 <thead class="thead-dark">
                 <tr>
-                    <th data-key="nazwa">{{ 'Nazwa'|trans }}</th>
+                    <th data-render="ObiektNazwa" class="custom-render" data-key="nazwa">{{ 'Nazwa'|trans }}</th>
                     <th data-key="symbol">{{ 'Symbol'|trans }}</th>
                     {% for typ in typyParametrow %}
                         <th data-key="param{{ loop.index }}">{{ typ.nazwa }} {% if typ.jednostkaMiary %}[{{ typ.jednostkaMiary }}]{% endif %}</th>
@@ -19,6 +19,15 @@
     <script>
         function ObiektAkcje(row) {
             return '{{ include('obiekt/obiekt.dropdown.html.twig')|e('js') }}'.replace(/"__obiekt__"/g, JSON.stringify(row));
+        }
+
+        function ObiektNazwa(row) {
+            let html = `<span>${row.nazwa}</span>`;
+            console.log(row);
+            if (row.zdjecie != null) {
+                html += `<a class="float-right" href="javascript:void(0)" onclick="PokazZdjecie(${row.id})"><i class="fas fa-fw fa-image fa-2x"></i></a>`;
+            }
+            return html;
         }
 
         $("#obiekt-tabela").ajaxDataTable('{{ path('obiekt_ajax_lista', {id: grupaId}) }}', () => {

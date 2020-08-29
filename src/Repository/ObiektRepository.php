@@ -39,7 +39,7 @@ class ObiektRepository extends BaseRepository
             $query->andWhere("o.$column = :val$j")->setParameter('val' . $j++, $value);
         }
         $searchFields = ['o.nazwa', 'o.symbol'];
-        $select = ['DISTINCT o.nazwa as nazwa', 'o.symbol as symbol', 'o.id as id'];
+        $select = ['DISTINCT o.nazwa as nazwa', 'o.symbol as symbol', 'o.id as id, o.zdjecie as zdjecie'];
         foreach ($typyParametrow as $typ) {
             $query->leftJoin('o.parametry', "p$i", Expr\Join::WITH, "p$i.typ = :typ$i")
                 ->setParameter("typ$i", $typ);

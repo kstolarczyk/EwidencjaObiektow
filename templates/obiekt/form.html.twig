@@ -14,6 +14,14 @@
         </div>
         <div class="row">
             <div class="col-12">
+                <img id="image-preview" alt="image preview" class="d-none" style="max-height: 150px;"/>
+            </div>
+            <div class="col-12">
+                {{ form_row(form.imgFile) }}
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-12">
                 {{ form_row(form.grupa) }}
             </div>
         </div>
@@ -55,6 +63,16 @@
             $("#obiekt_dlugosc").val(coords.position.lng);
         });
         {% endif %}
+    });
+    $("#obiekt_imgFile").change(function () {
+        let reader = new FileReader();
+        reader.onload = function (e) {
+            $("#image-preview").attr("src", e.target.result);
+        }
+        reader.readAsDataURL(this.files[0]);
+        let fileName = $(this).val().split("\\").pop();
+        $(this).siblings(".custom-file-label").addClass("selected").html(fileName);
+        $("#image-preview").removeClass("d-none");
     });
 
     $("select:not(#obiekt_grupa)").each((i, e) => $(e).select2({

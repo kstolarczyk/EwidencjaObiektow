@@ -7,6 +7,7 @@ namespace App\Entity;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\Validator\Context\ExecutionContextInterface;
 
@@ -61,6 +62,16 @@ class Obiekt implements \JsonSerializable
      * @Assert\Regex(pattern="/\d+(\.\d+)?/")
      */
     private ?float $szerokosc = null;
+
+    /**
+     * @ORM\Column(name="zdjecie", type="string", nullable=true)
+     */
+    private ?string $zdjecie = null;
+
+    /**
+     * @Assert\Image()
+     */
+    private ?UploadedFile $imgFile = null;
 
     public function __construct()
     {
@@ -155,6 +166,26 @@ class Obiekt implements \JsonSerializable
     public function jsonSerialize()
     {
         return get_object_vars($this);
+    }
+
+    public function getZdjecie(): ?string
+    {
+        return $this->zdjecie;
+    }
+
+    public function setZdjecie(?string $zdjecie): void
+    {
+        $this->zdjecie = $zdjecie;
+    }
+
+    public function getImgFile(): ?UploadedFile
+    {
+        return $this->imgFile;
+    }
+
+    public function setImgFile(?UploadedFile $imgFile): void
+    {
+        $this->imgFile = $imgFile;
     }
 
     public function setPlainData($key, $value)
