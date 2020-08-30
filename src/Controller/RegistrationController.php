@@ -11,6 +11,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
+use Symfony\Component\Security\Core\Exception\CustomUserMessageAuthenticationException;
 use Symfony\Component\Security\Guard\GuardAuthenticatorHandler;
 
 class RegistrationController extends AbstractController
@@ -34,13 +35,22 @@ class RegistrationController extends AbstractController
                 )
             );
             //TODO: make it configurable with APP_ENV (first ever user should be enabled automatically)
-            $user->setEnabled(true);
 
             $entityManager = $this->getDoctrine()->getManager();
+            $firstUser = $entityManager->getRepository(User::class)->count([]) == 0;
+            if ($firstUser) {
+                $user->setRoles(['ROLE_SUPER_ADMIN']);
+                $user->setEnabled(true);
+            } else {
+                $user->setEnabled($_ENV["USER_DEFAULT_ENABLED"] == "true");
+            }
+
             $entityManager->persist($user);
             $entityManager->flush();
 
-
+            if (!$user->isEnabled()) {
+                throw new CustomUserMessageAuthenticationException("User %username% is disabled. Please contact with system administrator.", ['%username%' => $user->getUsername()]);
+            }
             return $guardHandler->authenticateUserAndHandleSuccess($user, $request, $authenticator, 'main');
         }
 
