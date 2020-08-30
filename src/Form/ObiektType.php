@@ -6,6 +6,8 @@ use App\Entity\GrupaObiektow;
 use App\Entity\Obiekt;
 use App\Entity\Parametr;
 use App\Entity\TypParametru;
+use App\Entity\User;
+use App\Repository\GrupaObiektowRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
@@ -17,15 +19,18 @@ use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormEvent;
 use Symfony\Component\Form\FormEvents;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Security\Core\Security;
 
 class ObiektType extends AbstractType
 {
 
     protected EntityManagerInterface $entityManager;
+    private ?User $user;
 
-    public function __construct(EntityManagerInterface $entityManager)
+    public function __construct(EntityManagerInterface $entityManager, Security $security)
     {
         $this->entityManager = $entityManager;
+        $this->user = $security->getUser();
     }
 
     public function buildForm(FormBuilderInterface $builder, array $options)
@@ -39,6 +44,7 @@ class ObiektType extends AbstractType
             ->add('grupa', EntityType::class, [
                 'label' => 'Grupa.Obiektow',
                 'class' => GrupaObiektow::class,
+                'query_builder' => fn(GrupaObiektowRepository $repository) => $repository->getGrupyByUser($this->user),
                 'required' => false,
                 'choice_label' => 'nazwa'
             ])
