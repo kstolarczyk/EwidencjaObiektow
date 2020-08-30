@@ -25,12 +25,14 @@ class ObiektRepository extends BaseRepository
         return $query->getResult();
     }
 
-    public function dtFindBy(array $criteria = [], array $orderBy = [], ?int $limit = null, ?int $offset = null, ?string $search = '', ?int &$total = 0, ?int &$filtered = 0): Collection
+    public function dtFindBy(array $criteria = [], array $orderBy = [], ?int $limit = null,
+                             ?int $offset = null, ?string $search = '', ?int &$total = 0, ?int &$filtered = 0): Collection
     {
         $filtered = $total = $this->count($criteria);
         $grupa = $criteria['grupa'] ?? null;
         if (!$grupa instanceof GrupaObiektow) {
-            throw new \InvalidArgumentException("Wymagany parametr 'grupaObiektow' w \$criteria musi być typu: " . GrupaObiektow::class);
+            throw new \InvalidArgumentException(
+                "Wymagany parametr 'grupaObiektow' w \$criteria musi być typu: " . GrupaObiektow::class);
         }
         $typyParametrow = $grupa->getTypyParametrow();
         $query = $this->createQueryBuilder('o');
@@ -48,7 +50,8 @@ class ObiektRepository extends BaseRepository
             $i++;
         }
         if (strlen($search) > 0) {
-            $query->andWhere('CONCAT(' . join(',', $searchFields) . ') LIKE :search')->setParameter('search', "%$search%");
+            $query->andWhere('CONCAT(' . join(',', $searchFields) . ') LIKE :search')
+                ->setParameter('search', "%$search%");
             $filtered = $query->select($query->expr()->countDistinct('o.id'))->getQuery()->getSingleScalarResult();
         }
         $query->select($select);

@@ -26,18 +26,15 @@ class ObiektController extends AbstractController
     public function index(Request $request, EntityManagerInterface $entityManager)
     {
         $grupaId = $request->query->getInt('grupaId', 0);
-        $lista = [];
         $typyParametrow = [];
         if ($grupaId > 0) {
             $grupaObiektow = $entityManager->getRepository(GrupaObiektow::class)->find($grupaId);
             if ($grupaObiektow instanceof GrupaObiektow) {
-                $lista = $grupaObiektow->getObiekty();
                 $typyParametrow = $grupaObiektow->getTypyParametrow();
             }
-
         }
 
-        $viewData = ['lista' => $lista, 'grupaId' => $grupaId, 'typyParametrow' => $typyParametrow, 'maps_used' => true];
+        $viewData = ['grupaId' => $grupaId, 'typyParametrow' => $typyParametrow, 'maps_used' => true];
         if ($request->isXmlHttpRequest()) {
             return new JsonResponse($this->renderView('obiekt/tabela.ajax.html.twig', $viewData));
         }
@@ -47,7 +44,8 @@ class ObiektController extends AbstractController
     /**
      * @Route("/Obiekt/Ajax/{id}", name="obiekt_ajax_lista", condition="request.isXmlHttpRequest()")
      */
-    public function listaObiektow(Request $request, EntityManagerInterface $entityManager, GrupaObiektow $grupaObiektow, UserInterface $user)
+    public function listaObiektow(Request $request, EntityManagerInterface $entityManager,
+                                  UserInterface $user, GrupaObiektow $grupaObiektow)
     {
         if (!$grupaObiektow->getUsers()->contains($user)) {
             throw new NotFoundHttpException();
@@ -94,7 +92,8 @@ class ObiektController extends AbstractController
 
 
     /**
-     * @Route("/Obiekt/Edytuj/{id}", name="obiekt_edytuj", condition="request.isXmlHttpRequest()", requirements={"id":"\d+"}, methods={"POST"})
+     * @Route("/Obiekt/Edytuj/{id}", name="obiekt_edytuj", condition="request.isXmlHttpRequest()", requirements={"id":"\d+"},
+     *      methods={"POST"})
      */
     public function edytuj(Request $request, EntityManagerInterface $entityManager, Filesystem $fileSystem, Obiekt $obiekt)
     {
@@ -123,13 +122,16 @@ class ObiektController extends AbstractController
     }
 
     /**
-     * @Route("/Obiekt/Usun/{id}", name="obiekt_usun", condition="request.isXmlHttpRequest()", requirements={"id":"\d+"}, methods={"POST"})
+     * @Route("/Obiekt/Usun/{id}", name="obiekt_usun", condition="request.isXmlHttpRequest()", requirements={"id":"\d+"},
+     *      methods={"POST"})
      */
     public function usun(EntityManagerInterface $entityManager, Filesystem $filesystem, Obiekt $obiekt)
     {
         $entityManager->remove($obiekt);
         $entityManager->flush();
-        $filesystem->remove($_ENV["IMG_DIR"] . $obiekt->getZdjecie());
+        if ($obiekt->getZdjecie() != null && file_exists($path = $_ENV["IMG_DIR"] . $obiekt->getZdjecie())) {
+            $filesystem->remove($path);
+        }
         return new JsonResponse(true);
     }
 
@@ -159,11 +161,13 @@ class ObiektController extends AbstractController
     }
 
     /**
-     * @Route("/Obiekt/Zdjecie/{id}", name="obiekt_zdjecie", condition="request.isXmlHttpRequest()", requirements={"id":"\d+"}, defaults={"id"=0})
+     * @Route("/Obiekt/Zdjecie/{id}", name="obiekt_zdjecie", condition="request.isXmlHttpRequest()",
+     *     requirements={"id":"\d+"}, defaults={"id"=0})
      */
     public function zdjecie(Obiekt $obiekt)
     {
         $path = $_ENV["IMG_DIR"] . $obiekt->getZdjecie();
+        if (!file_exists($path)) return new JsonResponse(false, 404);
         $file = new File($path);
         $data = base64_encode(file_get_contents($path));
         return new JsonResponse(['content' => $data, 'mime' => $file->getMimeType()]);
