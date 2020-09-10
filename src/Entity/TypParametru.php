@@ -146,6 +146,13 @@ class TypParametru implements \JsonSerializable
 
     public function jsonSerialize()
     {
-        return get_object_vars($this);
+        return [
+            'typParametrowId' => $this->id,
+            'nazwa' => $this->nazwa,
+            'symbol' => $this->symbol,
+            'jednostkaMiary' => $this->jednostkaMiary,
+            'typDanych' => $this->typDanych,
+            'akceptowalneWartosci' => $this->akceptowalneWartosci
+        ];
     }
 }

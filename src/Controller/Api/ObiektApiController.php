@@ -25,8 +25,8 @@ class ObiektApiController extends BaseApiController
     public function index(Request $request, EntityManagerInterface $entityManager, GrupaObiektow $grupaObiektow)
     {
         $data = json_decode($request->getContent(), true);
-        $login = $data['credentials']['base64_login'];
-        $password = $data['credentials']['base64_password'];
+        $login = $data['credentials']['base64_login'] ?? "";
+        $password = $data['credentials']['base64_password'] ?? "";
         if(($code = $this->autoryzacja($login, $password)) !== true)
             return new JsonResponse( [
                 'errors' => $code,
@@ -38,18 +38,20 @@ class ObiektApiController extends BaseApiController
         foreach ($lista as $obiekt) {
             /** @var Obiekt $obiekt */
             $return[] = [
-                'id' => $obiekt->getId(),
+                'obiektId' => $obiekt->getId(),
+                'grupaId' => $obiekt->getGrupa()->getId(),
                 'nazwa' => $obiekt->getNazwa(),
                 'symbol' => $obiekt->getSymbol(),
-                'parametry' => $obiekt->getParametry(),
+                'parametry' => $obiekt->getParametry()->getValues(),
                 'dlugosc' => $obiekt->getDlugosc(),
                 'szerokosc' => $obiekt->getSzerokosc(),
             ];
         }
-        return new JsonResponse([
-            'errors' => [],
-            'data' => []
-        ],200);
+//        return new JsonResponse([
+//            'errors' => [],
+//            'data' => $lista->getValues()
+//        ],200);
+        return new JsonResponse($lista->getValues(), 200);
     }
 
     /**

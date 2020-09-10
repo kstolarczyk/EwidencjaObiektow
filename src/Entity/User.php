@@ -16,7 +16,7 @@ use Symfony\Component\Validator\Constraints as Assert;
  * @ORM\Table(name="users")
  * @UniqueEntity("email")
  */
-class User implements UserInterface
+class User implements UserInterface, \JsonSerializable
 {
 
     /**
@@ -201,5 +201,10 @@ class User implements UserInterface
     public function setEnabled(bool $enabled): void
     {
         $this->enabled = $enabled;
+    }
+
+    public function jsonSerialize()
+    {
+        return get_object_vars(this);
     }
 }

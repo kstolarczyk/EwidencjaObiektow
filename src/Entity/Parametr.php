@@ -12,7 +12,7 @@ use Symfony\Component\Validator\Context\ExecutionContextInterface;
  * @ORM\Entity(repositoryClass="App\Repository\ParametrRepository")
  * @ORM\Table(name="parametry")
  */
-class Parametr
+class Parametr implements \JsonSerializable
 {
     /**
      * @ORM\Id()
@@ -143,4 +143,13 @@ class Parametr
         $this->value = $value;
     }
 
+    public function jsonSerialize()
+    {
+        return [
+            'parametrId' => $this->id,
+            'wartosc' => $this->value,
+            'obiektId' => $this->obiekt->getId(),
+            'typParametrowId' => $this->typ->getId()
+        ];
+    }
 }
