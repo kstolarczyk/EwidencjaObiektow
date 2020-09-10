@@ -165,6 +165,7 @@ class Obiekt implements \JsonSerializable
 
     public function jsonSerialize()
     {
+//        return get_object_vars($this);
         return [
           'obiektId' => $this->id,
           'grupaObiektowId' => $this->grupa->getId(),

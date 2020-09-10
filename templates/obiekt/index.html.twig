@@ -182,7 +182,7 @@
                     map.clearMarkers();
                     $.each(response.obiekty, function (i, obiekt) {
                         let marker = new google.maps.Marker({
-                            position: {lat: obiekt['szerokosc'], lng: obiekt['dlugosc']},
+                            position: {lat: obiekt['latitude'], lng: obiekt['longitude']},
                             map: map
                         });
                         let infoWindow = new google.maps.InfoWindow({
