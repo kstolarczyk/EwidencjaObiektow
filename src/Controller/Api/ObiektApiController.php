@@ -34,19 +34,6 @@ class ObiektApiController extends BaseApiController
             ], $code);
 
         $lista = $entityManager->getRepository(Obiekt::class)->findBy(['grupa' => $grupaObiektow]);
-        $return = [];
-        foreach ($lista as $obiekt) {
-            /** @var Obiekt $obiekt */
-            $return[] = [
-                'obiektId' => $obiekt->getId(),
-                'grupaId' => $obiekt->getGrupa()->getId(),
-                'nazwa' => $obiekt->getNazwa(),
-                'symbol' => $obiekt->getSymbol(),
-                'parametry' => $obiekt->getParametry()->getValues(),
-                'dlugosc' => $obiekt->getDlugosc(),
-                'szerokosc' => $obiekt->getSzerokosc(),
-            ];
-        }
 //        return new JsonResponse([
 //            'errors' => [],
 //            'data' => $lista->getValues()
