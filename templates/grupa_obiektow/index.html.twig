@@ -26,11 +26,11 @@
         }
 
         function Edytuj(grupa) {
-            $.post("{{ path('grupa_obiektow_edytuj', {id: '9999999'}) }}".replace('9999999', grupa.id), {}, function (response, status) {
+            $.post("{{ path('grupa_obiektow_edytuj', {id: '9999999'}) }}".replace('9999999', grupa.grupaObiektowId), {}, function (response, status) {
                 if (status === "success") {
                     $("#grupa_obiektow-modal-content").html(response);
                     $("#grupa_obiektow-modal-title").html(`{{ 'Grupa.obiektow'|trans }} #${grupa.symbol}`);
-                    $("#grupa_obiektow-modal-zapisz").data("id", grupa.id);
+                    $("#grupa_obiektow-modal-zapisz").data("id", grupa.grupaObiektowId);
                     $("#grupa_obiektow-modal").modal("show");
                 }
             });
@@ -42,7 +42,7 @@
                 message: `{{ 'Usun.potwierdz'|trans }} #${grupa.symbol}`,
                 callback: function (result) {
                     if (result) {
-                        $.post("{{ path('grupa_obiektow_usun', {id: '9999999'}) }}".replace('9999999', grupa.id), {}, function (response, status) {
+                        $.post("{{ path('grupa_obiektow_usun', {id: '9999999'}) }}".replace('9999999', grupa.obiektowId), {}, function (response, status) {
                             if (status === "success") {
                                 Odswiez();
                             }
@@ -87,7 +87,7 @@
         }
 
         function Szczegoly(grupa) {
-            let path = "{{ path('grupa_obiektow_szczegoly', {id: '9999999'}) }}".replace('9999999', grupa.id)
+            let path = "{{ path('grupa_obiektow_szczegoly', {id: '9999999'}) }}".replace('9999999', grupa.grupaObiektowId)
             $.get(path, function (response, status) {
                 if (status === "success") {
                     $("#grupa_obiektow-szczegoly-modal-content").html(response);

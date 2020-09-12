@@ -16,6 +16,7 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Symfony\Component\Security\Core\User\UserInterface;
 
 class ObiektController extends AbstractController
@@ -48,11 +49,15 @@ class ObiektController extends AbstractController
                                   UserInterface $user, GrupaObiektow $grupaObiektow)
     {
         if (!$grupaObiektow->getUsers()->contains($user)) {
-            throw new NotFoundHttpException();
+            throw new AccessDeniedException();
         }
         $params = $request->query->all();
+        $criteria = ['grupa' => $grupaObiektow];
+        if(!$this->isGranted('ROLE_ZATWIERDZ')) {
+            $criteria['potwierdzony'] = true;
+        }
         $lista = $entityManager->getRepository(Obiekt::class)
-            ->dtFindBy(['grupa' => $grupaObiektow],
+            ->dtFindBy($criteria,
                 $params['order'], $params['length'], $params['start'], $params['search']['value'], $total, $filtered);
         return new JsonResponse([
             'draw' => $params['draw'] + 1,
@@ -68,6 +73,7 @@ class ObiektController extends AbstractController
     public function dodaj(Request $request, EntityManagerInterface $entityManager)
     {
         $obiekt = new Obiekt();
+        $obiekt->setPotwierdzony(true);
         $form = $this->createForm(ObiektType::class, $obiekt);
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
@@ -173,4 +179,25 @@ class ObiektController extends AbstractController
         return new JsonResponse(['content' => $data, 'mime' => $file->getMimeType()]);
     }
 
+    /**
+     * @Route("/Obiekt/Zatwierdz/{id}", name="obiekt_zatwierdz", condition="request.isXmlHttpRequest()",
+     *     requirements={"id":"\d+"}, defaults={"id"=0})
+     * @IsGranted("ROLE_ZATWIERDZ")
+     */
+    public function zatwierdz(EntityManagerInterface $entityManager, Obiekt $obiekt) {
+        $obiekt->setPotwierdzony(true);
+        $entityManager->flush();
+        return new JsonResponse(true);
+    }
+
+    /**
+     * @Route("/Obiekt/Odrzuc/{id}", name="obiekt_odrzuc", condition="request.isXmlHttpRequest()",
+     *     requirements={"id":"\d+"}, defaults={"id"=0})
+     * @IsGranted("ROLE_ZATWIERDZ")
+     */
+    public function odrzuc(EntityManagerInterface $entityManager, Obiekt $obiekt) {
+        $obiekt->setPotwierdzony(false);
+        $entityManager->flush();
+        return new JsonResponse(true);
+    }
 }

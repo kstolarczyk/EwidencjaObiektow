@@ -88,7 +88,7 @@ class GrupaObiektowController extends AbstractController
         foreach ($grupyObiektow as $grupa) {
             /** @var GrupaObiektow $grupa */
             $return[] = [
-                'id' => $grupa->getId(),
+                'grupaObiektowId' => $grupa->getId(),
                 'nazwa' => $grupa->getNazwa(),
                 'symbol' => $grupa->getSymbol()
             ];

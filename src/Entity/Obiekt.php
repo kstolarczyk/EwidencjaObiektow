@@ -69,6 +69,11 @@ class Obiekt implements \JsonSerializable
     private ?string $zdjecie = null;
 
     /**
+     * @ORM\Column(name="potwierdzony", type="boolean", nullable=true)
+     */
+    private ?bool $potwierdzony = null;
+
+    /**
      * @Assert\Image()
      */
     private ?UploadedFile $imgFile = null;
@@ -167,13 +172,13 @@ class Obiekt implements \JsonSerializable
     {
 //        return get_object_vars($this);
         return [
-          'obiektId' => $this->id,
-          'grupaObiektowId' => $this->grupa->getId(),
-          'nazwa' => $this->nazwa,
-          'symbol' => $this->symbol,
-          'longitude' => $this->dlugosc,
-          'latitude' => $this->szerokosc,
-          'parametry' => $this->parametry->getValues()
+            'obiektId' => $this->id,
+            'grupaObiektowId' => $this->grupa->getId(),
+            'nazwa' => $this->nazwa,
+            'symbol' => $this->symbol,
+            'longitude' => $this->dlugosc,
+            'latitude' => $this->szerokosc,
+            'parametry' => $this->parametry->getValues(),
         ];
     }
 
@@ -195,6 +200,16 @@ class Obiekt implements \JsonSerializable
     public function setImgFile(?UploadedFile $imgFile): void
     {
         $this->imgFile = $imgFile;
+    }
+
+    public function isPotwierdzony(): ?bool
+    {
+        return $this->potwierdzony;
+    }
+
+    public function setPotwierdzony(?bool $potwierdzony): void
+    {
+        $this->potwierdzony = $potwierdzony;
     }
 
     public function setPlainData($key, $value)

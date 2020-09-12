@@ -10,6 +10,10 @@
                     {% for typ in typyParametrow %}
                         <th data-key="param{{ loop.index }}">{{ typ.nazwa }} {% if typ.jednostkaMiary %}[{{ typ.jednostkaMiary }}]{% endif %}</th>
                     {% endfor %}
+                    {% if is_granted('ROLE_ZATWIERDZ') %}
+                        <th data-render="ObiektZatwierdz" data-class="text-nowrap" data-orderable="false"
+                            class="custom-render custom-class">{{ 'Zatwierdzony'|trans }}</th>
+                    {% endif %}
                     <th data-render="ObiektAkcje" data-class="text-center" data-orderable="false" class="custom-render custom-class">{{ 'Akcje'|trans }}</th>
                 </tr>
                 </thead>
@@ -17,6 +21,27 @@
         </div>
     </div>
     <script>
+        {% if is_granted('ROLE_ZATWIERDZ') %}
+        function ObiektZatwierdz(row) {
+            let html = '';
+            let zatwierdzText = '{{ 'Zatwierdz'|trans }}';
+            let odrzucText = '{{ 'Odrzuc'|trans }}';
+            if(row.potwierdzony === null) {
+                html += `<button class="btn btn-success btn-small" onclick="Zatwierdz(${row.obiektId})">${zatwierdzText}</button>
+                         <button class="btn btn-danger btn-small" onclick="Odrzuc(${row.obiektId})">${odrzucText}</button>`;
+            }
+            else {
+                html += row.potwierdzony === true ? '{{ 'Zatwierdzony'|trans }}' : '{{ 'Odrzucony'|trans }}';
+            }
+            return html;
+        }
+        function Zatwierdz(id) {
+            bootbox.confirm("{{ 'Zatwierdzenie.potwierdz'|trans }}", r => !r ? !r : $.post(`{{ path('obiekt_zatwierdz') }}/${id}`).then(Odswiez));
+        }
+        function Odrzuc(id) {
+            bootbox.confirm("{{ 'Odrzucenie.potwierdz'|trans }}", r => !r ? !r : $.post(`{{ path('obiekt_odrzuc') }}/${id}`).then(Odswiez));
+        }
+        {% endif %}
         function ObiektAkcje(row) {
             return '{{ include('obiekt/obiekt.dropdown.html.twig')|e('js') }}'.replace(/"__obiekt__"/g, JSON.stringify(row));
         }
@@ -24,7 +49,7 @@
         function ObiektNazwa(row) {
             let html = `<span>${row.nazwa}</span>`;
             if (row.zdjecie != null) {
-                html += `<a class="float-right" href="javascript:void(0)" onclick="PokazZdjecie(${row.id})"><i class="fas fa-fw fa-image fa-2x"></i></a>`;
+                html += `<a class="float-right" href="javascript:void(0)" onclick="PokazZdjecie(${row.obiektId})"><i class="fas fa-fw fa-image fa-2x"></i></a>`;
             }
             return html;
         }

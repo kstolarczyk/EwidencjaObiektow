@@ -33,7 +33,8 @@
             if (status === "success") {
                 let data = $.map(response, function (obj) {
                     obj.text = obj.nazwa + " (" + obj.symbol + ")";
-                    obj.selected = obj.id === {{ grupaId }};
+                    obj.selected = obj.grupaObiektowId === {{ grupaId }};
+                    obj.id = obj.grupaObiektowId;
                     return obj;
                 });
                 $("#grupa_obiektow-select").select2({data: data});
@@ -56,11 +57,11 @@
         }
 
         function Edytuj(obiekt) {
-            $.post("{{ path('obiekt_edytuj', {id: '999999'}) }}".replace('999999', obiekt.id), {}, function (response, status) {
+            $.post("{{ path('obiekt_edytuj', {id: '999999'}) }}".replace('999999', obiekt.obiektId), {}, function (response, status) {
                 if (status === "success") {
                     $("#obiekt-modal-content").html(response);
                     $("#obiekt-modal-title").html(`{{ 'Obiekt'|trans }} #${obiekt.symbol}`);
-                    $("#obiekt-modal-zapisz").data("id", obiekt.id);
+                    $("#obiekt-modal-zapisz").data("id", obiekt.obiektId);
                     $("#obiekt-modal").modal("show");
                 }
             });
@@ -72,7 +73,7 @@
                 message: `{{ 'Usun.potwierdz'|trans }} #${obiekt.symbol}`,
                 callback: function (result) {
                     if (result) {
-                        $.post("{{ path('obiekt_usun', {id: '9999999'}) }}".replace('9999999', obiekt.id), {}, function (response, status) {
+                        $.post("{{ path('obiekt_usun', {id: '9999999'}) }}".replace('9999999', obiekt.obiektId), {}, function (response, status) {
                             if (status === "success") {
                                 if ($("#mapa-modal").hasClass("show")) {
                                     RefreshMap();
@@ -148,7 +149,7 @@
                     map: map
                 });
                 let infoWindow = new google.maps.InfoWindow({
-                    content: $.jsTemplates.infoWindow(obiekt)
+                    content: $.jsTemplates.infoWindow(obiekt),
                 });
                 map.markers.push(marker);
                 map.infoWindows.push(infoWindow);
