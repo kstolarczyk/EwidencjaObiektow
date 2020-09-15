@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\GrupaObiektow;
+use App\Entity\User;
 use App\Form\GrupaObiektowType;
 use Doctrine\ORM\EntityManagerInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
@@ -19,7 +20,7 @@ class GrupaObiektowController extends AbstractController
      */
     public function index(Request $request, EntityManagerInterface $entityManager)
     {
-        $lista = $entityManager->getRepository(GrupaObiektow::class)->findAll();
+        $lista = $entityManager->getRepository(GrupaObiektow::class)->findBy(['usunieta' => false]);
         $viewData = ['lista' => $lista];
         if ($request->isXmlHttpRequest()) {
             return new JsonResponse($this->renderView('grupa_obiektow/tabela.html.twig', $viewData));
@@ -37,6 +38,7 @@ class GrupaObiektowController extends AbstractController
         $form = $this->createForm(GrupaObiektowType::class, $grupa);
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
+            $grupa->setOstatniaAktualizacja(new \DateTime('now'));
             $entityManager->persist($grupa);
             $entityManager->flush();
             return new JsonResponse(true);
@@ -54,6 +56,7 @@ class GrupaObiektowController extends AbstractController
         $form = $this->createForm(GrupaObiektowType::class, $grupa);
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
+            $grupa->setOstatniaAktualizacja(new \DateTime('now'));
             $entityManager->flush();
             return new JsonResponse(true);
         }
@@ -73,7 +76,8 @@ class GrupaObiektowController extends AbstractController
         if (!$grupa->getTypyParametrow()->isEmpty()) {
             $grupa->getTypyParametrow()->clear();
         }
-        $entityManager->remove($grupa);
+        $grupa->setOstatniaAktualizacja(new \DateTime('now'));
+        $grupa->setUsunieta(true);
         $entityManager->flush();
         return new JsonResponse(true);
     }
@@ -83,7 +87,8 @@ class GrupaObiektowController extends AbstractController
      */
     public function ajaxGet(UserInterface $user)
     {
-        $grupyObiektow = $user->getGrupyObiektow();
+        if(!$user instanceof User) return new JsonResponse(false, 404);
+        $grupyObiektow = $user->getGrupyObiektow()->filter(fn(GrupaObiektow $gr) => !$gr->isUsunieta());
         $return = [];
         foreach ($grupyObiektow as $grupa) {
             /** @var GrupaObiektow $grupa */

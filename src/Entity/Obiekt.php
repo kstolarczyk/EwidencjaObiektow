@@ -74,6 +74,16 @@ class Obiekt implements \JsonSerializable
     private ?bool $potwierdzony = null;
 
     /**
+     * @ORM\Column(name="ostatnia_aktualizacja", type="datetime", nullable=true)
+     */
+    private ?\DateTime $ostatniaAktualizacja = null;
+
+    /**
+     * @ORM\Column(name="usuniety", type="boolean", nullable=false)
+     */
+    private bool $usuniety = false;
+
+    /**
      * @Assert\Image()
      */
     private ?UploadedFile $imgFile = null;
@@ -81,6 +91,7 @@ class Obiekt implements \JsonSerializable
     public function __construct()
     {
         $this->parametry = new ArrayCollection();
+        $this->ostatniaAktualizacja ??= new \DateTime('now');
     }
 
     public function getId(): ?int
@@ -173,11 +184,14 @@ class Obiekt implements \JsonSerializable
 //        return get_object_vars($this);
         return [
             'obiektId' => $this->id,
+            'remoteId' => $this->id,
             'grupaObiektowId' => $this->grupa->getId(),
             'nazwa' => $this->nazwa,
             'symbol' => $this->symbol,
             'longitude' => $this->dlugosc,
             'latitude' => $this->szerokosc,
+            'ostatniaAktualizacja' => $this->ostatniaAktualizacja != null ? $this->ostatniaAktualizacja->format('Y-m-d H:i:s') : '1900-01-01 00:00',
+            'usuniety' => $this->usuniety,
             'parametry' => $this->parametry->getValues(),
         ];
     }
@@ -211,6 +225,39 @@ class Obiekt implements \JsonSerializable
     {
         $this->potwierdzony = $potwierdzony;
     }
+
+    /**
+     * @return \DateTime
+     */
+    public function getOstatniaAktualizacja(): \DateTime
+    {
+        return $this->ostatniaAktualizacja;
+    }
+
+    /**
+     * @param \DateTime $ostatniaAktualizacja
+     */
+    public function setOstatniaAktualizacja(\DateTime $ostatniaAktualizacja): void
+    {
+        $this->ostatniaAktualizacja = $ostatniaAktualizacja;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isUsuniety(): bool
+    {
+        return $this->usuniety;
+    }
+
+    /**
+     * @param bool $usuniety
+     */
+    public function setUsuniety(bool $usuniety): void
+    {
+        $this->usuniety = $usuniety;
+    }
+
 
     public function setPlainData($key, $value)
     {

@@ -4,16 +4,24 @@
 namespace App\Repository;
 
 use App\Entity\GrupaObiektow;
+use App\Entity\Obiekt;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Query\Expr;
+use Doctrine\Persistence\ManagerRegistry;
 
 class ObiektRepository extends BaseRepository
 {
+    public function __construct(ManagerRegistry $registry)
+    {
+        parent::__construct($registry, Obiekt::class);
+    }
+
     public function findInBounds($neLat, $neLng, $swLat, $swLng)
     {
         $qb = $this->createQueryBuilder('o');
         $query = $qb
+            ->where('!o.usuniety')
             ->andWhere($qb->expr()->between('o.dlugosc', ':swLng', ':neLng'))
             ->andWhere($qb->expr()->between('o.szerokosc', ':swLat', ':neLat'))
             ->setParameters([
@@ -23,6 +31,13 @@ class ObiektRepository extends BaseRepository
                 'neLat' => $neLat
             ])->getQuery();
         return $query->getResult();
+    }
+
+    public function findFromDate(string $dateFrom, GrupaObiektow $grupaObiektow) : ArrayCollection {
+        $qb = $this->createQueryBuilder('o');
+        $query = $qb->where('o.grupa = ?1')->andWhere('o.ostatniaAktualizacja > ?2')
+            ->setParameter(1, $grupaObiektow)->setParameter(2, $dateFrom)->getQuery();
+        return new ArrayCollection($query->getResult());
     }
 
     public function dtFindBy(array $criteria = [], array $orderBy = [], ?int $limit = null,

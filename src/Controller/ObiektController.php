@@ -52,7 +52,7 @@ class ObiektController extends AbstractController
             throw new AccessDeniedException();
         }
         $params = $request->query->all();
-        $criteria = ['grupa' => $grupaObiektow];
+        $criteria = ['grupa' => $grupaObiektow, 'usuniety' => false];
         if(!$this->isGranted('ROLE_ZATWIERDZ')) {
             $criteria['potwierdzony'] = true;
         }
@@ -85,6 +85,7 @@ class ObiektController extends AbstractController
                 $obiekt->setZdjecie($newFileName);
                 $obiekt->setImgFile(null);
             }
+            $obiekt->setOstatniaAktualizacja(new \DateTime('now'));
             $entityManager->persist($obiekt);
             $entityManager->flush();
             return new JsonResponse(true);
@@ -117,6 +118,7 @@ class ObiektController extends AbstractController
                 $obiekt->setZdjecie($newFileName);
                 $obiekt->setImgFile(null);
             }
+            $obiekt->setOstatniaAktualizacja(new \DateTime('now'));
             $entityManager->flush();
             return new JsonResponse(true);
         }
@@ -133,7 +135,8 @@ class ObiektController extends AbstractController
      */
     public function usun(EntityManagerInterface $entityManager, Filesystem $filesystem, Obiekt $obiekt)
     {
-        $entityManager->remove($obiekt);
+        $obiekt->setOstatniaAktualizacja(new \DateTime('now'));
+        $obiekt->setUsuniety(true);
         $entityManager->flush();
         if ($obiekt->getZdjecie() != null && file_exists($path = $_ENV["IMG_DIR"] . $obiekt->getZdjecie())) {
             $filesystem->remove($path);
@@ -186,6 +189,7 @@ class ObiektController extends AbstractController
      */
     public function zatwierdz(EntityManagerInterface $entityManager, Obiekt $obiekt) {
         $obiekt->setPotwierdzony(true);
+        $obiekt->setOstatniaAktualizacja(new \DateTime('now'));
         $entityManager->flush();
         return new JsonResponse(true);
     }
@@ -197,6 +201,8 @@ class ObiektController extends AbstractController
      */
     public function odrzuc(EntityManagerInterface $entityManager, Obiekt $obiekt) {
         $obiekt->setPotwierdzony(false);
+        $obiekt->setOstatniaAktualizacja(new \DateTime('now'));
+        $obiekt->setUsuniety(true);
         $entityManager->flush();
         return new JsonResponse(true);
     }

@@ -4,7 +4,9 @@ namespace App\Controller\Api;
 
 use App\Controller\BaseApiController;
 use App\Entity\GrupaObiektow;
+use App\Entity\User;
 use App\Form\GrupaObiektowType;
+use App\Repository\GrupaObiektowRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -13,34 +15,36 @@ use Symfony\Component\Routing\Annotation\Route;
 class GrupaObiektowApiController extends BaseApiController
 {
     /**
-     * @Route("/Api/GrupaObiektow", name="grupa_obiektow_api")
+     * @Route("/Api/GrupaObiektow", name="grupa_obiektow_api", methods={"GET"})
      */
-    public function index(Request $request, EntityManagerInterface $entityManager)
+    public function index(Request $request, GrupaObiektowRepository $repository)
     {
         $data = json_decode($request->getContent(), true);
-        $login = $data['credentials']['base64_login'];
-        $password = $data['credentials']['base64_password'];
-        if(($code = $this->autoryzacja($login, $password)) !== true)
-            return new JsonResponse( [
-                'errors' => $code,
-                'data' => []
-            ], $code);
+        $login = $data['credentials']['base64_login'] ?? "";
+        $password = $data['credentials']['base64_password'] ?? "";
+//        if(($code = $this->autoryzacja($login, $password)) !== true)
+//            return new JsonResponse( [
+//                'errors' => $code,
+//                'data' => []
+//            ], $code);
 
-        $lista = $entityManager->getRepository(GrupaObiektow::class)->findAll();
-        foreach ($lista as $grupa) {
-            /** @var GrupaObiektow $grupa */
-            $return[] = [
-                'id' => $grupa->getId(),
-                'nazwa' => $grupa->getNazwa(),
-                'symbol' => $grupa->getSymbol(),
-                'typyParametrow' => $grupa->getTypyParametrow(),
-                'obiekty' => $grupa->getObiekty(),
-                'users' => $grupa->getUsers(),
-            ];
-        }
+        $fromDate = $data['lastUpdate'] ?? "1900-01-01 00:00";
+        $tmpUser = $this->getDoctrine()->getManager()->getRepository(User::class)->find(2);
+        $lista = $repository->findFromDate($fromDate, $tmpUser);
+//        foreach ($lista as $grupa) {
+//            /** @var GrupaObiektow $grupa */
+//            $return[] = [
+//                'id' => $grupa->getId(),
+//                'nazwa' => $grupa->getNazwa(),
+//                'symbol' => $grupa->getSymbol(),
+//                'typyParametrow' => $grupa->getTypyParametrow(),
+//                'obiekty' => $grupa->getObiekty(),
+//                'users' => $grupa->getUsers(),
+//            ];
+//        }
         return new JsonResponse([
             'errors' => [],
-            'data' => $return
+            'data' => $lista->getValues()
         ], 200);
     }
 

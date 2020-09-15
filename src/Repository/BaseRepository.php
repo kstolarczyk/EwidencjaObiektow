@@ -5,11 +5,12 @@ namespace App\Repository;
 
 
 use App\Entity\Searchable;
+use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\EntityRepository;
 
-class BaseRepository extends EntityRepository
+class BaseRepository extends ServiceEntityRepository
 {
     public function findAll(): Collection
     {

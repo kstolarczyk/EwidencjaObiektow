@@ -11,7 +11,9 @@ namespace App\Controller\Api;
 
 use App\Controller\BaseApiController;
 use App\Entity\TypParametru;
+use App\Entity\User;
 use App\Form\TypParametruType;
+use App\Repository\TypParametruRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -104,35 +106,37 @@ class TypParametruApiController extends BaseApiController
     }
 
     /**
-     * @Route("/Api/TypParametru", name="typ_parametru_index_api", methods={"POST"})
+     * @Route("/Api/TypParametru", name="typ_parametru_index_api", methods={"GET"})
      */
-    public function index(EntityManagerInterface $entityManager, Request $request)
+    public function index(TypParametruRepository $repository, Request $request)
     {
         $data = json_decode($request->getContent(), true);
-        $login = $data['credentials']['base64_login'];
-        $password = $data['credentials']['base64_password'];
-        if(($code = $this->autoryzacja($login, $password)) !== true)
-            return new JsonResponse( [
-                'errors' => $code,
-                'data' => []
-            ], $code);
+        $login = $data['credentials']['base64_login'] ?? "";
+        $password = $data['credentials']['base64_password'] ?? "";
+//        if(($code = $this->autoryzacja($login, $password)) !== true)
+//            return new JsonResponse( [
+//                'errors' => $code,
+//                'data' => []
+//            ], $code);
 
-        $typyParametrow = $entityManager->getRepository(TypParametru::class)->findAll();
-        $return = [];
-        foreach ($typyParametrow as $typ) {
-            /** @var TypParametru $typ */
-            $return[] = [
-                'id' => $typ->getId(),
-                'nazwa' => $typ->getNazwa(),
-                'symbol' => $typ->getSymbol(),
-                'jednostkaMiary' => $typ->getJednostkaMiary(),
-                'typDanych' => $typ->getTypDanych(),
-                'akceptowalneWartosci' => $typ->getAkceptowalneWartosci()
-            ];
-        }
+        $lastUpdate = $data['lastUpdate'] ?? "1900-01-01 00:00";
+        $tmpUser = $this->getDoctrine()->getManager()->getRepository(User::class)->find(2);
+        $typyParametrow = $repository->findFromDate($lastUpdate, $tmpUser);
+//        $return = [];
+//        foreach ($typyParametrow as $typ) {
+//            /** @var TypParametru $typ */
+//            $return[] = [
+//                'id' => $typ->getId(),
+//                'nazwa' => $typ->getNazwa(),
+//                'symbol' => $typ->getSymbol(),
+//                'jednostkaMiary' => $typ->getJednostkaMiary(),
+//                'typDanych' => $typ->getTypDanych(),
+//                'akceptowalneWartosci' => $typ->getAkceptowalneWartosci()
+//            ];
+//        }
         return new JsonResponse([
             'errors' => [],
-            'data' => $return
+            'data' => $typyParametrow->getValues()
         ], 200);
     }
 

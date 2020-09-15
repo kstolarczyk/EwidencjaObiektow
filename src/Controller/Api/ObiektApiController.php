@@ -9,6 +9,7 @@ use App\Entity\Obiekt;
 use App\Entity\Parametr;
 use App\Entity\TypParametru;
 use App\Form\ObiektType;
+use App\Repository\ObiektRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -20,25 +21,25 @@ use Symfony\Component\Validator\Validator\ValidatorInterface;
 class ObiektApiController extends BaseApiController
 {
     /**
-     * @Route("/Api/Obiekt/Lista/{id}", name="obiekt_lista_api", requirements={"id":"\d+"}, methods={"POST"})
+     * @Route("/Api/Obiekt/Lista/{id}", name="obiekt_lista_api", requirements={"id":"\d+"}, methods={"GET"})
      */
-    public function index(Request $request, EntityManagerInterface $entityManager, GrupaObiektow $grupaObiektow)
+    public function index(Request $request, ObiektRepository $repository, GrupaObiektow $grupaObiektow)
     {
         $data = json_decode($request->getContent(), true);
         $login = $data['credentials']['base64_login'] ?? "";
         $password = $data['credentials']['base64_password'] ?? "";
-        if(($code = $this->autoryzacja($login, $password)) !== true)
-            return new JsonResponse( [
-                'errors' => $code,
-                'data' => []
-            ], $code);
+//        if(($code = $this->autoryzacja($login, $password)) !== true)
+//            return new JsonResponse( [
+//                'errors' => $code,
+//                'data' => []
+//            ], $code);
 
-        $lista = $entityManager->getRepository(Obiekt::class)->findBy(['grupa' => $grupaObiektow]);
-//        return new JsonResponse([
-//            'errors' => [],
-//            'data' => $lista->getValues()
-//        ],200);
-        return new JsonResponse($lista->getValues(), 200);
+        $dateFrom = $data['lastUpdate'] ?? "1900-01-01 00:00";
+        $lista = $repository->findFromDate($dateFrom, $grupaObiektow);
+        return new JsonResponse([
+            'errors' => [],
+            'data' => $lista->getValues()
+        ],200);
     }
 
     /**

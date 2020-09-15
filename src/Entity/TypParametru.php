@@ -52,6 +52,16 @@ class TypParametru implements \JsonSerializable
      */
     private Collection $grupyObiektow;
 
+    /**
+     * @ORM\Column(name="ostatnia_aktualizacja", type="datetime", nullable=true)
+     */
+    private ?\DateTime $ostatniaAktualizacja = null;
+
+    /**
+     * @ORM\Column(name="usuniety", type="boolean", nullable=false)
+     */
+    private bool $usuniety = false;
+
     public function getId(): int
     {
         return $this->id;
@@ -122,6 +132,40 @@ class TypParametru implements \JsonSerializable
         $this->grupyObiektow = $grupyObiektow;
     }
 
+    /**
+     * @return \DateTime
+     */
+    public function getOstatniaAktualizacja(): \DateTime
+    {
+        return $this->ostatniaAktualizacja;
+    }
+
+    /**
+     * @param \DateTime $ostatniaAktualizacja
+     */
+    public function setOstatniaAktualizacja(\DateTime $ostatniaAktualizacja): void
+    {
+        $this->ostatniaAktualizacja = $ostatniaAktualizacja;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isUsuniety(): bool
+    {
+        return $this->usuniety;
+    }
+
+    /**
+     * @param bool $usuniety
+     */
+    public function setUsuniety(bool $usuniety): void
+    {
+        $this->usuniety = $usuniety;
+    }
+
+
+
 
     public const DATE = "DATE";
     public const DATETIME = "DATETIME";
@@ -152,6 +196,8 @@ class TypParametru implements \JsonSerializable
             'symbol' => $this->symbol,
             'jednostkaMiary' => $this->jednostkaMiary,
             'typDanych' => $this->typDanych,
+            'usuniety' => $this->usuniety,
+            'ostatniaAktualizacja' => $this->ostatniaAktualizacja != null ? $this->ostatniaAktualizacja->format('Y-m-d H:i:s') : '1900-01-01 00:00',
             'akceptowalneWartosci' => $this->akceptowalneWartosci
         ];
     }

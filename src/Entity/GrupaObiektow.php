@@ -50,11 +50,22 @@ class GrupaObiektow implements \JsonSerializable
      */
     private Collection $users;
 
+    /**
+     * @ORM\Column(name="ostatnia_aktualizacja", type="datetime", nullable=true)
+     */
+    private ?\DateTime $ostatniaAktualizacja = null;
+
+    /**
+     * @ORM\Column(name="usunieta", type="boolean", nullable=false)
+     */
+    private bool $usunieta = false;
+
     public function __construct()
     {
         $this->typyParametrow = new ArrayCollection();
         $this->obiekty = new ArrayCollection();
         $this->users = new ArrayCollection();
+        $this->ostatniaAktualizacja ??= new \DateTime('now');
     }
 
     public function getId(): int
@@ -154,6 +165,40 @@ class GrupaObiektow implements \JsonSerializable
         return $this->users->removeElement($user);
     }
 
+    /**
+     * @return \DateTime
+     */
+    public function getOstatniaAktualizacja(): \DateTime
+    {
+        return $this->ostatniaAktualizacja;
+    }
+
+    /**
+     * @param \DateTime $ostatniaAktualizacja
+     */
+    public function setOstatniaAktualizacja(\DateTime $ostatniaAktualizacja): void
+    {
+        $this->ostatniaAktualizacja = $ostatniaAktualizacja;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isUsunieta(): bool
+    {
+        return $this->usunieta;
+    }
+
+    /**
+     * @param bool $usunieta
+     */
+    public function setUsunieta(bool $usunieta): void
+    {
+        $this->usunieta = $usunieta;
+    }
+
+
+
     public function jsonSerialize()
     {
 //        return get_object_vars($this);
@@ -161,6 +206,8 @@ class GrupaObiektow implements \JsonSerializable
             'grupaObiektowId' => $this->id,
             'nazwa' => $this->nazwa,
             'symbol' => $this->symbol,
+            'usunieta' => $this->usunieta,
+            'ostatniaAktualizacja' => $this->ostatniaAktualizacja != null ? $this->ostatniaAktualizacja->format('Y-m-d H:i:s') : '1900-01-01 00:00',
             'typyParametrow' => $this->typyParametrow->getValues(),
             'obiekty' => $this->obiekty->getValues()
         ];

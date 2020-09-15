@@ -23,6 +23,7 @@ class TypParametruController extends BaseController
         $form = $this->createForm(TypParametruType::class, $typParametru);
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
+            $typParametru->setOstatniaAktualizacja(new \DateTime('now'));
             $entityManager->persist($typParametru);
             $entityManager->flush();
             return new JsonResponse(true);
@@ -43,6 +44,7 @@ class TypParametruController extends BaseController
         $form = $this->createForm(TypParametruType::class, $typParametru);
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
+            $typParametru->setOstatniaAktualizacja(new \DateTime('now'));
             $entityManager->flush();
             return new JsonResponse(true);
         }
@@ -60,7 +62,8 @@ class TypParametruController extends BaseController
      */
     public function usun(EntityManagerInterface $entityManager, TypParametru $typParametru)
     {
-        $entityManager->remove($typParametru);
+        $typParametru->setOstatniaAktualizacja(new \DateTime('now'));
+        $typParametru->setUsuniety(true);
         $entityManager->flush();
         return new JsonResponse(true);
     }
@@ -70,7 +73,7 @@ class TypParametruController extends BaseController
      */
     public function index(EntityManagerInterface $entityManager, Request $request)
     {
-        $lista = $entityManager->getRepository(TypParametru::class)->findAll();
+        $lista = $entityManager->getRepository(TypParametru::class)->findBy(['usuniety' => false]);
         if ($request->isXmlHttpRequest()) {
             return new JsonResponse($this->renderView('typ_parametru/tabela.html.twig', [
                 'lista' => $lista
@@ -89,10 +92,10 @@ class TypParametruController extends BaseController
         if ($grupaId > 0) {
             $grupa = $entityManager->getRepository(GrupaObiektow::class)->find($grupaId);
             if ($grupa instanceof GrupaObiektow) {
-                $typyParametrow = $grupa->getTypyParametrow();
+                $typyParametrow = $grupa->getTypyParametrow()->filter(fn(TypParametru $typ) => !$typ->isUsuniety());
             }
         } else {
-            $typyParametrow = $entityManager->getRepository(TypParametru::class)->findAll();
+            $typyParametrow = $entityManager->getRepository(TypParametru::class)->findBy(['usuniety' => false]);
         }
         $return = [];
         foreach ($typyParametrow as $typ) {
