@@ -21,7 +21,7 @@ class ObiektRepository extends BaseRepository
     {
         $qb = $this->createQueryBuilder('o');
         $query = $qb
-            ->where('!o.usuniety')
+            ->where('o.usuniety = false')
             ->andWhere($qb->expr()->between('o.dlugosc', ':swLng', ':neLng'))
             ->andWhere($qb->expr()->between('o.szerokosc', ':swLat', ':neLat'))
             ->setParameters([
