@@ -18,14 +18,14 @@ class ObiektApiControllerTest extends WebTestCase
     {
         $client = static::createClient();
         $router = self::$container->get("router");
-        $url = $router->generate("obiekt_lista_api", ["id" => 1]);
+        $url = $router->generate("grupa_obiektow_api");
         $data = [
             'credentials' => [
-                'base64_login' => base64_encode("test"),
-                'base64_password' => base64_encode("test")
+                'base64_login' => base64_encode("TestUser"),
+                'base64_password' => base64_encode("TestPass321")
             ]
         ];
-        $client->request("POST", $url, [], [], [], json_encode($data));
+        $client->request("GET", $url, [], [], [], json_encode($data));
 
         $this->assertEquals(200, $client->getResponse()->getStatusCode());
     }

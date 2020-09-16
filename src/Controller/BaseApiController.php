@@ -6,6 +6,7 @@ namespace App\Controller;
 use App\Entity\User;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Form\FormInterface;
+use Symfony\Component\HttpFoundation\JsonResponse;
 
 class BaseApiController extends AbstractController
 {
@@ -15,11 +16,10 @@ class BaseApiController extends AbstractController
         $password = base64_decode($base64_password);
         $repository = $this->getDoctrine()->getRepository(User::class);
         $user = $repository->findOneBy(['username' => $login]);
-        if (!$user)
-            return 404;
-        if (password_verify($password, $user->getPassword()))
-            return true;
-        return 401;
+        if($user instanceof User && password_verify($password, $user->getPassword())) {
+            return $user;
+        }
+        return new JsonResponse(['errors' => ['Wrong credentials!'], 'data' => []], 401);
     }
 
     protected function buildErrorArray(FormInterface $form)

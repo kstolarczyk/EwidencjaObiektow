@@ -84,6 +84,12 @@ class Obiekt implements \JsonSerializable
     private bool $usuniety = false;
 
     /**
+     * @ORM\ManyToOne(targetEntity="App\Entity\User")
+     * @ORM\JoinColumn(name="user_id", referencedColumnName="id")
+     */
+    private ?User $user = null;
+
+    /**
      * @Assert\Image()
      */
     private ?UploadedFile $imgFile = null;
@@ -256,6 +262,22 @@ class Obiekt implements \JsonSerializable
     public function setUsuniety(bool $usuniety): void
     {
         $this->usuniety = $usuniety;
+    }
+
+    /**
+     * @return User|null
+     */
+    public function getUser(): ?User
+    {
+        return $this->user;
+    }
+
+    /**
+     * @param User|null $user
+     */
+    public function setUser(?User $user): void
+    {
+        $this->user = $user;
     }
 
 

@@ -21,19 +21,19 @@ use Symfony\Component\Validator\Validator\ValidatorInterface;
 class ObiektApiController extends BaseApiController
 {
     /**
-     * @Route("/Api/Obiekt/Lista/{id}", name="obiekt_lista_api", requirements={"id":"\d+"}, methods={"GET"})
+     * @Route("/Api/Obiekt/Lista/{id}", name="obiekt_lista_api", requirements={"id":"\d+"}, methods={"POST"})
      */
     public function index(Request $request, ObiektRepository $repository, GrupaObiektow $grupaObiektow)
     {
         $data = json_decode($request->getContent(), true);
         $login = $data['credentials']['base64_login'] ?? "";
         $password = $data['credentials']['base64_password'] ?? "";
-//        if(($code = $this->autoryzacja($login, $password)) !== true)
-//            return new JsonResponse( [
-//                'errors' => $code,
-//                'data' => []
-//            ], $code);
-
+        if(($auth = $this->autoryzacja($login, $password)) instanceof JsonResponse) {
+            return $auth;
+        }
+        if(!$grupaObiektow->getUsers()->contains($auth)) {
+            return new JsonResponse(['errors' => ['Access denied for this user!'], 'data' => []], 403);
+        }
         $dateFrom = $data['lastUpdate'] ?? "1900-01-01 00:00";
         $lista = $repository->findFromDate($dateFrom, $grupaObiektow);
         return new JsonResponse([
@@ -49,13 +49,11 @@ class ObiektApiController extends BaseApiController
     public function obiekty(EntityManagerInterface $entityManager, Request $request)
     {
         $data = json_decode($request->getContent(), true);
-        $login = $data['credentials']['base64_login'];
-        $password = $data['credentials']['base64_password'];
-        if(($code = $this->autoryzacja($login, $password)) !== true)
-            return new JsonResponse( [
-                'errors' => $code,
-                'data' => []
-            ], $code);
+        $login = $data['credentials']['base64_login'] ?? "";
+        $password = $data['credentials']['base64_password'] ?? "";
+        if(($auth = $this->autoryzacja($login, $password)) instanceof JsonResponse) {
+            return $auth;
+        }
 
         $NELat = $request->query->get('NELat', 0.0);
         $NELng = $request->query->get('NELng', 0.0);
@@ -79,20 +77,21 @@ class ObiektApiController extends BaseApiController
     }
 
     /**
-     * @Route("/Api/Obiekt/Usun/{id}", name="obiekt_usun_api", requirements={"id":"\d+"}, methods={"POST"})
+     * @Route("/Api/Obiekt/Usun/{id}", name="obiekt_usun_api", requirements={"id":"\d+"}, methods={"DELETE"})
      */
     public function usun(Request $request, EntityManagerInterface $entityManager, Obiekt $obiekt)
     {
         $data = json_decode($request->getContent(), true);
-        $login = $data['credentials']['base64_login'];
-        $password = $data['credentials']['base64_password'];
-        if(($code = $this->autoryzacja($login, $password)) !== true)
-            return new JsonResponse( [
-                'errors' => $code,
-                'data' => []
-            ], $code);
-
-        $entityManager->remove($obiekt);
+        $login = $data['credentials']['base64_login'] ?? "";
+        $password = $data['credentials']['base64_password'] ?? "";
+        if(($auth = $this->autoryzacja($login, $password)) instanceof JsonResponse) {
+            return $auth;
+        }
+        if($obiekt->getUser()->getId() != $auth->getId()) {
+            return new JsonResponse(['data' => [], 'errors' => ['Access denied for this user!']], 403);
+        }
+        $obiekt->setUsuniety(true);
+        $obiekt->setOstatniaAktualizacja(new \DateTime('now'));
         $entityManager->flush();
         return new JsonResponse([
             'errors' => [],
@@ -102,20 +101,21 @@ class ObiektApiController extends BaseApiController
     }
 
     /**
-     * @Route("/Api/Obiekt/Edytuj/{id}", name="obiekt_edytuj_api", requirements={"id":"\d+"} , methods={"POST"})
+     * @Route("/Api/Obiekt/Edytuj/{id}", name="obiekt_edytuj_api", requirements={"id":"\d+"} , methods={"PUT"})
      */
     public function edytuj(Request $request, EntityManagerInterface $entityManager,
                            ValidatorInterface $validator, Obiekt $obiekt)
     {
         $data = json_decode($request->getContent(), true);
-        $login = $data['credentials']['base64_login'];
-        $password = $data['credentials']['base64_password'];
-        if (($code = $this->autoryzacja($login, $password)) !== true)
-            return new JsonResponse([
-                'errors' => $code,
-                'data' => []
-            ], $code);
+        $login = $data['credentials']['base64_login'] ?? "";
+        $password = $data['credentials']['base64_password'] ?? "";
+        if(($auth = $this->autoryzacja($login, $password)) instanceof JsonResponse) {
+            return $auth;
+        }
 
+        if($obiekt->getUser()->getId() != $auth->getId()) {
+            return new JsonResponse(['data' => [], 'errors' => ['Access denied for this user!']], 403);
+        }
         unset($data['credentials']);
         foreach ($data as $key => $value) {
             switch ($key) {
@@ -141,10 +141,11 @@ class ObiektApiController extends BaseApiController
 
         $errors = $validator->validate($obiekt);
         if ($errors->count() <= 0) {
+            $obiekt->setOstatniaAktualizacja(new \DateTime('now'));
             $entityManager->flush();
             return new JsonResponse([
                 'errors' => [],
-                'data' => []
+                'data' => [$obiekt]
             ], 200);
         }
 
@@ -167,24 +168,27 @@ class ObiektApiController extends BaseApiController
     public function dodaj(Request $request, EntityManagerInterface $entityManager)
     {
         $data = json_decode($request->getContent(), true);
-        $login = $data['credentials']['base64_login'];
-        $password = $data['credentials']['base64_password'];
-        if(($code = $this->autoryzacja($login, $password)) !== true)
-            return new JsonResponse( [
-                'errors' => $code,
-                'data' => []
-            ], $code);
+        $login = $data['credentials']['base64_login'] ?? "";
+        $password = $data['credentials']['base64_password'] ?? "";
+        if(($auth = $this->autoryzacja($login, $password)) instanceof JsonResponse) {
+            return $auth;
+        }
 
         unset($data['credentials']);
         $obiekt = new Obiekt();
         $form = $this->createForm(ObiektType::class, $obiekt, ["csrf_protection" => false]);
         $form->submit($data);
+
         if ($form->isSubmitted() && $form->isValid()) {
+            if(!$obiekt->getGrupa()->getUsers()->contains($auth)) {
+                return new JsonResponse(['data' => [], 'errors' => ['Access denied for this group!']], 403);
+            }
+            $obiekt->setOstatniaAktualizacja(new \DateTime('now'));
             $entityManager->persist($obiekt);
             $entityManager->flush();
             return new JsonResponse([
                 'errors' => [],
-                'data' => []
+                'data' => [$obiekt]
             ],200);
         }
         return new JsonResponse(
