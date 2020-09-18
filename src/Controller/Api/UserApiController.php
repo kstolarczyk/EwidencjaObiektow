@@ -21,18 +21,15 @@ class UserApiController extends BaseApiController
     /**
      * @Route("/Api/User", name="user_api", methods={"POST"})
      */
-    public function index(Request $request, EntityManagerInterface $entityManager)
+    public function index(Request $request)
     {
         $data = json_decode($request->getContent(), true);
         $login = $data['credentials']['base64_login'] ?? "";
         $password = $data['credentials']['base64_password'] ?? "";
-        if(($code = $this->autoryzacja($login, $password)) !== true)
-            return new JsonResponse( [
-                'errors' => $code,
-                'data' => []
-            ], $code);
+        if(($auth = $this->autoryzacja($login, $password)) instanceof JsonResponse) {
+            return $auth;
+        }
 
-        $user = $entityManager->getRepository(User::class)->findOneBy(['username' => $login]);
-        return new JsonResponse($user, 200);
+        return new JsonResponse(['errors' => [], 'data' => [$auth]], 200);
     }
 }

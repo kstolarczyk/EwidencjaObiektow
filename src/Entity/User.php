@@ -205,6 +205,10 @@ class User implements UserInterface, \JsonSerializable
 
     public function jsonSerialize()
     {
-        return get_object_vars(this);
+        return [
+            'userId' => $this->id,
+            'username' => $this->username,
+            'email' => $this->email
+        ];
     }
 }
