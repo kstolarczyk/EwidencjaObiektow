@@ -105,18 +105,20 @@ class ObiektApiControllerTest extends WebTestCase
         return [
             [40, [
                 'credentials' => [
-                    'base64_login' => base64_encode("test"),
-                    'base64_password' => base64_encode("test")
+                    'base64_login' => base64_encode("kamilinho20"),
+                    'base64_password' => base64_encode("ImKox123")
                 ],
-                'nazwa' => "Chujowy",
-                'symbol' => "Test",
-                'grupa' => 1,
-                'parametry' => [
-                    ['typ' => 1, 'value' => 24],
-                    ['typ' => 3, 'value' => 45],
-                ],
-                'dlugosc' => 33.327562,
-                'szerokosc' => 41.473215
+                'data' => [
+                    'nazwa' => "Chujowy",
+                    'symbol' => "Test",
+                    'grupa' => 1,
+                    'parametry' => [
+                        ['typ' => 1, 'value' => 24],
+                        ['typ' => 3, 'value' => 45],
+                    ],
+                    'dlugosc' => 33.327562,
+                    'szerokosc' => 41.473215
+                ]
             ]],
             [39, [
                 'credentials' => [

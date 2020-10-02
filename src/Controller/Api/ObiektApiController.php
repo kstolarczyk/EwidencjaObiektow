@@ -14,6 +14,8 @@ use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
+use Symfony\Component\Security\Core\Security;
 use Symfony\Component\Validator\ConstraintViolation;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 
@@ -164,7 +166,7 @@ class ObiektApiController extends BaseApiController
     /**
      * @Route("/Api/Obiekt/Dodaj", name="obiekt_dodaj_api", methods={"POST"})
      */
-    public function dodaj(Request $request, EntityManagerInterface $entityManager)
+    public function dodaj(Request $request, EntityManagerInterface $entityManager, TokenStorageInterface $storage)
     {
         $data = json_decode($request->getContent(), true);
         $login = $data['credentials']['base64_login'] ?? "";
@@ -172,7 +174,7 @@ class ObiektApiController extends BaseApiController
         if(($auth = $this->autoryzacja($login, $password)) instanceof JsonResponse) {
             return $auth;
         }
-
+        $storage->getToken()->setUser($auth);
         $obiekt = new Obiekt();
         $form = $this->createForm(ObiektType::class, $obiekt, ["csrf_protection" => false]);
         $form->submit($data['data'] ?? []);
