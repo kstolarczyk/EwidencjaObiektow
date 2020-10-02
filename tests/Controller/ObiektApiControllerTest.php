@@ -52,7 +52,7 @@ class ObiektApiControllerTest extends WebTestCase
         $client = static::createClient();
         $router = self::$container->get("router");
         $url = $router->generate("obiekt_dodaj_api");;
-        $client->request("POST", $url, [], [], [], json_encode($data));
+        $client->request("POST", $url, [], [], [], '{"data":{"ObiektId":6,"Symbol":"TEST","Nazwa":"TestowyObiekt","GrupaObiektowId":1,"Latitude":15.0,"Longitude":15.0,"Status":1,"Zdjecie":"","OstatniaAktualizacja":"2020-10-02T12:56:48.189747","Usuniety":false,"Parametry":[],"ZdjecieLokal":"","HasErrors":false},"credentials":{"base64_login":"a2FtaWxpbmhvMjA=","base64_password":"'.base64_encode("ImKox123").'"}}');
         $response = $client->getResponse();
         $content = json_decode($response->getContent(), true);
         $this->assertEquals(200, $response->getStatusCode());

@@ -174,10 +174,15 @@ class ObiektApiController extends BaseApiController
         if(($auth = $this->autoryzacja($login, $password)) instanceof JsonResponse) {
             return $auth;
         }
+        if(!array_key_exists("data", $data)) {
+            return new JsonResponse(['data' => [], 'errors' => ['Key "data" not found!']], 400);
+        }
         $storage->getToken()->setUser($auth);
         $obiekt = new Obiekt();
         $form = $this->createForm(ObiektType::class, $obiekt, ["csrf_protection" => false]);
-        $form->submit($data['data'] ?? []);
+
+        $this->prepareData($data['data']);
+        $form->submit($data['data']);
 
         if ($form->isSubmitted() && $form->isValid()) {
             if(!$obiekt->getGrupa()->getUsers()->contains($auth)) {
@@ -198,5 +203,25 @@ class ObiektApiController extends BaseApiController
                 'data' => []
             ], 400);
 
+    }
+
+    private function prepareData(&$data)
+    {
+        foreach ($data as $key => &$value) {
+            if(is_array($value)) $this->prepareData($value);
+            switch ($key) {
+                case "latitude":
+                    $data["szerokosc"] = $value;
+                    break;
+                case "longitude":
+                    $data["dlugosc"] = $value;
+                    break;
+                case "grupaObiektowId":
+                    $data["grupa"] = $value;
+                    break;
+                case "typParametrowId":
+                    $data["typ"] = $value;
+            }
+        }
     }
 }
