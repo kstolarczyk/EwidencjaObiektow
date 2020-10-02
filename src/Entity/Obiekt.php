@@ -291,6 +291,9 @@ class Obiekt implements \JsonSerializable
             case "longitude":
                 $this->dlugosc = $value;
                 break;
+            case "ostatniaAktualizacja":
+                $this->ostatniaAktualizacja = new \DateTime($value);
+                break;
             case "obiektId":
             case "remoteId":
                 break;
