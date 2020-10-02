@@ -30,10 +30,10 @@ class ObiektApiController extends BaseApiController
         $data = json_decode($request->getContent(), true);
         $login = $data['credentials']['base64_login'] ?? "";
         $password = $data['credentials']['base64_password'] ?? "";
-        if(($auth = $this->autoryzacja($login, $password)) instanceof JsonResponse) {
+        if (($auth = $this->autoryzacja($login, $password)) instanceof JsonResponse) {
             return $auth;
         }
-        if(!$grupaObiektow->getUsers()->contains($auth)) {
+        if (!$grupaObiektow->getUsers()->contains($auth)) {
             return new JsonResponse(['errors' => ['Access denied for this user!'], 'data' => []], 403);
         }
         $dateFrom = $data['lastUpdate'] ?? "1900-01-01 00:00";
@@ -41,7 +41,7 @@ class ObiektApiController extends BaseApiController
         return new JsonResponse([
             'errors' => [],
             'data' => $lista->getValues()
-        ],200);
+        ], 200);
     }
 
     /**
@@ -53,7 +53,7 @@ class ObiektApiController extends BaseApiController
         $data = json_decode($request->getContent(), true);
         $login = $data['credentials']['base64_login'] ?? "";
         $password = $data['credentials']['base64_password'] ?? "";
-        if(($auth = $this->autoryzacja($login, $password)) instanceof JsonResponse) {
+        if (($auth = $this->autoryzacja($login, $password)) instanceof JsonResponse) {
             return $auth;
         }
 
@@ -75,7 +75,7 @@ class ObiektApiController extends BaseApiController
                 'obiekty' => $obiekty,
                 'coords' => ['lat' => (float)$_ENV['MAPS_DEFAULT_LAT'], 'lng' => (float)$_ENV['MAPS_DEFAULT_LON']],
                 'zoom' => 10,
-            ]],200);
+            ]], 200);
     }
 
     /**
@@ -86,10 +86,10 @@ class ObiektApiController extends BaseApiController
         $data = json_decode($request->getContent(), true);
         $login = $data['credentials']['base64_login'] ?? "";
         $password = $data['credentials']['base64_password'] ?? "";
-        if(($auth = $this->autoryzacja($login, $password)) instanceof JsonResponse) {
+        if (($auth = $this->autoryzacja($login, $password)) instanceof JsonResponse) {
             return $auth;
         }
-        if($obiekt->getUser()->getId() != $auth->getId()) {
+        if ($obiekt->getUser()->getId() != $auth->getId()) {
             return new JsonResponse(['data' => [], 'errors' => ['Access denied for this user!']], 403);
         }
         $obiekt->setUsuniety(true);
@@ -111,11 +111,13 @@ class ObiektApiController extends BaseApiController
         $data = json_decode($request->getContent(), true);
         $login = $data['credentials']['base64_login'] ?? "";
         $password = $data['credentials']['base64_password'] ?? "";
-        if(($auth = $this->autoryzacja($login, $password)) instanceof JsonResponse) {
+        if (($auth = $this->autoryzacja($login, $password)) instanceof JsonResponse) {
             return $auth;
         }
-
-        if($obiekt->getUser()->getId() != $auth->getId()) {
+        if (!array_key_exists("data", $data)) {
+            return new JsonResponse(['data' => [], 'errors' => ['Key "data" not found!']], 400);
+        }
+        if ($obiekt->getUser()->getId() != $auth->getId()) {
             return new JsonResponse(['data' => [], 'errors' => ['Access denied for this user!']], 403);
         }
         foreach ($data['data'] ?? [] as $key => $value) {
@@ -132,7 +134,6 @@ class ObiektApiController extends BaseApiController
                         ]);
                         if (!$parametr instanceof Parametr) continue;
                         $parametr->setValue((string)($param["value"] ?? null));
-                        $params[] = $parametr;
                     }
                     break;
                 default:
@@ -153,7 +154,7 @@ class ObiektApiController extends BaseApiController
         $err = [];
         foreach ($errors as $e) {
             if (!$e instanceof ConstraintViolation) continue;
-            $err[$e->getPropertyPath()] = $e->getMessage();
+            $err[] = "[{$e->getPropertyPath()}]: {$e->getMessage()}";
         }
         return new JsonResponse(
             [
@@ -166,62 +167,62 @@ class ObiektApiController extends BaseApiController
     /**
      * @Route("/Api/Obiekt/Dodaj", name="obiekt_dodaj_api", methods={"POST"})
      */
-    public function dodaj(Request $request, EntityManagerInterface $entityManager, TokenStorageInterface $storage)
+    public function dodaj(Request $request, EntityManagerInterface $entityManager, ValidatorInterface $validator)
     {
         $data = json_decode($request->getContent(), true);
         $login = $data['credentials']['base64_login'] ?? "";
         $password = $data['credentials']['base64_password'] ?? "";
-        if(($auth = $this->autoryzacja($login, $password)) instanceof JsonResponse) {
+        if (($auth = $this->autoryzacja($login, $password)) instanceof JsonResponse) {
             return $auth;
         }
-        if(!array_key_exists("data", $data)) {
+        if (!array_key_exists("data", $data)) {
             return new JsonResponse(['data' => [], 'errors' => ['Key "data" not found!']], 400);
         }
-        $storage->getToken()->setUser($auth);
         $obiekt = new Obiekt();
-        $form = $this->createForm(ObiektType::class, $obiekt, ["csrf_protection" => false]);
-
-        $this->prepareData($data['data']);
-        $form->submit($data['data']);
-
-        if ($form->isSubmitted() && $form->isValid()) {
-            if(!$obiekt->getGrupa()->getUsers()->contains($auth)) {
-                return new JsonResponse(['data' => [], 'errors' => ['Access denied for this group!']], 403);
+        foreach ($data['data'] ?? [] as $key => $value) {
+            switch ($key) {
+                case "grupaObiektowId":
+                    $grupa = $entityManager->getRepository(GrupaObiektow::class)->find($value);
+                    if (!$grupa->getUsers()->contains($auth)) {
+                        return new JsonResponse(['data' => [], 'errors' => ['Access denied for this group!']], 403);
+                    }
+                    $obiekt->setGrupa($grupa);
+                    break;
+                case "parametry":
+                    if (!is_array($value)) break;
+                    foreach ($value as $param) {
+                        $typ = $entityManager->getRepository(TypParametru::class)->find($param["typ"] ?? 0);
+                        $parametr = new Parametr();
+                        $parametr->setTyp($typ);
+                        $parametr->setValue((string)($param["value"] ?? null));
+                        $obiekt->addParametry($parametr);
+                    }
+                    break;
+                default:
+                    $obiekt->setPlainData($key, $value);
             }
-            $obiekt->setOstatniaAktualizacja(new \DateTime('now'));
+        }
+
+        $errors = $validator->validate($obiekt);
+        if ($errors->count() <= 0) {
             $obiekt->setUser($auth);
-            $entityManager->persist($obiekt);
+            $obiekt->setOstatniaAktualizacja(new \DateTime('now'));
             $entityManager->flush();
             return new JsonResponse([
                 'errors' => [],
                 'data' => [$obiekt]
-            ],200);
+            ], 200);
+        }
+
+        $err = [];
+        foreach ($errors as $e) {
+            if (!$e instanceof ConstraintViolation) continue;
+            $err[] = "[{$e->getPropertyPath()}]: {$e->getMessage()}";
         }
         return new JsonResponse(
             [
-                'errors' => $this->buildErrorArray($form),
+                'errors' => $err,
                 'data' => []
             ], 400);
-
-    }
-
-    private function prepareData(&$data)
-    {
-        foreach ($data as $key => &$value) {
-            if(is_array($value)) $this->prepareData($value);
-            switch ($key) {
-                case "latitude":
-                    $data["szerokosc"] = $value;
-                    break;
-                case "longitude":
-                    $data["dlugosc"] = $value;
-                    break;
-                case "grupaObiektowId":
-                    $data["grupa"] = $value;
-                    break;
-                case "typParametrowId":
-                    $data["typ"] = $value;
-            }
-        }
     }
 }
