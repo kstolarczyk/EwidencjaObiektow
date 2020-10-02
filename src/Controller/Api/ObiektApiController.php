@@ -122,7 +122,7 @@ class ObiektApiController extends BaseApiController
         }
         foreach ($data['data'] ?? [] as $key => $value) {
             switch ($key) {
-                case "grupa":
+                case "grupaObiektowId":
                     break;
                 case "parametry":
                     if (!is_array($value)) break;
