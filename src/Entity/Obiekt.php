@@ -284,9 +284,20 @@ class Obiekt implements \JsonSerializable
 
     public function setPlainData($key, $value)
     {
-        try {
-            $this->{$key} = $value;
-        } catch (\Exception $e) {
+        switch ($key) {
+            case "latitude":
+                $this->szerokosc = $value;
+                break;
+            case "longitude":
+                $this->dlugosc = $value;
+                break;
+            case "obiektId":
+            case "remoteId":
+                break;
+            default:
+                try {
+                    $this->{$key} = $value;
+                } catch (\Exception $e) {}
         }
     }
 

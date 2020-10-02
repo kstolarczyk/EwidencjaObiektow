@@ -127,7 +127,7 @@ class ObiektApiController extends BaseApiController
                 case "parametry":
                     if (!is_array($value)) break;
                     foreach ($value as $param) {
-                        $typ = $entityManager->getRepository(TypParametru::class)->find($param["typ"] ?? 0);
+                        $typ = $entityManager->getRepository(TypParametru::class)->find($param["typParametrowId"] ?? 0);
                         $parametr = $entityManager->getRepository(Parametr::class)->findOneBy([
                             'typ' => $typ,
                             'obiekt' => $obiekt
@@ -191,7 +191,7 @@ class ObiektApiController extends BaseApiController
                 case "parametry":
                     if (!is_array($value)) break;
                     foreach ($value as $param) {
-                        $typ = $entityManager->getRepository(TypParametru::class)->find($param["typ"] ?? 0);
+                        $typ = $entityManager->getRepository(TypParametru::class)->find($param["typParametrowId"] ?? 0);
                         $parametr = new Parametr();
                         $parametr->setTyp($typ);
                         $parametr->setValue((string)($param["value"] ?? null));
