@@ -116,8 +116,7 @@ class ObiektApiController extends BaseApiController
         if($obiekt->getUser()->getId() != $auth->getId()) {
             return new JsonResponse(['data' => [], 'errors' => ['Access denied for this user!']], 403);
         }
-        unset($data['credentials']);
-        foreach ($data as $key => $value) {
+        foreach ($data['data'] ?? [] as $key => $value) {
             switch ($key) {
                 case "grupa":
                     break;
@@ -174,16 +173,16 @@ class ObiektApiController extends BaseApiController
             return $auth;
         }
 
-        unset($data['credentials']);
         $obiekt = new Obiekt();
         $form = $this->createForm(ObiektType::class, $obiekt, ["csrf_protection" => false]);
-        $form->submit($data);
+        $form->submit($data['data'] ?? []);
 
         if ($form->isSubmitted() && $form->isValid()) {
             if(!$obiekt->getGrupa()->getUsers()->contains($auth)) {
                 return new JsonResponse(['data' => [], 'errors' => ['Access denied for this group!']], 403);
             }
             $obiekt->setOstatniaAktualizacja(new \DateTime('now'));
+            $obiekt->setUser($auth);
             $entityManager->persist($obiekt);
             $entityManager->flush();
             return new JsonResponse([
