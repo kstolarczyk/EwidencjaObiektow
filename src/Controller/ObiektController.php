@@ -176,7 +176,7 @@ class ObiektController extends AbstractController
     public function zdjecie(Obiekt $obiekt)
     {
         $path = $_ENV["IMG_DIR"] . $obiekt->getZdjecie();
-        if (!file_exists($path)) return new JsonResponse(false, 404);
+        if (!file_exists($path) || !is_file($path)) return new JsonResponse(false, 404);
         $file = new File($path);
         $data = base64_encode(file_get_contents($path));
         return new JsonResponse(['content' => $data, 'mime' => $file->getMimeType()]);
