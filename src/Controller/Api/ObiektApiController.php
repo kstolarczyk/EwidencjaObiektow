@@ -207,6 +207,7 @@ class ObiektApiController extends BaseApiController
         if ($errors->count() <= 0) {
             $obiekt->setUser($auth);
             $obiekt->setOstatniaAktualizacja(new \DateTime('now'));
+            $entityManager->persist($obiekt);
             $entityManager->flush();
             return new JsonResponse([
                 'errors' => [],
