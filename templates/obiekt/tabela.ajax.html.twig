@@ -48,7 +48,7 @@
 
         function ObiektNazwa(row) {
             let html = `<span>${row.nazwa}</span>`;
-            if (row.zdjecie != null) {
+            if (row.zdjecie != null && row.zdjecie.length > 0) {
                 html += `<a class="float-right" href="javascript:void(0)" onclick="PokazZdjecie(${row.obiektId})"><i class="fas fa-fw fa-image fa-2x"></i></a>`;
             }
             return html;
