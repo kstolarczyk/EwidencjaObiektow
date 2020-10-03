@@ -112,7 +112,7 @@ class ObiektController extends AbstractController
                 $newFileName = uniqid(md5($file->getClientOriginalName())) . "." . $file->getClientOriginalExtension();
                 $path = $_ENV["IMG_DIR"];
                 $file->move($path, $newFileName);
-                if ($obiekt->getZdjecie() !== null) {
+                if (strlen($obiekt->getZdjecie()) > 0) {
                     $fileSystem->remove($path . $obiekt->getZdjecie());
                 }
                 $obiekt->setZdjecie($newFileName);
@@ -138,7 +138,7 @@ class ObiektController extends AbstractController
         $obiekt->setOstatniaAktualizacja(new \DateTime('now'));
         $obiekt->setUsuniety(true);
         $entityManager->flush();
-        if ($obiekt->getZdjecie() != null && file_exists($path = $_ENV["IMG_DIR"] . $obiekt->getZdjecie())) {
+        if (strlen($obiekt->getZdjecie()) > 0 && file_exists($path = $_ENV["IMG_DIR"] . $obiekt->getZdjecie())) {
             $filesystem->remove($path);
         }
         return new JsonResponse(true);
