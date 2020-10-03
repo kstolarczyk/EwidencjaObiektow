@@ -52,7 +52,7 @@ class ObiektApiControllerTest extends WebTestCase
         $client = static::createClient();
         $router = self::$container->get("router");
         $url = $router->generate("obiekt_dodaj_api");;
-        $client->request("POST", $url, [], [], [], '{"data":{"ObiektId":6,"Symbol":"TEST","Nazwa":"TestowyObiekt","GrupaObiektowId":1,"Latitude":15.0,"Longitude":15.0,"Status":1,"Zdjecie":"","OstatniaAktualizacja":"2020-10-02T12:56:48.189747","Usuniety":false,"Parametry":[],"ZdjecieLokal":"","HasErrors":false},"credentials":{"base64_login":"a2FtaWxpbmhvMjA=","base64_password":"'.base64_encode("ImKox123").'"}}');
+        $client->request("POST", $url, [], [], [], '{"data":{"obiektId":6,"symbol":"TEST","nazwa":"TestowyObiekt","grupaObiektowId":1,"latitude":15.0,"longitude":15.0,"status":1,"zdjecie":"","ostatniaAktualizacja":"2020-10-02T15:27:13.11329","usuniety":false,"parametry":[{"parametrId":78,"obiektId":6,"typParametrowId":1,"wartosc":"5"},{"parametrId":79,"obiektId":6,"typParametrowId":2,"wartosc":"5"}],"zdjecieLokal":"","hasErrors":false},"credentials":{"base64_login":"a2FtaWxpbmhvMjA=","base64_password":"'.base64_encode("ImKox123").'"}}');
         $response = $client->getResponse();
         $content = json_decode($response->getContent(), true);
         $this->assertEquals(200, $response->getStatusCode());

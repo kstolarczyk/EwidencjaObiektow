@@ -133,7 +133,7 @@ class ObiektApiController extends BaseApiController
                             'obiekt' => $obiekt
                         ]);
                         if (!$parametr instanceof Parametr) continue;
-                        $parametr->setValue((string)($param["value"] ?? null));
+                        $parametr->setValue((string)($param["wartosc"] ?? null));
                     }
                     break;
                 default:
@@ -194,7 +194,7 @@ class ObiektApiController extends BaseApiController
                         $typ = $entityManager->getRepository(TypParametru::class)->find($param["typParametrowId"] ?? 0);
                         $parametr = new Parametr();
                         $parametr->setTyp($typ);
-                        $parametr->setValue((string)($param["value"] ?? null));
+                        $parametr->setValue((string)($param["wartosc"] ?? null));
                         $obiekt->addParametry($parametr);
                     }
                     break;
