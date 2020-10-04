@@ -138,8 +138,9 @@ class ObiektController extends AbstractController
         $obiekt->setOstatniaAktualizacja(new \DateTime('now'));
         $obiekt->setUsuniety(true);
         $entityManager->flush();
-        if (strlen($obiekt->getZdjecie()) > 0 && file_exists($path = $_ENV["IMG_DIR"] . $obiekt->getZdjecie())) {
-            $filesystem->remove($path);
+        $imgPath = $_ENV["IMG_DIR"] . $obiekt->getZdjecie();
+        if (strlen($obiekt->getZdjecie()) > 0 && file_exists($imgPath) && is_file($imgPath)) {
+            $filesystem->remove($imgPath);
         }
         return new JsonResponse(true);
     }
