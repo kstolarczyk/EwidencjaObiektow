@@ -16,10 +16,13 @@ class BaseApiController extends AbstractController
         $password = base64_decode($base64_password);
         $repository = $this->getDoctrine()->getRepository(User::class);
         $user = $repository->findOneBy(['username' => $login]);
-        if($user instanceof User && password_verify($password, $user->getPassword())) {
+        if(!$user instanceof User) {
+            return new JsonResponse(['errors' => ['User not found'], 'data' => []], 403);
+        }
+        if(password_verify($password, $user->getPassword())) {
             return $user;
         }
-        return new JsonResponse(['errors' => ['Wrong credentials!'], 'data' => []], 401);
+        return new JsonResponse(['errors' => ['Wrong password!'], 'data' => []], 401);
     }
 
     protected function buildErrorArray(FormInterface $form)
