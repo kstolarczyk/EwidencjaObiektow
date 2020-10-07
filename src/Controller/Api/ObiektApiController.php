@@ -79,7 +79,7 @@ class ObiektApiController extends BaseApiController
     }
 
     /**
-     * @Route("/Api/Obiekt/Usun/{id}", name="obiekt_usun_api", requirements={"id":"\d+"}, methods={"DELETE"})
+     * @Route("/Api/Obiekt/Usun/{id}", name="obiekt_usun_api", requirements={"id":"\d+"}, methods={"POST"})
      */
     public function usun(Request $request, EntityManagerInterface $entityManager, Obiekt $obiekt)
     {
@@ -103,7 +103,7 @@ class ObiektApiController extends BaseApiController
     }
 
     /**
-     * @Route("/Api/Obiekt/Edytuj/{id}", name="obiekt_edytuj_api", requirements={"id":"\d+"} , methods={"PUT"})
+     * @Route("/Api/Obiekt/Edytuj/{id}", name="obiekt_edytuj_api", requirements={"id":"\d+"} , methods={"POST"})
      */
     public function edytuj(Request $request, EntityManagerInterface $entityManager,
                            ValidatorInterface $validator, Obiekt $obiekt)
