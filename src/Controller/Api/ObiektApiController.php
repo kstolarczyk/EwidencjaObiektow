@@ -11,6 +11,7 @@ use App\Entity\TypParametru;
 use App\Form\ObiektType;
 use App\Repository\ObiektRepository;
 use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
@@ -81,7 +82,7 @@ class ObiektApiController extends BaseApiController
     /**
      * @Route("/Api/Obiekt/Usun/{id}", name="obiekt_usun_api", requirements={"id":"\d+"}, methods={"POST"})
      */
-    public function usun(Request $request, EntityManagerInterface $entityManager, Obiekt $obiekt)
+    public function usun(Request $request, Filesystem $filesystem, EntityManagerInterface $entityManager, Obiekt $obiekt)
     {
         $data = json_decode($request->getContent(), true);
         $login = $data['credentials']['base64_login'] ?? "";
@@ -89,12 +90,16 @@ class ObiektApiController extends BaseApiController
         if (($auth = $this->autoryzacja($login, $password)) instanceof JsonResponse) {
             return $auth;
         }
-        if ($obiekt->getUser()->getId() != $auth->getId()) {
+        if (!$obiekt->getUser() || $obiekt->getUser()->getId() != $auth->getId()) {
             return new JsonResponse(['data' => [], 'errors' => ['Access denied for this user!']], 403);
         }
         $obiekt->setUsuniety(true);
         $obiekt->setOstatniaAktualizacja(new \DateTime('now'));
         $entityManager->flush();
+        $imgPath = $_ENV["IMG_DIR"] . $obiekt->getZdjecie();
+        if (strlen($obiekt->getZdjecie()) > 0 && file_exists($imgPath) && is_file($imgPath)) {
+            $filesystem->remove($imgPath);
+        }
         return new JsonResponse([
             'errors' => [],
             'data' => []

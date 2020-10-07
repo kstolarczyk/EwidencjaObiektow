@@ -98,6 +98,14 @@ class ObiektApiControllerTest extends WebTestCase
 
     public function testUsun()
     {
+        $data = '{"credentials":{"base64_login":"a2FtaWxpbmhvMjA=","base64_password":""}}';
+        $client = static::createClient();
+        $router = self::$container->get("router");
+        $url = $router->generate("obiekt_usun_api", ["id" => 9]);
+        $client->request("POST", $url, [], [], [], $data);
+        $response = $client->getResponse();
+        $content = json_decode($response->getContent(), true);
+        $this->assertEquals(200, $response->getStatusCode());
     }
 
     public function obiektSuccessData()

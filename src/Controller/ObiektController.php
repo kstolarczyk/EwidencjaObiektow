@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Entity\GrupaObiektow;
 use App\Entity\Obiekt;
 use App\Entity\TypParametru;
+use App\Entity\User;
 use App\Form\ObiektType;
 use Doctrine\ORM\EntityManagerInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
@@ -70,7 +71,7 @@ class ObiektController extends AbstractController
     /**
      * @Route("/Obiekt/Dodaj", name="obiekt_dodaj", condition="request.isXmlHttpRequest()", methods={"POST"})
      */
-    public function dodaj(Request $request, EntityManagerInterface $entityManager)
+    public function dodaj(Request $request, UserInterface $user, EntityManagerInterface $entityManager)
     {
         $obiekt = new Obiekt();
         $obiekt->setPotwierdzony(true);
@@ -84,6 +85,9 @@ class ObiektController extends AbstractController
                 $file->move($path, $newFileName);
                 $obiekt->setZdjecie($newFileName);
                 $obiekt->setImgFile(null);
+            }
+            if($user instanceof User) {
+                $obiekt->setUser($user);
             }
             $obiekt->setOstatniaAktualizacja(new \DateTime('now'));
             $entityManager->persist($obiekt);
@@ -102,7 +106,8 @@ class ObiektController extends AbstractController
      * @Route("/Obiekt/Edytuj/{id}", name="obiekt_edytuj", condition="request.isXmlHttpRequest()", requirements={"id":"\d+"},
      *      methods={"POST"})
      */
-    public function edytuj(Request $request, EntityManagerInterface $entityManager, Filesystem $fileSystem, Obiekt $obiekt)
+    public function edytuj(Request $request, UserInterface $user,
+                           EntityManagerInterface $entityManager, Filesystem $fileSystem, Obiekt $obiekt)
     {
         $form = $this->createForm(ObiektType::class, $obiekt);
         $form->handleRequest($request);
@@ -117,6 +122,10 @@ class ObiektController extends AbstractController
                 }
                 $obiekt->setZdjecie($newFileName);
                 $obiekt->setImgFile(null);
+            }
+
+            if($user instanceof User) {
+                $obiekt->setUser($user);
             }
             $obiekt->setOstatniaAktualizacja(new \DateTime('now'));
             $entityManager->flush();
