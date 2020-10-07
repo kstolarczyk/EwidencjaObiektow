@@ -198,7 +198,7 @@ class Obiekt implements \JsonSerializable
             'latitude' => $this->szerokosc,
             'ostatniaAktualizacja' => $this->ostatniaAktualizacja != null ? $this->ostatniaAktualizacja->format('Y-m-d H:i:s') : '1900-01-01 00:00',
             'usuniety' => $this->usuniety,
-            'userId' => $this->getUser()->getId(),
+            'userId' => $this->getUser() != null ? $this->getUser()->getId() : null,
             'zdjecie' => $this->zdjecie,
             'parametry' => $this->parametry->getValues(),
         ];
