@@ -209,7 +209,6 @@ class GrupaObiektow implements \JsonSerializable
             'usunieta' => $this->usunieta,
             'ostatniaAktualizacja' => $this->ostatniaAktualizacja != null ? $this->ostatniaAktualizacja->format('Y-m-d H:i:s') : '1900-01-01 00:00',
             'typyParametrow' => $this->typyParametrow->getValues(),
-            'obiekty' => $this->obiekty->getValues()
         ];
     }
 
