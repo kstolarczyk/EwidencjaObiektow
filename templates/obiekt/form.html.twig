@@ -27,7 +27,8 @@
         </div>
         <div class="row">
             <div class="col-12">
-                <div id="obiekt-parametry-content" data-prototype="{{ form_row(form.parametry.vars.prototype)|e('html_attr') }}">
+                <div id="obiekt-parametry-content"
+                     data-prototype="{{ form_row(form.parametry.vars.prototype)|e('html_attr') }}">
                     {{ form_row(form.parametry) }}
                 </div>
             </div>
@@ -96,7 +97,7 @@
                 $.each(response, function (i, typ) {
                     let label = typ.nazwa + (typ.jednostkaMiary ? " [" + typ.jednostkaMiary + "]" : "");
                     let html = formFactor.replace(/__name__/g, i).replace("__label__", label);
-                    if (typ.typDanych === '{{ enum_type }}') {
+                    if (typ.typDanych === '{{ constant('App\\Entity\\TypParametru::ENUM') }}') {
                         html = html.replace('input', 'select');
                         contentElement.append(html);
                         let element = $("#obiekt_parametry_" + i + "_value");
@@ -107,6 +108,21 @@
                             data: typ.akceptowalneWartosci
                         });
                     } else {
+                        switch (typ.typDanych) {
+                            case '{{ constant('App\\Entity\\TypParametru::DATE') }}':
+                                html = html.replace('type="text"', 'type="date"');
+                                break;
+                            case '{{ constant('App\\Entity\\TypParametru::DATETIME') }}':
+                                html = html.replace('type="text"', 'type="datetime-local"');
+                                break;
+                            case '{{ constant('App\\Entity\\TypParametru::TIME') }}':
+                                html = html.replace('type="text"', 'type="time"');
+                                break;
+                            case '{{ constant('App\\Entity\\TypParametru::INT') }}':
+                            case '{{ constant('App\\Entity\\TypParametru::FLOAT') }}':
+                                html = html.replace('type="text"', 'type="number"');
+                                break;
+                        }
                         contentElement.append(html);
                     }
                     $("#obiekt_parametry_" + i + "_typ").val(typ.id);

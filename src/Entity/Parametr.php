@@ -66,29 +66,29 @@ class Parametr implements \JsonSerializable
                 }
                 break;
             case TypParametru::DATETIME:
-                $errors = $executionContext->getValidator()->validate($value, [Assert\DateTime::class]);
+                $errors = $executionContext->getValidator()->validate($value, [new Assert\DateTime(), new Assert\NotBlank()]);
                 foreach ($errors as $error) {
                     /** @var ConstraintViolation $error */
                     $executionContext->buildViolation($error->getMessage())
-                        ->atPath($error->getPropertyPath())
+                        ->atPath('value')
                         ->addViolation();
                 }
                 break;
             case TypParametru::DATE:
-                $errors = $executionContext->getValidator()->validate($value, [Assert\Date::class]);
+                $errors = $executionContext->getValidator()->validate($value, [new Assert\Date(), new Assert\NotBlank()]);
                 foreach ($errors as $error) {
                     /** @var ConstraintViolation $error */
                     $executionContext->buildViolation($error->getMessage())
-                        ->atPath($error->getPropertyPath())
+                        ->atPath('value')
                         ->addViolation();
                 }
                 break;
             case TypParametru::TIME:
-                $errors = $executionContext->getValidator()->validate($value, [Assert\Time::class]);
+                $errors = $executionContext->getValidator()->validate($value, [new Assert\Time(), new Assert\NotBlank()]);
                 foreach ($errors as $error) {
                     /** @var ConstraintViolation $error */
                     $executionContext->buildViolation($error->getMessage())
-                        ->atPath($error->getPropertyPath())
+                        ->atPath('value')
                         ->addViolation();
                 }
                 break;

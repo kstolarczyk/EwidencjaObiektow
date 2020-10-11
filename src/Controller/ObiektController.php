@@ -97,7 +97,6 @@ class ObiektController extends AbstractController
 
         return new JsonResponse($this->renderView('obiekt/form.html.twig', [
             'form' => $form->createView(),
-            'enum_type' => TypParametru::ENUM
         ]));
     }
 
