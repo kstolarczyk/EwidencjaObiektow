@@ -147,9 +147,23 @@ class Parametr implements \JsonSerializable
     {
         return [
             'parametrId' => $this->id,
-            'wartosc' => $this->value,
+            'wartosc' => $this->formattedValue(),
             'obiektId' => $this->obiekt->getId(),
             'typParametrowId' => $this->typ->getId()
         ];
+    }
+
+    private function formattedValue()
+    {
+        switch($this->typ->getTypDanych()) {
+            case TypParametru::DATETIME:
+                return $this->value->format('d.m.Y H:i');
+            case TypParametru::DATE:
+                return $this->value->format('d.m.Y');
+            case TypParametru::TIME:
+                return $this->value->format('H:i');
+            default:
+                return $this->value;
+        }
     }
 }
