@@ -36,9 +36,9 @@ class Parametr implements \JsonSerializable
     private ?Obiekt $obiekt = null;
 
     /**
-     * @ORM\Column(name="value", type="string", nullable=true)
+     * @ORM\Column(name="value", type="object", nullable=true)
      */
-    private ?string $value = null;
+    private $value = null;
 
     /**
      * @Assert\Callback()
@@ -52,14 +52,14 @@ class Parametr implements \JsonSerializable
             case TypParametru::STRING:
                 break;
             case TypParametru::INT:
-                if ($value !== (string)(int)$value) {
+                if (!is_int($value)) {
                     $executionContext->buildViolation('The value should be an integer')
                         ->atPath('value')
                         ->addViolation();
                 }
                 break;
             case TypParametru::FLOAT:
-                if ($value !== (string)(float)$value) {
+                if (!is_float($value)) {
                     $executionContext->buildViolation('The value should be float')
                         ->atPath('value')
                         ->addViolation();
@@ -133,12 +133,12 @@ class Parametr implements \JsonSerializable
         $this->obiekt = $obiekt;
     }
 
-    public function getValue(): ?string
+    public function getValue()
     {
         return $this->value;
     }
 
-    public function setValue(?string $value): void
+    public function setValue($value): void
     {
         $this->value = $value;
     }
