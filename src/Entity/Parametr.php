@@ -66,7 +66,7 @@ class Parametr implements \JsonSerializable
                 }
                 break;
             case TypParametru::DATETIME:
-                $errors = $executionContext->getValidator()->validate($value, Assert\DateTime::class);
+                $errors = $executionContext->getValidator()->validate($value, [Assert\DateTime::class]);
                 foreach ($errors as $error) {
                     /** @var ConstraintViolation $error */
                     $executionContext->buildViolation($error->getMessage())
@@ -75,7 +75,7 @@ class Parametr implements \JsonSerializable
                 }
                 break;
             case TypParametru::DATE:
-                $errors = $executionContext->getValidator()->validate($value, Assert\Date::class);
+                $errors = $executionContext->getValidator()->validate($value, [Assert\Date::class]);
                 foreach ($errors as $error) {
                     /** @var ConstraintViolation $error */
                     $executionContext->buildViolation($error->getMessage())
@@ -84,7 +84,7 @@ class Parametr implements \JsonSerializable
                 }
                 break;
             case TypParametru::TIME:
-                $errors = $executionContext->getValidator()->validate($value, Assert\Time::class);
+                $errors = $executionContext->getValidator()->validate($value, [Assert\Time::class]);
                 foreach ($errors as $error) {
                     /** @var ConstraintViolation $error */
                     $executionContext->buildViolation($error->getMessage())

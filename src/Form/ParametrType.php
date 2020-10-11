@@ -61,7 +61,14 @@ class ParametrType extends AbstractType
                 if ($jm) {
                     $label .= " [$jm]";
                 }
-                $form->add('value', TextType::class, ['label' => $label]);
+                if ($typ->getTypDanych() === TypParametru::ENUM) {
+                    $form->add('value', ChoiceType::class, [
+                        'label' => $label,
+                        'choices' => array_combine($typ->getAkceptowalneWartosci() ?? [], $typ->getAkceptowalneWartosci() ?? [])
+                    ]);
+                } else {
+                    $form->add('value', TextType::class, ['label' => $label]);
+                }
             }
         });
     }
