@@ -140,7 +140,7 @@ class Parametr implements \JsonSerializable
 
     public function setValue($value): void
     {
-        $this->value = $value;
+        $this->value = $this->tryConvertToStrict($value);
     }
 
     public function jsonSerialize()
@@ -164,6 +164,35 @@ class Parametr implements \JsonSerializable
                 return $this->value->format('H:i');
             default:
                 return $this->value;
+        }
+    }
+
+    private function tryConvertToStrict($value)
+    {
+        if($this->typ == null) return $value;
+        switch($this->typ->getTypDanych()) {
+            case TypParametru::DATETIME:
+                $tmp = \DateTime::createFromFormat("Y-m-d H:i", $value);
+                if($tmp === false) $tmp = \DateTime::createFromFormat("d.m.Y H:i", $value);
+                return $tmp;
+            case TypParametru::DATE:
+                $tmp = \DateTime::createFromFormat("Y-m-d H:i", $value);
+                if($tmp === false) $tmp = \DateTime::createFromFormat("d.m.Y", $value);
+                return $tmp;
+            case TypParametru::TIME:
+                return \DateTime::createFromFormat("H:i", $value);
+            case TypParametru::FLOAT:
+                if(is_float($value) || (string)(float) $value == $value) {
+                    return (float) $value;
+                }
+                return $value;
+            case TypParametru::INT:
+                if(is_int($value) || (string)(int) $value == $value) {
+                    return (int) $value;
+                }
+                return $value;
+            default:
+                return $value;
         }
     }
 }
