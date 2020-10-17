@@ -172,14 +172,17 @@ class Parametr implements \JsonSerializable
         if($this->typ == null) return $value;
         switch($this->typ->getTypDanych()) {
             case TypParametru::DATETIME:
+                if($value instanceof \DateTime) $value = $value->format("Y-m-d H:i");
                 $tmp = \DateTime::createFromFormat("Y-m-d H:i", $value);
                 if($tmp === false) $tmp = \DateTime::createFromFormat("d.m.Y H:i", $value);
                 return $tmp;
             case TypParametru::DATE:
-                $tmp = \DateTime::createFromFormat("Y-m-d H:i", $value);
+                if($value instanceof \DateTime) $value = $value->format("Y-m-d");
+                $tmp = \DateTime::createFromFormat("Y-m-d", $value);
                 if($tmp === false) $tmp = \DateTime::createFromFormat("d.m.Y", $value);
                 return $tmp;
             case TypParametru::TIME:
+                if($value instanceof \DateTime) $value = $value->format("H:i");
                 return \DateTime::createFromFormat("H:i", $value);
             case TypParametru::FLOAT:
                 if(is_float($value) || (string)(float) $value == $value) {
