@@ -83,6 +83,7 @@ class ObiektRepository extends BaseRepository
     {
         foreach ($row as $key => $value) {
             if(($pos = strpos($key, "param")) === false) continue;
+            if($value === null) continue;
             $i = (int) substr($key, $pos + 5);
             /** @var TypParametru $typ */
             $typ = $typyParametrow[$i-1];
