@@ -83,10 +83,11 @@ class ObiektRepository extends BaseRepository
     {
         foreach ($row as $key => $value) {
             if(($pos = strpos($key, "param")) === false) continue;
-            if($value === null) continue;
+            if(!$value instanceof \DateTime) continue;
             $i = (int) substr($key, $pos + 5);
             /** @var TypParametru $typ */
             $typ = $typyParametrow[$i-1];
+
             switch($typ->getTypDanych()) {
                 case TypParametru::DATETIME:
                     $row[$key] = $value->format('d.m.Y H:i');
