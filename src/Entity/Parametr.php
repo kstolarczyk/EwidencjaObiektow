@@ -169,7 +169,7 @@ class Parametr implements \JsonSerializable
 
     private function tryConvertToStrict($value)
     {
-        if($this->typ == null) return $value;
+        if($this->typ == null || $value === null) return $value;
         switch($this->typ->getTypDanych()) {
             case TypParametru::DATETIME:
                 if($value instanceof \DateTime) $value = $value->format("Y-m-d H:i");
