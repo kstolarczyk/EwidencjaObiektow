@@ -155,6 +155,7 @@ class Parametr implements \JsonSerializable
 
     private function formattedValue()
     {
+        if(!$this->value instanceof \DateTime) return $this->value;
         switch($this->typ->getTypDanych()) {
             case TypParametru::DATETIME:
                 return $this->value->format('d.m.Y H:i');
