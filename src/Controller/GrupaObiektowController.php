@@ -29,7 +29,8 @@ class GrupaObiektowController extends AbstractController
     }
 
     /**
-     * @Route("/GrupaObiektow/Dodaj", name="grupa_obiektow_dodaj", condition="request.isXmlHttpRequest()", methods={"POST"})
+     * @Route("/GrupaObiektow/Dodaj", name="grupa_obiektow_dodaj",
+     *     condition="request.isXmlHttpRequest()", methods={"POST"})
      * @IsGranted("ROLE_ADMIN")
      */
     public function dodaj(Request $request, EntityManagerInterface $entityManager)
@@ -48,7 +49,8 @@ class GrupaObiektowController extends AbstractController
     }
 
     /**
-     * @Route("/GrupaObiektow/Edytuj/{id}", name="grupa_obiektow_edytuj", condition="request.isXmlHttpRequest()", requirements={"id":"\d+"}, methods={"POST"})
+     * @Route("/GrupaObiektow/Edytuj/{id}", name="grupa_obiektow_edytuj",
+     *     condition="request.isXmlHttpRequest()", requirements={"id":"\d+"}, methods={"POST"})
      * @IsGranted("ROLE_ADMIN")
      */
     public function edytuj(Request $request, EntityManagerInterface $entityManager, GrupaObiektow $grupa)
@@ -65,7 +67,8 @@ class GrupaObiektowController extends AbstractController
     }
 
     /**
-     * @Route("/GrupaObiektow/Usun/{id}", name="grupa_obiektow_usun", condition="request.isXmlHttpRequest()", requirements={"id":"\d+"}, methods={"POST"})
+     * @Route("/GrupaObiektow/Usun/{id}", name="grupa_obiektow_usun",
+     *     condition="request.isXmlHttpRequest()", requirements={"id":"\d+"}, methods={"POST"})
      * @IsGranted("ROLE_ADMIN")
      */
     public function usun(EntityManagerInterface $entityManager, GrupaObiektow $grupa)

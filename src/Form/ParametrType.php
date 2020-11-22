@@ -83,7 +83,8 @@ class ParametrType extends AbstractType
                 ]);
                 break;
             case TypParametru::DATETIME:
-                $form->add('value', DateTimeType::class, ['label' => $label, 'widget' => 'single_text', 'input_format' => 'yyyy-MM-dd HH:mm']);
+                $form->add('value', DateTimeType::class, ['label' => $label, 'widget' => 'single_text',
+                    'input_format' => 'yyyy-MM-dd HH:mm']);
                 break;
             case TypParametru::DATE:
                 $form->add('value', DateType::class, ['label' => $label, 'widget' => 'single_text', 'input_format' => 'yyyy-MM-dd']);

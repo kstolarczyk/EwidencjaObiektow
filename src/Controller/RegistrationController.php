@@ -34,7 +34,6 @@ class RegistrationController extends AbstractController
                     $form->get('plainPassword')->getData()
                 )
             );
-            //TODO: make it configurable with APP_ENV (first ever user should be enabled automatically)
 
             $entityManager = $this->getDoctrine()->getManager();
             $firstUser = $entityManager->getRepository(User::class)->count([]) == 0;
@@ -49,7 +48,8 @@ class RegistrationController extends AbstractController
             $entityManager->flush();
 
             if (!$user->isEnabled()) {
-                throw new CustomUserMessageAuthenticationException("User %username% is disabled. Please contact with system administrator.", ['%username%' => $user->getUsername()]);
+                throw new CustomUserMessageAuthenticationException("User %username% is disabled. Please contact with system administrator."
+                    , ['%username%' => $user->getUsername()]);
             }
             return $guardHandler->authenticateUserAndHandleSuccess($user, $request, $authenticator, 'main');
         }

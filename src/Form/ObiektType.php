@@ -23,7 +23,6 @@ use Symfony\Component\Security\Core\Security;
 
 class ObiektType extends AbstractType
 {
-
     protected EntityManagerInterface $entityManager;
     private ?User $user;
 
@@ -44,7 +43,8 @@ class ObiektType extends AbstractType
             ->add('grupa', EntityType::class, [
                 'label' => 'Grupa.Obiektow',
                 'class' => GrupaObiektow::class,
-                'query_builder' => fn(GrupaObiektowRepository $repository) => $repository->getGrupyByUser($this->user),
+                'query_builder' =>
+                    fn(GrupaObiektowRepository $repository) => $repository->getGrupyByUser($this->user),
                 'required' => false,
                 'choice_label' => 'nazwa'
             ])

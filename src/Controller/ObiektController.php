@@ -122,7 +122,6 @@ class ObiektController extends AbstractController
                 $obiekt->setZdjecie($newFileName);
                 $obiekt->setImgFile(null);
             }
-
             if($user instanceof User) {
                 $obiekt->setUser($user);
             }

@@ -8,13 +8,15 @@
                     <th data-render="ObiektNazwa" class="custom-render" data-key="nazwa">{{ 'Nazwa'|trans }}</th>
                     <th data-key="symbol">{{ 'Symbol'|trans }}</th>
                     {% for typ in typyParametrow %}
-                        <th data-key="param{{ loop.index }}">{{ typ.nazwa }} {% if typ.jednostkaMiary %}[{{ typ.jednostkaMiary }}]{% endif %}</th>
+                        <th data-key="param{{ loop.index }}">
+                            {{ typ.nazwa }} {% if typ.jednostkaMiary %}[{{ typ.jednostkaMiary }}]{% endif %}</th>
                     {% endfor %}
                     {% if is_granted('ROLE_ZATWIERDZ') %}
                         <th data-render="ObiektZatwierdz" data-class="text-nowrap" data-orderable="false"
                             class="custom-render custom-class">{{ 'Zatwierdzony'|trans }}</th>
                     {% endif %}
-                    <th data-render="ObiektAkcje" data-class="text-center" data-orderable="false" class="custom-render custom-class">{{ 'Akcje'|trans }}</th>
+                    <th data-render="ObiektAkcje" data-class="text-center" data-orderable="false" class="custom-render custom-class">
+                        {{ 'Akcje'|trans }}</th>
                 </tr>
                 </thead>
             </table>
@@ -36,10 +38,12 @@
             return html;
         }
         function Zatwierdz(id) {
-            bootbox.confirm("{{ 'Zatwierdzenie.potwierdz'|trans }}", r => !r ? !r : $.post(`{{ path('obiekt_zatwierdz') }}/${id}`).then(Odswiez));
+            bootbox.confirm("{{ 'Zatwierdzenie.potwierdz'|trans }}", r => !r ? !r : $.post(`{{ path('obiekt_zatwierdz') }}/${id}`)
+                .then(Odswiez));
         }
         function Odrzuc(id) {
-            bootbox.confirm("{{ 'Odrzucenie.potwierdz'|trans }}", r => !r ? !r : $.post(`{{ path('obiekt_odrzuc') }}/${id}`).then(Odswiez));
+            bootbox.confirm("{{ 'Odrzucenie.potwierdz'|trans }}", r => !r ? !r : $.post(`{{ path('obiekt_odrzuc') }}/${id}`)
+                .then(Odswiez));
         }
         {% endif %}
         function ObiektAkcje(row) {
@@ -49,7 +53,8 @@
         function ObiektNazwa(row) {
             let html = `<span>${row.nazwa}</span>`;
             if (row.zdjecie != null && row.zdjecie.length > 0) {
-                html += `<a class="float-right" href="javascript:void(0)" onclick="PokazZdjecie(${row.obiektId})"><i class="fas fa-fw fa-image fa-2x"></i></a>`;
+                html += `<a class="float-right" href="javascript:void(0)" onclick="PokazZdjecie(${row.obiektId})">
+                        <i class="fas fa-fw fa-image fa-2x"></i></a>`;
             }
             return html;
         }
