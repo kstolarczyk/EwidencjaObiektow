@@ -76,7 +76,7 @@ class ObiektApiControllerTest extends WebTestCase
         $this->assertEquals(200, $client->getResponse()->getStatusCode());
     }
 
-    public function ShouldNotAddObiekt() {
+    public function testShouldNotAddObiekt() {
         $data = [
             'credentials' => $this->credentials,
             'data' => [
